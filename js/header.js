@@ -6,8 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const headerNaoLogado = `
     <header>
-      <div class="logo">
-        <img src="img/Melfy-versão final.svg" alt="Logo" />
+      <div class="header-top">
+        <div class="logo">
+          <img src="img/Melfy-versão final.svg" alt="Logo" />
+        </div>
+        <div class="menu-toggle" id="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
       <nav>
         <a href="index.html">Home</a>
@@ -26,8 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const headerLogado = `
     <header>
-      <div class="logo">
-        <img src="img/Melfy-versão final.svg" alt="Logo" />
+      <div class="header-top">
+        <div class="logo">
+          <img src="img/Melfy-versão final.svg" alt="Logo" />
+        </div>
+        <div class="menu-toggle" id="menu-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
       <nav>
         <a href="home.html">Home</a>
@@ -61,6 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         window.location.href = 'login.html';
       }
+    });
+  }
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const nav = headerContainer.querySelector('nav');
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener('click', () => {
+      nav.classList.toggle('active');
+      menuToggle.classList.toggle('open');
     });
   }
 });

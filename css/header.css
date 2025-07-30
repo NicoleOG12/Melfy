@@ -223,3 +223,73 @@ nav .active {
   color: #e0eaff;
   text-shadow: 0 0 5px #a0c0ff;
 }
+
+.header-top {
+  position: relative;
+  height: 80px;
+}
+
+.logo {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+.logo img {
+  height: 60px;
+}
+
+.menu-toggle {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.menu-toggle span {
+  height: 3px;
+  width: 25px;
+  background: #ffbb00;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: 0.4s;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+@media (max-width: 768px) {
+  nav {
+    display: none;
+    flex-direction: column;
+    background-color: rgba(250, 239, 179, 0.95);
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    padding: 10px 20px;
+  }
+
+  nav.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
