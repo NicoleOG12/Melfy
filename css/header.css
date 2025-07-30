@@ -1,3 +1,22 @@
+body {
+  margin: 0;
+  font-family: "Istok Web", sans-serif;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  /*cursor: url('../img/abelha.png'), auto;*/
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(250, 239, 179, 0.5);
+  z-index: -1;
+}
 
 .header-bg {
   background-image: url(../img/header-choco.svg);
