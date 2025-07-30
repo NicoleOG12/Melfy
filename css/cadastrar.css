@@ -56,205 +56,23 @@ body.dark-mode::before {
   background-color: rgb(0, 0, 0);
 }
 
-
 body {
-    margin: 0;
-    font-family: "Istok Web", sans-serif;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
+  margin: 0;
+  font-family: "Istok Web", sans-serif;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.623);
-    z-index: -1;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(150deg, var(--cor-header), var(--cor-ativa));
-    padding: 10px 20px;
-    border-bottom: 2px solid var(--cor-borda);
-}
-  
-.logo img {
-    height: 70px;
-    width: auto;
-}
-  
-nav {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    flex-grow: 2;
-    margin-left: 400px;
-}
-
-nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: var(--cor-link);
-    font-size: 15px;
-    font-family: "Istok Web", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    padding: 8px 10px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-}
-
-nav a:hover {
-    background-color: var(--cor-laranja);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
-}
-
-nav .iconbag {
-    margin-left: 20px;
-}
-
-nav .iconbag a {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: var(--cor-link);
-}
-
-nav .iconbag a:hover {
-    background-color: var(--cor-laranja);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
-}
-
-nav .iconuser {
-    margin-left: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0px;
-}
-
-.iconuser img {
-    height: 50px;
-}
-
-nav .iconbag a, nav .iconuser a {
-    display: inline-block;
-}
-
-nav .active {
-    background-color: var(--cor-ativa);
-    padding: 5px 10px;
-    border-radius: 10px;
-}
-
-.iconbag i {
-    font-size: 34px;
-    color: var(--cor-link);
-}
-
-.iconbag i:hover, .iconuser i:hover {
-    color: white;
-}
-
-.icons span {
-    margin-left: 10px;
-    font-size: 20px;
-}
-
-.toggle-btn {
-  position: relative;
-  width: 60px;
-  height: 24px;
-  background: linear-gradient(145deg, #1bcae9, #00a1f1);
-  border-radius: 34px;
-  border: 2px solid black;
-  cursor: pointer;
-  transition: background 0.4s ease, box-shadow 0.4s ease;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 3px;
-  user-select: none;
-  box-shadow: inset 5px 5px 10px #00a0df, inset -5px -5px 10px #56d8ff;
-}
-
-.toggle-btn.active {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
-  box-shadow: inset 5px 5px 10px #005374, inset -5px -5px 10px #007599;
-  justify-content: flex-end;
-}
-
-.toggle-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #FFD94B, #FF9E1B 70%, #FF6F00);
-  box-shadow:
-    0 2px 6px rgba(255, 165, 0, 0.6),
-    inset 0 0 8px #fff5cc;
-  transition: all 0.4s ease;
-  pointer-events: none;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.toggle-btn.active .toggle-icon {
-  background: radial-gradient(circle at 30% 30%, #c2c2c2, #888888 70%, #555555);
-  box-shadow:
-    inset 4px 4px 5px rgba(80, 80, 80, 0.7),
-    inset -3px -2px 4px rgba(180, 180, 180, 0.6);
-}
-
-.toggle-btn.active .toggle-icon::before {
   content: "";
-  position: absolute;
-  top: 25%;
-  left: 40%;
-  width: 5px;
-  height: 5px;
-  background: #6a6a6a;
-  border-radius: 50%;
-  box-shadow:
-    8px 3px 0 #7b7b7b,
-    12px 10px 0 #5f5f5f,
-    4px 12px 0 #6e6e6e;
-  pointer-events: none;
-  user-select: none;
-}
-
-.toggle-icon::before {
-  content: none;
-}
-
-.toggle-label {
-  margin-left: 80px;
-  font-weight: 700;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #555;
-  transition: color 0.4s ease;
-  user-select: none;
-  letter-spacing: 0.03em;
-  font-size: 14px;
-}
-
-.toggle-btn.active .toggle-label {
-  color: #e0eaff;
-  text-shadow: 0 0 5px #a0c0ff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.623);
+  z-index: -1;
 }
 
 main {

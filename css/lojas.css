@@ -19,118 +19,22 @@
 }
 
 body {
-    margin: 0;
-    font-family: "Istok Web", sans-serif;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
+  margin: 0;
+  font-family: "Istok Web", sans-serif;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
 }
 
 body::before {
-    content: "";
-     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.623);
-    z-index: -1;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(150deg, var(--cor-header), var(--cor-ativa));
-    padding: 10px 20px;
-    border-bottom: 2px solid var(--cor-borda);
-}
-  
-.logo img {
-    height: 70px;
-    width: auto;
-}
-  
-nav {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    flex-grow: 2;
-    margin-left: 400px;
-}
-
-nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: var(--cor-link);
-    font-size: 15px;
-    font-family: "Istok Web", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-    padding: 8px 10px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-}
-
-nav a:hover {
-    background-color: var(--cor-laranja);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
-}
-
-nav .iconbag {
-    margin-left: 20px;
-}
-
-nav .iconbag a {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: var(--cor-link);
-}
-
-nav .iconbag a:hover {
-    background-color: var(--cor-laranja);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
-}
-
-nav .iconuser {
-    margin-left: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0px;
-}
-
-.iconuser img {
-    height: 50px;
-}
-
-nav .iconbag a, nav .iconuser a {
-    display: inline-block;
-}
-
-nav .active {
-    background-color: var(--cor-ativa);
-    padding: 5px 10px;
-    border-radius: 10px;
-}
-
-.iconbag i {
-    font-size: 34px;
-    color: var(--cor-link);
-}
-
-.iconbag i:hover, .iconuser i:hover {
-    color: white;
-}
-
-.icons span {
-    margin-left: 10px;
-    font-size: 20px;
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.623);
+  z-index: -1;
 }
 
 main {
