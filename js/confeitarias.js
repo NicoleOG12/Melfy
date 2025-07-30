@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 </div>
+                
             `;
             
             const nomeLojaElement = card.querySelector('.marca');

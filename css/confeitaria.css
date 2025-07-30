@@ -312,8 +312,6 @@ h3 {
     align-items: center;
     position: relative;
     overflow: hidden;
-    border: 2px solid var(--cor-contraste);
-    border-radius: 35px;
     background-color: var(--cor-fundo);
     height: 125px;
     padding: 0 50px;
@@ -324,29 +322,102 @@ h3 {
     overflow-x: auto;
     scroll-behavior: smooth;
     gap: 10px;
+    padding-bottom: 30px;
 }
-  
+
 .doce, .categoria {
     flex: 0 0 auto;
-    text-align: center;
-    margin: 20px;
+    margin: 10px;
+    margin-top: 60px;
 }
-  
-.doce img, .categoria img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #fff1a8;
-    padding: 10px;
-    margin-top: 30px;
+
+.hex-externo {
+  width: 80px;         
+  height: 46px;         
+  background: #fff1a8;
+  position: relative;
+  margin: 20px auto;
 }
-  
-.categoria img {
-    background: var(--cor-amarelo);
+
+.categoria .hex-externo{
+  background: #FFD700;
+
 }
-  
+
+.hex-externo::before,
+.hex-externo::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+}
+
+.hex-externo::before {
+  bottom: 100%;
+  border-bottom: 23px solid #fff1a8;
+}
+
+.categoria .hex-externo::before {
+  border-bottom: 23px solid #FFD700;
+}
+
+.hex-externo::after {
+  top: 100%;
+  border-top: 23px solid #fff1a8;
+}
+
+.categoria .hex-externo::after {
+  border-top: 23px solid #FFD700;
+}
+
+.hex-interno {
+  width: 70px;
+  height: 40px;
+  background: white;
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  z-index: 1;
+}
+
+.hex-interno::before,
+.hex-interno::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+}
+
+.hex-interno::before {
+  bottom: 100%;
+  border-bottom: 20px solid white;
+}
+
+.hex-interno::after {
+  top: 100%;
+  border-top: 20px solid white;
+}
+ 
+.hex-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hex-img img {
+  max-width: 50px;
+  max-height: 50px;
+}
+
 .doce p, .categoria p {
-    margin-top: -5px;
+    margin-top: 15px;
+
 }
   
 .arrow img {
@@ -495,7 +566,7 @@ h3 {
 .valor {
     font-size: 16px;
 }
-  
+
 .modal-overlay {
   position: fixed;
   top: 0;
