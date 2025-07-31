@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="./css/cores.css">.search-bar {
+.search-bar {
   display: flex;
   justify-content: center;
   padding: 10px;
@@ -11,8 +11,8 @@
   padding: 15px;
   border-radius: 20px;
   border: 1px solid #ffdd99;
-  background-color: var(--cor-fundo);
-  color: var(--cor-texto);
+  background-color: var(--cor-branca);
+  color: var(--cor-cinza);
 }
 
 .search-bar input:focus {
@@ -191,7 +191,7 @@
 
 .descricao h3 {
     font-size: 18px;
-    color:var(--cor-texto);
+    color:var(--cor-cinza);
     padding-left: 10px;
     margin: 0;
 }
@@ -214,7 +214,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    color: var(--cor-texto);
+    color: var(--cor-cinza);
 }
   
 .icone-preco {
@@ -239,69 +239,7 @@
 /* #endregion */
 
 /* #region CSS FOOTER--------------------------------------*/
-footer {
-    background: linear-gradient(150deg, var(--cor-footer), var(--cor-ativa));
-    font-family: 'Quicksand', sans-serif;
-    color: var(--cor-footer-text);
-    text-align: center;
-    padding: 20px 0px;
-    border-top: 2px solid var(--cor-borda);
-    width: 100%;
-    box-sizing: border-box;
-    height: 170px;
-}
-  
-.footer-top .social-icons {
-    margin-bottom: 10px;
-}
-  
-.footer-top .social-icons a {
-    margin: 0 8px;
-    display: inline-block;
-    background-color: #fff;
-    padding: 8px;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-}
-  
-.footer-top .social-icons a img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-  
-.footer-top p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-  
-.footer-bottom {
-    background: linear-gradient(150deg, var(--cor-footer-bottom), var(--cor-ativa2));
-    margin-top: 15px;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-between; 
-    padding-left: 50px;
-    padding-right: 50px;
-    font-size: 14px;
-    color: var(--cor-footer-text);
-    width: 100%;
-    box-sizing: border-box;
-}
-  
-.footer-bottom a {
-    text-decoration: none;
-    color: var(--cor-footer-text);
-    font-size: 14px;
-}
-  
-.footer-bottom span {
-    color: var(--cor-footer-text);
-    font-size: 14px;
-    text-align: center; 
-    flex-grow: 1; 
-}
+
 /* #endregion CSS FOOTER--------------------------------------*/
 
 /* #region Modal Descrição do produto */
@@ -333,7 +271,7 @@ footer {
 
 .modal-content {
   position: relative;
-  background: var(--cor-fundo);
+  background: var(--cor-branca);
   padding: 32px;
   border-radius: 20px;
   border: 2px solid var(--cor-laranja);
@@ -347,7 +285,7 @@ footer {
 .modal-img {
   width: 50%;
   height: auto;
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-branca);
   border-radius: 8px;
   object-fit: cover;
 }
@@ -372,7 +310,7 @@ footer {
 .modal-logo {
   width: 50px;
   height: 50px;
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-branca);
   border-radius: 50%;
   border: 1px solid var(--cor-botao-hover);
   object-fit: cover;
@@ -435,7 +373,7 @@ footer {
   padding: 8px;
   border-radius: 8px;
   border: 2px solid var(--cor-card);
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-branca);
   font-size: 14px;
   overflow-y: hidden;
   margin-top: -5px;

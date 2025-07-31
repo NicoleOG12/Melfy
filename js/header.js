@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const usuarioLogado = localStorage.getItem('usuarioLogado');
   const headerContainer = document.getElementById('header');
+  const footerContainer = document.getElementById('footer');
 
   if (!headerContainer) return;
 
@@ -64,7 +65,32 @@ document.addEventListener('DOMContentLoaded', () => {
     </header>
   `;
 
+  const footerHTML = `
+    <footer class="footer">
+      <div class="footer-top">
+        <div class="social-icons">
+          <a href="#"><img src="./img/Instagram.svg" alt="Instagram" /></a>
+          <a href="#"><img src="./img/Facebook.svg" alt="Facebook" /></a>
+          <a href="#"><img src="./img/Linkedin.svg" alt="LinkedIn" /></a>
+        </div>
+        <p>Rua das Flores, nº 255, Jardim Rosinha, SP, Brasil</p>
+        <p>
+          <i class="fas fa-phone-alt"></i> (11) 959343957 &nbsp;
+          <i class="fas fa-envelope"></i> melfy@gmail.com
+        </p>
+      </div>
+      <div class="footer-bottom">
+        <a href="#">Política de Privacidade</a>
+        <span>© Copyright, 2025</span>
+        <a href="#">Termos e Condições</a>
+      </div>
+    </footer>
+  `;
+
   headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
+  if (footerContainer) {
+    footerContainer.innerHTML = footerHTML;
+  }
 
   const linkPerfil = document.getElementById('link-perfil');
   if (linkPerfil) {

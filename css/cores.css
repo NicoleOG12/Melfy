@@ -1,8 +1,7 @@
 :root {
-  --cor-fundo: #ffffff;
-  --cor-texto: #333;
-  --cor-nome: #000000;
-  --cor-header: #FBDC2A;
+  --cor-branca: #ffffff;
+  --cor-cinza: #333;
+  --cor-preta: #000000;
   --cor-link: #573224;
   --cor-ativa: #ffa500;
   --cor-ativa2: #ff9900;

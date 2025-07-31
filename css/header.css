@@ -43,7 +43,7 @@ body::before {
 }
 
 .logo img {
-  height: 70px;
+  height: 100px;
   width: auto;
   animation: glow 2s ease-in-out infinite;
 }
@@ -62,7 +62,7 @@ nav {
     justify-content: left;
     align-items: center;
     flex-grow: 2;
-    margin-left: 400px;
+    margin-left: 500px;
 }
 
 nav a {
@@ -227,17 +227,6 @@ nav .active {
 .header-top {
   position: relative;
   height: 80px;
-}
-
-.logo {
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  transform: translateY(-50%);
-}
-
-.logo img {
-  height: 60px;
 }
 
 .menu-toggle {
