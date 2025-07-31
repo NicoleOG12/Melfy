@@ -115,8 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.modal-price').textContent = `R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}`;
       
         document.getElementById('qtd-value').textContent = 1;
-        document.getElementById('comentario').value = '';
-      
         document.getElementById('product-modal').style.display = 'flex';
     }
 
@@ -169,7 +167,6 @@ function adicionarNaSacola() {
     }
 
     const quantidadeAdicionada = parseInt(document.getElementById('qtd-value').textContent);
-    const comentario = document.getElementById('comentario').value.trim();
 
     const agora = new Date();
     const data = agora.toLocaleDateString();
@@ -191,8 +188,6 @@ function adicionarNaSacola() {
         itemExistente.quantidade += quantidadeAdicionada;
         itemExistente.valorTotal = itemExistente.quantidade * itemExistente.valorUnitario;
 
-        // Opcional: você pode sobrescrever o comentário, juntar os comentários ou manter o antigo
-        itemExistente.comentario = comentario || itemExistente.comentario;
         itemExistente.data = data;
         itemExistente.horario = horario;
     } else {
@@ -201,7 +196,6 @@ function adicionarNaSacola() {
             idProduto: produto.idProduto,
             idUsuario: usuarioLogado.id,
             quantidade: quantidadeAdicionada,
-            comentario,
             valorUnitario,
             valorTotal: valorTotalAdicionado,
             data,

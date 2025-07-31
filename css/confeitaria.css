@@ -222,7 +222,7 @@ h3 {
 }
 
 .border-card{
-  border: 2px solid rgba(255, 255, 255, 0.288);
+  border: 2px solid #53151554;
   border-radius: 16px;
   padding: 6px;
   background-color: rgba(255, 255, 255, 0.062);
@@ -425,25 +425,6 @@ h3 {
   margin-top: -5px;
 }
 
-.comentario{
-  color: var(--cor-footer-text);
-  font-size: 16px;
-  margin-top: -5px;
-}
-
-#comentario {
-  width: 90%;
-  min-height: 50px;
-  resize: none;
-  padding: 8px;
-  border-radius: 8px;
-  border: 2px solid var(--cor-card);
-  background-color: var(--cor-branca);
-  font-size: 14px;
-  overflow-y: hidden;
-  margin-top: -5px;
-}
-
 .modal-actions {
   display: flex;
   align-items: center;
@@ -502,7 +483,7 @@ h3 {
 
 .modal-close:hover {
   color: var(--cor-borda);
-}
+}  
 
 @media (max-width: 1024px) {
   nav {

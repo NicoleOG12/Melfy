@@ -55,8 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="iconuser">
           <a href="perfil.html" id="link-perfil"> 
-            <img src="./img/Perfil.svg" alt="Perfil" />
+            <i class="fas fa-user"></i>
           </a>
+          <p class= nomeuser> Nome </p>
         </div>
       </nav>
       <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
