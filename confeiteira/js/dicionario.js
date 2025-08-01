@@ -104,7 +104,7 @@ export const produtosPadrao = [
   {
       nome: "Éclairs",
       subtitulo: "Caixa com 7 éclairs sortidas",
-      categoria: "Éclairs",
+      categoria: "Éclair",
       descricao: "Caixa com 7 éclairs sortidas",
       peso: 210,
       preco: 133.00,
@@ -128,7 +128,7 @@ export const produtosPadrao = [
   {
       nome: "Brigadeiros",
       subtitulo: "Caixa com 6 brigadeiros",
-      categoria: "Brigadeiros",
+      categoria: "Brigadeiro",
       descricao: "Caixa com 6 brigadeiros de chocolate",
       peso: 90,
       preco: 15.00,
@@ -176,7 +176,7 @@ export const produtosPadrao = [
   {
       nome: "Mini Sonhos",
       subtitulo: "Sonhos tradicionais unidade",
-      categoria: "Sonhos",
+      categoria: "Sonho",
       descricao: "Sonhos tradicionais unidade",
       peso: 25,
       preco: 2.50,

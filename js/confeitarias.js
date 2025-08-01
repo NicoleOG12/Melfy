@@ -5,23 +5,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const cardsWrapper = document.querySelector('.cards-wrapper');
     const inputPesquisa = document.getElementById('search-input');
     const botaoPesquisa = document.getElementById('search-button');
-
-    function removerAcentos(str) {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-
+    
     function renderizarProdutos(listaProdutos) {
         cardsWrapper.innerHTML = '';
-
+    
         if (listaProdutos.length === 0) {
             cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
             return;
         }
-
+    
         listaProdutos.forEach(produto => {
             const idLojaProduto = parseInt(produto.idLoja);
             const loja = lojas.find(l => l.idLoja === idLojaProduto);
-
+    
             const card = document.createElement('div');
             card.classList.add('card');
             
@@ -29,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="border-card">
                     <div class="headerNovidade">
                         <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
-                        <span class="marca">${loja?.nomeLoja || 'Loja Desconhecida'}</span>
                     </div>
                     <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
                     <div class="descricao">
@@ -41,33 +36,32 @@ document.addEventListener("DOMContentLoaded", function () {
                             <span class="icone-preco">R$</span>
                             <span class="valor">${produto.preco}</span>
                         </div>
+                        <div class="btn-carrinho">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
                     </div>
                 </div>
-                
             `;
             
-            const nomeLojaElement = card.querySelector('.marca');
             const logoLojaElement = card.querySelector('.logoLoja');
-            
-            [nomeLojaElement, logoLojaElement].forEach(el => {
-                el.addEventListener('click', function (e) {
-                    e.stopPropagation(); 
-                    localStorage.setItem('idLojaSelecionada', loja.idLoja);
-                    window.location.href = 'loja.html';
-                });
+    
+            logoLojaElement.addEventListener('click', function (e) {
+                e.stopPropagation(); 
+                localStorage.setItem('idLojaSelecionada', loja.idLoja);
+                window.location.href = 'loja.html';
             });
-            
+    
             card.addEventListener('click', function (event) {
                 const isHeader = event.target.closest('.headerNovidade');
                 if (!isHeader) {
                     openModal(produto);
                 }
             });
-            
+    
             cardsWrapper.appendChild(card);
-
         });
     }
+
 
     function filtrarProdutos() {
         const termo = removerAcentos(inputPesquisa.value.trim().toLowerCase());
@@ -177,21 +171,17 @@ function adicionarNaSacola() {
 
     let sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
 
-    // Verifica se já existe o mesmo produto na sacola desse usuário
     const itemExistente = sacola.find(item =>
         item.idUsuario === usuarioLogado.id &&
         item.idProduto === produto.idProduto
     );
 
     if (itemExistente) {
-        // Atualiza a quantidade e o valor total
         itemExistente.quantidade += quantidadeAdicionada;
         itemExistente.valorTotal = itemExistente.quantidade * itemExistente.valorUnitario;
-
         itemExistente.data = data;
         itemExistente.horario = horario;
     } else {
-        // Adiciona um novo item
         sacola.push({
             idProduto: produto.idProduto,
             idUsuario: usuarioLogado.id,
@@ -203,12 +193,32 @@ function adicionarNaSacola() {
         });
     }
     localStorage.setItem('Sacola', JSON.stringify(sacola));
-
-    alert('Produto adicionado à sacola!');
+     
+    mostrarAnimacaoCarrinho(produto.categoria, produto.nome);
     fecharModal();
 }
 
+function mostrarAnimacaoCarrinho(categoria, nomeProduto) {
+    const animacao = document.getElementById('carrinho-animacao');
+    const img = document.getElementById('img-doce-animado');
+    const mensagem = document.getElementById('mensagem-sacola');
 
+    const nomeCategoria = categoria || localStorage.getItem('categoriaSelecionada') || 'Beijinho';
+    img.src = `./img/Categorias/${nomeCategoria}.svg`;
+    img.alt = nomeCategoria;
+
+    mensagem.textContent = `"${nomeProduto}" foi adicionado à sacola com sucesso!`;
+
+    img.classList.remove('img-doce-sacola');
+    void img.offsetWidth;
+    img.classList.add('img-doce-sacola');
+
+    animacao.style.display = 'flex';
+
+    setTimeout(() => {
+        animacao.style.display = 'none';
+    }, 3000);
+}
 
 function entrarPerfil() {
   let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
