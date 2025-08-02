@@ -286,6 +286,26 @@ nav .iconuser a:hover {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
+.contador-sacola {
+  position: absolute;
+  top: 0;  
+  right: 0;    
+  background-color: #ffbe3e; 
+  color: #7c5600;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: bold;
+  pointer-events: none;
+  user-select: none;
+  transform: translate(-80%, -20%); 
+}
+
+.iconbag {
+  position: relative;
+}
+
+
 @media (max-width: 768px) {
   nav {
     display: none;
