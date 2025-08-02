@@ -1,159 +1,193 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Melfy</title>
-    <link rel="stylesheet" href="./css/carrinho.css" />
-    <link rel="stylesheet" href="./css/header.css">
-    <link rel="stylesheet" href="./css/footer.css">
-    <link rel="stylesheet" href="./css/cores.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <script src="./js/carrinho.js"></script>
-    <script src="./js/toggle.js" defer></script>
-    <script src="./js/header.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Melfy</title>
+
+  <link rel="stylesheet" href="./css/carrinho.css" />
+  <link rel="stylesheet" href="./css/header.css" />
+  <link rel="stylesheet" href="./css/footer.css" />
+  <link rel="stylesheet" href="./css/cores.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <script src="./js/carrinho.js"></script>
+  <script src="./js/toggle.js" defer></script>
+  <script src="./js/header.js"></script>
 </head>
+
 <body>
   <div class="header-bg"></div>
   <div id="header"></div>
 
-<main>
-  <div class="carrinho">
-    <div class="page-title">Seu Carrinho</div>
+  <main>
+    <div class="carrinho">
+      <div class="page-title">Seu Carrinho</div>
 
-    <div class="content">
-      <div class="container">
-        <section>
-          <table>
-            <thead>
-              <tr>
-                <th>Produto</th>
-                <th>Preço</th>
-                <th>Quantidade</th>
-                <th>Total</th>
-                <th>-</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-carrinho"></tbody>
-          </table>
-        </section>
-      </div>
-      
-      <aside>
-        <div class="box-finalizar-compra">
-          <div class="conteudo">
-            <div>
-              <span>Subtotal</span> 
-              <span id="subtotal">R$ 0,00</span>
+      <div class="content">
+        <div class="container">
+          <section>
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Preço</th>
+                  <th>Quantidade</th>
+                  <th>Total</th>
+                  <th>-</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-carrinho"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <aside>
+          <div class="box-finalizar-compra">
+            <div class="conteudo">
+              <div>
+                <span>Subtotal</span>
+                <span id="subtotal">R$ 0,00</span>
+              </div>
+              <div>
+                <span>Taxa de entrega</span>
+                <span id="taxa-entrega">Gratuito</span>
+              </div>
+              <div>
+                <button class="btn-cupom">Add cupom de desconto</button>
+              </div>
             </div>
-            <div>
-              <span>Taxa de entrega</span> 
-              <span id="taxa-entrega">Gratuito</span>
-            </div>
-            <div>
-              <button class="btn-cupom">Add cupom de desconto</button>
+            <div class="rodape">
+              <span>Total</span>
+              <span id="total">R$ 0,00</span>
             </div>
           </div>
-          <div class="rodape">
-            <span>Total</span>
-            <span id="total">R$ 0,00</span>
+          <button class="btn-compra" onclick="abrirModalCompra()">Finalizar Compra</button>
+        </aside>
+      </div>
+    </div>
+
+    <h3 class="h3Novidades">Peça também</h3>
+    <div class="cards-wrapper"></div>
+
+    <div class="modal-overlay" id="product-modal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="fecharModalCompra()">×</button>
+        <img src="" alt="" class="modal-img" />
+        <div class="modal-info">
+          <div class="modal-header">
+            <div class="modal-loja">
+              <img src="" alt="Logo da loja" class="modal-logo" />
+              <span class="modal-nome-loja">Dama</span>
+              <span class="modal-avaliacoes">★ 4.8</span>
+            </div>
+          </div>
+          <h2 class="modal-title"></h2>
+          <p class="modal-subtitulo"></p>
+          <p class="modal-description"></p>
+          <p class="modal-peso"></p>
+          <p class="modal-price"></p>
+          <div class="modal-actions">
+            <div class="modal-quantity">
+              <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+              <span id="qtd-value">1</span>
+              <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+            </div>
+            <button class="btn-add">Adicionar</button>
           </div>
         </div>
-        <button class="btn-compra" onclick="abrirModal()">Finalizar Compra</button>
+      </div>
+    </div>
 
-      </aside> 
+    <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
+      <div class="animacao-conteudo">
+        <i class="fas fa-shopping-bag icone-sacola"></i>
+        <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
+        <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="modal-compra-buy" class="modal-overlay-buy" style="display:none;">
+    <div class="modal-content-buy">
+      <button class="modal-close-buy" onclick="fecharModalCompra()">×</button>
+      <div class="modal-info-buy">
+        <h2 class="modal-title-buy">Finalizar Compra</h2>
+
+        <div id="lista-produtos-compra" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; border-bottom: 1px solid var(--cor-botao-hover); padding-bottom: 15px;"></div>
+
+        <div style="margin-left: 570px; margin-top: -15px; font-family: 'Istok Web'; font-weight: bold; font-size: 20px; color: var(--cor-nome);">
+          Total: <span id="total-compra">R$ 0,00</span>
+        </div>
+
+        <div>
+          <h3 style="text-align: center;">Forma de Pagamento</h3>
+          <div class="formas-pagamento-buy" style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <label style="cursor:pointer; text-align:center;">
+              <input type="radio" name="pagamento-buy" value="dinheiro" checked style="display:none;" />
+              <img src="img/dinheiro.png" alt="Dinheiro" title="Dinheiro" style="width:40px;"/>
+              <div>Dinheiro</div>
+            </label>
+            <label style="cursor:pointer; text-align:center;">
+              <input type="radio" name="pagamento-buy" value="pix" style="display:none;" />
+              <img src="img/pix.png" alt="Pix" title="Pix" style="width:40px;"/>
+              <div>Pix</div>
+            </label>
+            <label style="cursor:pointer; text-align:center;">
+              <input type="radio" name="pagamento-buy" value="boleto" style="display:none;" />
+              <img src="img/boleto.png" alt="Boleto" title="Boleto" style="width:40px;"/>
+              <div>Boleto</div>
+            </label>
+            <label style="cursor:pointer; text-align:center;">
+              <input type="radio" name="pagamento-buy" value="cartao" style="display:none;" />
+              <img src="img/cartão.png" alt="Cartão" title="Cartão" style="width:40px;"/>
+              <div>Cartão</div>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="text-align: center;">Forma de Entrega</h3>
+          <div class="forma-entrega-buy">
+            <label style="margin-right: 20px; cursor:pointer;">
+              <input type="radio" name="entrega-buy" value="retirada" checked onchange="atualizarFreteCompra()" />
+              Retirada
+            </label>
+            <label style="cursor:pointer;">
+              <input type="radio" name="entrega-buy" value="delivery" onchange="atualizarFreteCompra()" />
+              Delivery
+            </label>
+          </div>
+        </div>
+
+        <div id="frete-info-buy" style="margin-top: 15px; display: none; font-weight: bold; color: var(--cor-footer-text);">
+          Taxa de Entrega: <span id="valor-frete-buy">R$ 0,00</span>
+        </div>
+
+        <br><br>
+        <div class="resumo-final-buy">
+          <div class="linha-resumo-buy">
+            <span>Total dos Produtos</span>
+            <span id="total-produtos-buy">R$ 0,00</span>
+          </div>
+          <div class="linha-resumo-buy">
+            <span>Total do Frete</span>
+            <span id="total-frete-buy">R$ 0,00</span>
+          </div>
+          <div class="linha-resumo-buy total-geral-buy">
+            <strong>Pagamento Total</strong>
+            <strong id="total-geral-buy">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <button class="btn-add-buy" style="margin-top: 30px;" onclick="finalizarCompra()">Confirmar Compra</button>
+      </div>
     </div>
   </div>
-  <h3 class="h3Novidades">Peça também</h3>
-  <div class="cards-wrapper"></div>
 
-  
-</main>
-
-<div id="product-modal" class="modal-overlay" style="display:none;">
-  <div class="modal-content">
-    <button class="modal-close" onclick="fecharModal()">×</button>
-    
-    <div class="modal-info">
-      
-      <h2 class="modal-title">Finalizar Compra</h2>
-      
-      <div id="lista-produtos-modal" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; border-bottom: 1px solid var(--cor-botao-hover); padding-bottom: 15px;">
-      </div>
-      
-      <div style=" margin-left: 570px; margin-top: -15px; font-family: 'Istok Web'; font-weight: bold; font-size: 20px; color: var(--cor-nome);">
-        Total: <span id="total-modal">R$ 0,00</span>
-      </div>
-      <div>
-        <h3 style="text-align: center;">Forma de Pagamento</h3>
-        <div class="formas-pagamento" style="display: flex; gap: 15px; margin-bottom: 20px;">
-          <label style="cursor:pointer; text-align:center;">
-            <input type="radio" name="pagamento" value="dinheiro" checked style="display:none;" />
-            <img src="img/dinheiro.png" alt="Dinheiro" title="Dinheiro" style="width:40px;"/>
-            <div>Dinheiro</div>
-          </label>
-          <label style="cursor:pointer; text-align:center;">
-            <input type="radio" name="pagamento" value="pix" style="display:none;" />
-            <img src="img/pix.png" alt="Pix" title="Pix" style="width:40px; "/>
-            <div>Pix</div>
-          </label>
-          <label style="cursor:pointer; text-align:center;">
-            <input type="radio" name="pagamento" value="boleto" style="display:none;" />
-            <img src="img/boleto.png" alt="Boleto" title="Boleto" style="width:40px;"/>
-            <div>Boleto</div>
-          </label>
-          <label style="cursor:pointer; text-align:center;">
-            <input type="radio" name="pagamento" value="cartao" style="display:none;" />
-            <img src="img/cartão.png" alt="Cartão" title="Cartão" style="width:40px; "/>
-            <div>Cartão</div>
-          </label>
-        </div>
-      </div>
-
-      <div>
-       <h3 style="text-align: center;">Forma de Entrega</h3>
-        <div class="forma-entrega">
-          <label style="margin-right: 20px; cursor:pointer;">
-            <input type="radio" name="entrega" value="retirada" checked onchange="atualizarFrete()" />
-            Retirada
-          </label>
-          <label style="cursor:pointer;">
-            <input type="radio" name="entrega" value="delivery" onchange="atualizarFrete()" />
-            Delivery
-          </label>
-
-        </div>
-      </div>
-
-      <div id="frete-info" style="margin-top: 15px; display: none; font-weight: bold; color: var(--cor-footer-text);">
-        Taxa de Entrega: <span id="valor-frete">R$ 0,00</span>
-      </div>
-
-      <br><br>
-      <div class="resumo-final">
-        <div class="linha-resumo">
-          <span>Total dos Produtos</span>
-          <span id="total-produtos">R$ 0,00</span>
-        </div>
-        <div class="linha-resumo">
-          <span>Total do Frete</span>
-          <span id="total-frete">R$ 0,00</span>
-        </div>
-        <div class="linha-resumo total-geral">
-          <strong>Pagamento Total</strong>
-          <strong id="total-geral">R$ 0,00</strong>
-        </div>
-      </div>
-      <button class="btn-add" style="margin-top: 30px;" onclick="finalizarCompra()">Confirmar Compra</button>
-    </div>
-    
-  </div>
-</div>
-
-<div id="footer"></div>
-
+  <div id="footer"></div>
 </body>
 </html>

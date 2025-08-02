@@ -340,12 +340,12 @@ h3 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(83, 21, 21, 0.6); /* um fundo semi-transparente escuro para foco */
+  background-color: rgba(83, 21, 21, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  backdrop-filter: blur(6px); /* desfoque de fundo para suavizar */
+  backdrop-filter: blur(6px);
 }
 
 #product-modal {
@@ -355,7 +355,7 @@ h3 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: transparent; /* já tem no overlay */
+  background-color: transparent;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -363,10 +363,10 @@ h3 {
 
 .modal-content {
   position: relative;
-  background: #fffaf0; /* tom claro e quente */
+  background: #fffaf0;
   padding: 30px 40px;
   border-radius: 25px;
-  border: 3px solid #ffbe3e; /* laranja suave */
+  border: 3px solid #ffbe3e; 
   width: 850px;
   max-width: 95%;
   display: flex;
