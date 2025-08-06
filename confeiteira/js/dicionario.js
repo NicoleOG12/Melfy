@@ -62,6 +62,167 @@ export const dadosIniciais = [
       conta: "55667788",
       tipoConta: "Poupança"
     }
+  },
+
+  {
+    id: 5,
+    nome: "Eduarda Costa",
+    cpf_cnpj: "234.567.890-11",
+    nascimento: "1997-05-21",
+    endereco: "Rua das Margaridas, 500 - Curitiba",
+    celular: "(41) 99876-1234",
+    email: "eduarda@melfy.com",
+    senha: "eduarda123",
+    dadosBancarios: {
+      banco: "Itaú",
+      agencia: "1122",
+      conta: "33445566",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 6,
+    nome: "Fernanda Ribeiro",
+    cpf_cnpj: "345.678.901-22",
+    nascimento: "1993-11-03",
+    endereco: "Av. Independência, 350 - Recife",
+    celular: "(81) 91234-5678",
+    email: "fernanda@melfy.com",
+    senha: "fernanda123",
+    dadosBancarios: {
+      banco: "Bradesco",
+      agencia: "3344",
+      conta: "77889900",
+      tipoConta: "Poupança"
+    }
+  },
+  {
+    id: 7,
+    nome: "Gustavo Nunes",
+    cpf_cnpj: "456.789.012-33",
+    nascimento: "1986-02-09",
+    endereco: "Rua do Sol, 123 - Porto Alegre",
+    celular: "(51) 99876-5432",
+    email: "gustavo@melfy.com",
+    senha: "gustavo123",
+    dadosBancarios: {
+      banco: "Caixa Econômica",
+      agencia: "5566",
+      conta: "99887766",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 8,
+    nome: "Helena Martins",
+    cpf_cnpj: "567.890.123-44",
+    nascimento: "2000-01-01",
+    endereco: "Av. das Nações, 700 - Brasília",
+    celular: "(61) 91111-2222",
+    email: "helena@melfy.com",
+    senha: "helena123",
+    dadosBancarios: {
+      banco: "Banco do Brasil",
+      agencia: "6677",
+      conta: "44332211",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 9,
+    nome: "Isabela Ferreira",
+    cpf_cnpj: "678.901.234-55",
+    nascimento: "1998-08-08",
+    endereco: "Rua Flor de Lis, 99 - Salvador",
+    celular: "(71) 93456-7890",
+    email: "isabela@melfy.com",
+    senha: "isabela123",
+    dadosBancarios: {
+      banco: "Santander",
+      agencia: "7788",
+      conta: "12344321",
+      tipoConta: "Poupança"
+    }
+  },
+  {
+    id: 10,
+    nome: "Juliana Almeida",
+    cpf_cnpj: "789.012.345-66",
+    nascimento: "1991-06-15",
+    endereco: "Rua das Palmeiras, 321 - Manaus",
+    celular: "(92) 94567-8901",
+    email: "juliana@melfy.com",
+    senha: "juliana123",
+    dadosBancarios: {
+      banco: "Itaú",
+      agencia: "8899",
+      conta: "56785678",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 11,
+    nome: "Lucas Pereira",
+    cpf_cnpj: "890.123.456-77",
+    nascimento: "1985-12-22",
+    endereco: "Av. Amazonas, 1200 - Fortaleza",
+    celular: "(85) 91234-5678",
+    email: "lucas@melfy.com",
+    senha: "lucas123",
+    dadosBancarios: {
+      banco: "Bradesco",
+      agencia: "9911",
+      conta: "11221122",
+      tipoConta: "Poupança"
+    }
+  },
+  {
+    id: 12,
+    nome: "Mariana Sousa",
+    cpf_cnpj: "901.234.567-88",
+    nascimento: "1994-03-10",
+    endereco: "Rua das Acácias, 100 - Florianópolis",
+    celular: "(48) 98765-4321",
+    email: "mariana@melfy.com",
+    senha: "mariana123",
+    dadosBancarios: {
+      banco: "Caixa Econômica",
+      agencia: "3344",
+      conta: "55665566",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 13,
+    nome: "Paulo Silva",
+    cpf_cnpj: "012.345.678-99",
+    nascimento: "1979-09-05",
+    endereco: "Rua das Oliveiras, 400 - Belo Horizonte",
+    celular: "(31) 99887-7766",
+    email: "paulo@melfy.com",
+    senha: "paulo123",
+    dadosBancarios: {
+      banco: "Banco do Brasil",
+      agencia: "4455",
+      conta: "66778899",
+      tipoConta: "Corrente"
+    }
+  },
+  {
+    id: 14,
+    nome: "Renata Carvalho",
+    cpf_cnpj: "123.456.789-11",
+    nascimento: "1996-07-18",
+    endereco: "Av. Paulista, 1500 - São Paulo",
+    celular: "(11) 91122-3344",
+    email: "renata@melfy.com",
+    senha: "renata123",
+    dadosBancarios: {
+      banco: "Santander",
+      agencia: "5566",
+      conta: "99887755",
+      tipoConta: "Poupança"
+    }
   }
 ];
 
@@ -97,6 +258,87 @@ export const lojasIniciais = [
     descricao: "Brownies, cookies e sobremesas de potinho irresistíveis.",
     fotoPerfil: "img/Lojas/Barcelle.png",
     idConfeiteira: "4"
+  },
+
+  {
+    idLoja: 5,
+    nomeLoja: "Doce Mania",
+    horario: "08:00 - 19:00",
+    descricao: "Delícias doces feitas com ingredientes naturais.",
+    fotoPerfil: "img/Lojas/Doce Mania.svg",
+    idConfeiteira: "5"
+  },
+  {
+    idLoja: 6,
+    nomeLoja: "Sabores da Vovó",
+    horario: "09:00 - 21:00",
+    descricao: "Doces caseiros com sabor de infância.",
+    fotoPerfil: "img/Lojas/Sabores da Vovó.svg",
+    idConfeiteira: "6"
+  },
+  {
+    idLoja: 7,
+    nomeLoja: "Delícias do Campo",
+    horario: "07:00 - 17:00",
+    descricao: "Receitas tradicionais e artesanais.",
+    fotoPerfil: "img/Lojas/Delícias do Campo.svg",
+    idConfeiteira: "7"
+  },
+  {
+    idLoja: 8,
+    nomeLoja: "Bella Confeitaria ",
+    horario: "10:00 - 18:00",
+    descricao: "Doces finos para ocasiões especiais.",
+    fotoPerfil: "img/Lojas/Bella Confeitaria.svg",
+    idConfeiteira: "8"
+  },
+  {
+    idLoja: 9,
+    nomeLoja: "Caramelo Doces",
+    horario: "08:30 - 20:00",
+    descricao: "Doces gourmets e sobremesas exclusivas.",
+    fotoPerfil: "img/Lojas/Caramelo Doces.svg",
+    idConfeiteira: "9"
+  },
+  {
+    idLoja: 10,
+    nomeLoja: "Cantinho Doce",
+    horario: "09:00 - 19:30",
+    descricao: "Delícias para adoçar o seu dia.",
+    fotoPerfil: "img/Lojas/Cantinho Doce.svg",
+    idConfeiteira: "10"
+  },
+  {
+    idLoja: 11,
+    nomeLoja: "Sabor & Arte",
+    horario: "08:00 - 18:30",
+    descricao: "Combinação perfeita de sabor e beleza.",
+    fotoPerfil: "img/Lojas/Sabor & Arte.svg",
+    idConfeiteira: "11"
+  },
+  {
+    idLoja: 12,
+    nomeLoja: "Cheiro Suave",
+    horario: "10:00 - 22:00",
+    descricao: "Doces sofisticados e irresistíveis.",
+    fotoPerfil: "img/Lojas/Cheiro Suave.svg",
+    idConfeiteira: "12"
+  },
+  {
+    idLoja: 13,
+    nomeLoja: "Doce Encanto",
+    horario: "07:00 - 16:00",
+    descricao: "Encantando com doces artesanais.",
+    fotoPerfil: "img/Lojas/Doce Encanto.svg",
+    idConfeiteira: "13"
+  },
+  {
+    idLoja: 14,
+    nomeLoja: "Sonho Doce",
+    horario: "09:00 - 20:00",
+    descricao: "Sonhos e doces que derretem na boca.",
+    fotoPerfil: "img/Lojas/Sonho Doce.svg",
+    idConfeiteira: "14"
   }
 ];
 
@@ -210,9 +452,9 @@ export const produtosPadrao = [
       idProduto: 9
   },
   {
-      nome: "Romcabole Red Velvet",
+      nome: "Rocambole Red Velvet",
       subtitulo: "Recheado com geléia de amoras",
-      categoria: "Romcabole", 
+      categoria: "Rocambole", 
       descricao: "Recheado com geléia de amoras",
       peso: 600, 
       preco: 120.00,
@@ -220,6 +462,131 @@ export const produtosPadrao = [
       idLoja: "1", 
       idConfeiteira: "1", 
       idProduto: 10 
+  },
+
+  {
+    nome: "Torta de Limão",
+    subtitulo: "Torta com recheio de limão siciliano",
+    categoria: "Torta",
+    descricao: "Deliciosa torta com creme de limão siciliano e base crocante",
+    peso: 500,
+    preco: 45.00,
+    foto: "./img/Torta de Limão.svg",
+    idLoja: "5",
+    idConfeiteira: "5",
+    idProduto: 11
+  },
+  {
+    nome: "Trufa de Chocolate",
+    subtitulo: "Caixa com 12 trufas sortidas",
+    categoria: "Bombons",
+    descricao: "Trufas cremosas com cobertura de cacau",
+    peso: 200,
+    preco: 35.00,
+    foto: "./img/Trufas de Chocolate.svg",
+    idLoja: "6",
+    idConfeiteira: "6",
+    idProduto: 12
+  },
+
+  {
+    nome: "Churros Recheado",
+    subtitulo: "Vários Recheios",
+    categoria: "Churros",
+    descricao: "Churros Recheados com vários sabores",
+    peso: 300,
+    preco: 15.00,
+    foto: "./img/Churros Recheado.svg",
+    idLoja: "10",
+    idConfeiteira: "10",
+    idProduto: 13
+  },
+  
+  {
+    nome: "Cupcake Red Velvet",
+    subtitulo: "Cupcake com cobertura de cream cheese",
+    categoria: "Cupcake",
+    descricao: "Clássico cupcake red velvet com cobertura de cream cheese",
+    peso: 80,
+    preco: 12.00,
+    foto: "./img/Cupcake Red Velvet.svg",
+    idLoja: "8",
+    idConfeiteira: "8",
+    idProduto: 14
+  },
+  {
+    nome: "Pão de Mel",
+    subtitulo: "Pão de mel recheado com doce de leite",
+    categoria: "Pão de Mel",
+    descricao: "Pão de mel macio com recheio cremoso",
+    peso: 100,
+    preco: 10.00,
+    foto: "./img/Pão de Mel.svg",
+    idLoja: "9",
+    idConfeiteira: "9",
+    idProduto: 15
+  },
+
+  {
+    nome: "Cheesecake de Framboesa",
+    subtitulo: "Cheesecake com cobertura de framboesa",
+    categoria: "Cheesecake",
+    descricao: "Delicioso cheesecake com base crocante e cobertura de framboesa",
+    peso: 600,
+    preco: 195.00,
+    foto: "./img/Cheesecake Framboesa.svg",
+    idLoja: "7",
+    idConfeiteira: "7",
+    idProduto: 16
+  },
+  
+  {
+    nome: "Mousse de Maracujá",
+    subtitulo: "Mousse leve e refrescante",
+    categoria: "Mousse",
+    descricao: "Mousse de maracujá com toque cítrico",
+    peso: 150,
+    preco: 18.00,
+    foto: "./img/Mousse de Maracujá.svg",
+    idLoja: "11",
+    idConfeiteira: "11",
+    idProduto: 17
+  },
+  {
+    nome: "Bolo de Cenoura",
+    subtitulo: "Bolo caseiro com cobertura de chocolate",
+    categoria: "Bolo",
+    descricao: "Bolo fofinho de cenoura com cobertura de chocolate",
+    peso: 800,
+    preco: 70.00,
+    foto: "./img/Bolo de Cenoura.svg",
+    idLoja: "12",
+    idConfeiteira: "12",
+    idProduto: 18
+  },
+  {
+    nome: "Quindim",
+    subtitulo: "Doce tradicional brasileiro",
+    categoria: "Quindim",
+    descricao: "Quindim com sabor autêntico e textura cremosa",
+    peso: 90,
+    preco: 8.00,
+    foto: "./img/Quindim.svg",
+    idLoja: "13",
+    idConfeiteira: "13",
+    idProduto: 19
+  },
+  {
+    nome: "Macarons",
+    subtitulo: "Macarons Coloridos e Recheados",
+    categoria: "Macarons",
+    descricao: "Macarons Coloridos e Recheados",
+    peso: 50,
+    preco: 10.00,
+    foto: "./img/Macarons.svg",
+    idLoja: "14",
+    idConfeiteira: "14",
+    idProduto: 20
   }
 ];
 

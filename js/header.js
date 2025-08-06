@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 
   headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
+  
   if (footerContainer) {
     footerContainer.innerHTML = `
       <footer class="footer">
@@ -112,23 +113,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nomeUserElem) nomeUserElem.textContent = usuarioLogado.nome || 'Usuário';
   }
 
-  function atualizarContadorSacola() {
-    const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
+  window.atualizarContadorSacola = function () {
     if (!usuarioLogado) return;
+    const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
     const totalItens = sacola
       .filter(item => item.idUsuario === usuarioLogado.id)
       .reduce((acc, item) => acc + item.quantidade, 0);
+
     const contador = document.getElementById('contador-sacola');
     if (!contador) return;
+
     if (totalItens > 0) {
       contador.textContent = totalItens;
       contador.style.display = 'inline-block';
     } else {
       contador.style.display = 'none';
     }
-  }
+  };
 
   atualizarContadorSacola();
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'Sacola') {
+      atualizarContadorSacola();
+    }
+  });
 
   const linkPerfil = document.getElementById('link-perfil');
   if (linkPerfil) {
