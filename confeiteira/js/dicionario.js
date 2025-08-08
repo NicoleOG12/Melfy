@@ -343,6 +343,18 @@ export const lojasIniciais = [
 ];
 
 export const produtosPadrao = [
+    {
+      nome: "Alfajor",
+      subtitulo: "Caixa com 12 unidades",
+      categoria: "Alfajor",
+      descricao: "Delicioso alfajor artesanal recheado com doce de leite argentino e coberto com chocolate ao leite",
+      peso: 60,
+      preco: 144.00,
+      foto: "./img/Alfajor.svg",
+      idLoja: "10",
+      idConfeiteira: "10",
+      idProduto: 1
+  },
   {
       nome: "Éclairs",
       subtitulo: "Caixa com 7 éclairs sortidas",
@@ -353,7 +365,7 @@ export const produtosPadrao = [
       foto: "./img/Eclairs.svg",
       idLoja: "1",
       idConfeiteira: "1",
-      idProduto: 1
+      idProduto: 2
   },
   {
       nome: "Bombons",
@@ -365,7 +377,7 @@ export const produtosPadrao = [
       foto: "./img/Bombons.svg",
       idLoja: "2",
       idConfeiteira: "2",
-      idProduto: 2
+      idProduto: 3
   },
   {
       nome: "Brigadeiros",
@@ -377,7 +389,7 @@ export const produtosPadrao = [
       foto: "./img/Brigadeiros.svg",
       idLoja: "3",
       idConfeiteira: "3",
-      idProduto: 3
+      idProduto: 4
   },
   {
       nome: "Brownie ninho e nutella",
@@ -389,7 +401,7 @@ export const produtosPadrao = [
       foto: "./img/Brownie de Ninho.svg",
       idLoja: "4",
       idConfeiteira: "4",
-      idProduto: 4
+      idProduto: 5
   },
   {
       nome: "Cookies Recheados",
@@ -401,7 +413,7 @@ export const produtosPadrao = [
       foto: "./img/Cookies de Chocolate.svg",
       idLoja: "2",
       idConfeiteira: "2",
-      idProduto: 5
+      idProduto: 6
   },
   {
       nome: "Pudim",
@@ -413,7 +425,7 @@ export const produtosPadrao = [
       foto: "./img/Pudim.svg",
       idLoja: "4",
       idConfeiteira: "4",
-      idProduto: 6
+      idProduto: 7
   },
   {
       nome: "Mini Sonhos",
@@ -425,7 +437,7 @@ export const produtosPadrao = [
       foto: "./img/Mini Sonhos.svg",
       idLoja: "1",
       idConfeiteira: "1",
-      idProduto: 7
+      idProduto: 8
   },
   {
       nome: "Cheescake de Morango",
@@ -437,7 +449,7 @@ export const produtosPadrao = [
       foto: "./img/Cheescake.svg",
       idLoja: "3",
       idConfeiteira: "3",
-      idProduto: 8
+      idProduto: 9
   },
   {
       nome: "Pavê de Chocolates",
@@ -449,7 +461,7 @@ export const produtosPadrao = [
       foto: "./img/Pave.svg",
       idLoja: "1",
       idConfeiteira: "1",
-      idProduto: 9
+      idProduto: 10
   },
   {
       nome: "Rocambole Red Velvet",
@@ -461,9 +473,8 @@ export const produtosPadrao = [
       foto: "./img/Romcabole.svg",
       idLoja: "1", 
       idConfeiteira: "1", 
-      idProduto: 10 
+      idProduto: 11
   },
-
   {
     nome: "Torta de Limão",
     subtitulo: "Torta com recheio de limão siciliano",
@@ -474,7 +485,7 @@ export const produtosPadrao = [
     foto: "./img/Torta de Limão.svg",
     idLoja: "5",
     idConfeiteira: "5",
-    idProduto: 11
+    idProduto: 12
   },
   {
     nome: "Trufa de Chocolate",
@@ -486,9 +497,8 @@ export const produtosPadrao = [
     foto: "./img/Trufas de Chocolate.svg",
     idLoja: "6",
     idConfeiteira: "6",
-    idProduto: 12
+    idProduto: 13
   },
-
   {
     nome: "Churros Recheado",
     subtitulo: "Vários Recheios",
@@ -499,9 +509,8 @@ export const produtosPadrao = [
     foto: "./img/Churros Recheado.svg",
     idLoja: "10",
     idConfeiteira: "10",
-    idProduto: 13
+    idProduto: 14
   },
-  
   {
     nome: "Cupcake Red Velvet",
     subtitulo: "Cupcake com cobertura de cream cheese",
@@ -512,7 +521,7 @@ export const produtosPadrao = [
     foto: "./img/Cupcake Red Velvet.svg",
     idLoja: "8",
     idConfeiteira: "8",
-    idProduto: 14
+    idProduto: 15
   },
   {
     nome: "Pão de Mel",
@@ -524,9 +533,8 @@ export const produtosPadrao = [
     foto: "./img/Pão de Mel.svg",
     idLoja: "9",
     idConfeiteira: "9",
-    idProduto: 15
+    idProduto: 16
   },
-
   {
     nome: "Cheesecake de Framboesa",
     subtitulo: "Cheesecake com cobertura de framboesa",
@@ -537,9 +545,8 @@ export const produtosPadrao = [
     foto: "./img/Cheesecake Framboesa.svg",
     idLoja: "7",
     idConfeiteira: "7",
-    idProduto: 16
+    idProduto: 17
   },
-  
   {
     nome: "Mousse de Maracujá",
     subtitulo: "Mousse leve e refrescante",
@@ -550,7 +557,7 @@ export const produtosPadrao = [
     foto: "./img/Mousse de Maracujá.svg",
     idLoja: "11",
     idConfeiteira: "11",
-    idProduto: 17
+    idProduto: 18
   },
   {
     nome: "Bolo de Cenoura",
@@ -562,7 +569,7 @@ export const produtosPadrao = [
     foto: "./img/Bolo de Cenoura.svg",
     idLoja: "12",
     idConfeiteira: "12",
-    idProduto: 18
+    idProduto: 19
   },
   {
     nome: "Quindim",
@@ -574,7 +581,7 @@ export const produtosPadrao = [
     foto: "./img/Quindim.svg",
     idLoja: "13",
     idConfeiteira: "13",
-    idProduto: 19
+    idProduto: 20
   },
   {
     nome: "Macarons",
@@ -586,8 +593,117 @@ export const produtosPadrao = [
     foto: "./img/Macarons.svg",
     idLoja: "14",
     idConfeiteira: "14",
-    idProduto: 20
-  }
+    idProduto: 21
+  },
+  {
+    nome: "Banoffe",
+    subtitulo: "Torta de banana com doce de leite e chantilly",
+    categoria: "Banoffe",
+    descricao: "Clássica sobremesa Banoffe com base crocante",
+    peso: 500,
+    preco: 35.00,
+    foto: "./img/Banoffe.svg",
+    idLoja: "14",
+    idConfeiteira: "14",
+    idProduto: 22
+  },
+  {
+    nome: "Croissant Recheado",
+    subtitulo: "Croissant com recheio de frutas vermelhas",
+    categoria: "Croissant Recheado",
+    descricao: "Croissant artesanal com recheio de frutas vermelhas",
+    peso: 130,
+    preco: 18.00,
+    foto: "./img/Croissant de Frutas Vermelhas.svg",
+    idLoja: "8",
+    idConfeiteira: "8",
+    idProduto: 23
+  },
+  {
+    nome: "Cake Pop",
+    subtitulo: "Bolinhos no palito cobertos com chocolate",
+    categoria: "Cake Pop",
+    descricao: "Coloridos e divertidos, ideais para festas",
+    peso: 80,
+    preco: 8.00,
+    foto: "./img/Cake pop.svg",
+    idLoja: "5",
+    idConfeiteira: "5",
+    idProduto: 24
+  },
+  {
+    nome: "Tiramisu",
+    subtitulo: "Sobremesa italiana com café e mascarpone",
+    categoria: "Tiramisu",
+    descricao: "Clássico italiano em versão individual",
+    peso: 120,
+    preco: 22.00,
+    foto: "./img/Tiramisu.svg",
+    idLoja: "7",
+    idConfeiteira: "7",
+    idProduto: 25
+  },
+  {
+    nome: "Beijinho",
+    subtitulo: "Doce de coco com leite condensado",
+    categoria: "Beijinho",
+    descricao: "Tradicional docinho de festa brasileiro",
+    peso: 25,
+    preco: 2.00,
+    foto: "./img/Beijinho.svg",
+    idLoja: "14",
+    idConfeiteira: "14",
+    idProduto: 26
+  },
+  {
+    nome: "Bomba de Morango",
+    subtitulo: "Recheado com brigadeiro e banhado no chocolate",
+    categoria: "Bomba de Morango",
+    descricao: "Bomba recheado com brigadeiro, morango e banhado no chocolate",
+    peso: 150,
+    preco: 10.00,
+    foto: "./img/Bomba de Morango.svg",
+    idLoja: "11",
+    idConfeiteira: "11",
+    idProduto: 27
+  },
+  {
+    nome: "Chocolate de Dubai",
+    subtitulo: "Barra recheada com kadayif e pistache",
+    categoria: "Chocolate de Dubai",
+    descricao: "Barra de chocolate recheada com kadayif e um creme de pistache e tahine",
+    peso: 150,
+    preco: 55.00,
+    foto: "./img/Chocolate de Dubai.svg",
+    idLoja: "3",
+    idConfeiteira: "3",
+    idProduto: 28
+  },
+  {
+    nome: "Morango do Amor",
+    subtitulo: "Morango com Brigadeiro de Ninho",
+    categoria: "Morango do Amor",
+    descricao: "Morango com Brigadeiro de Ninho banhado no caramelo, viral das redes sociais!",
+    peso: 100,
+    preco: 15.00,
+    foto: "./img/Morango do amor.svg",
+    idLoja: "2",
+    idConfeiteira: "2",
+    idProduto: 29
+  },
+  {
+    nome: "Morango do Amor de Maracujá",
+    subtitulo: "Brigadeiro de Maracujá",
+    categoria: "Morango do Amor",
+    descricao: "Morango com Brigadeiro de Maracujá banhado no caramelo",
+    peso: 100,
+    preco: 18.00,
+    foto: "./img/Morango de Maracujá.svg",
+    idLoja: "10",
+    idConfeiteira: "10",
+    idProduto: 30
+  },
+
 ];
 
 export function carregarTodosOsDados() {

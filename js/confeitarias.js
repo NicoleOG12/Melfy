@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    listaProdutos.forEach(produto => {
+    const listaInvertida = [...listaProdutos].reverse();
+
+    listaInvertida.forEach(produto => {
       const idLojaProduto = parseInt(produto.idLoja);
       const loja = lojas.find(l => l.idLoja === idLojaProduto);
 
