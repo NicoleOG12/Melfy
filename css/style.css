@@ -102,7 +102,7 @@
 .desserts-container {
   position: absolute;
   top: 20px;
-  right: -60px;
+  right: 0px;
   width: 70%;
   height: 100%;
   border-width: 1px;
@@ -114,9 +114,9 @@
   text-align: center;
   border: 2px solid var(--cor-preco-icone);
   padding: 5px;
+  margin-left: 60px;
   border-radius: 50%;
   width: 150px;
-  right: 50%;
   transition: all 1000ms;
   height: 150px;
   background-color: rgba(255, 255, 255, 0.096);
