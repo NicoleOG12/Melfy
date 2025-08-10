@@ -1,21 +1,21 @@
 .titulo {
   font-family: "Istok Web", sans-serif;
-  font-size: 40px;
-  color: var(--cor-destaque);
+  font-size: 50px;
+  color: #ffd900;
   text-shadow:
     -1px 1px 0 var(--cor-destaque),  
      1px 1px 0 var(--cor-destaque),
     -1px 1px 0 var(--cor-destaque),
      1px 1px 0 var(--cor-destaque);
   text-align: center;
-  margin-top: 40px;
+  margin-top: 80px;
 }
 
 .subTitulo{
     font-family: "Istok Web", sans-serif;
     font-size: 20px;
     text-align: center;
-    margin-top: -40px;
+    margin-top: -60px;
     color: var(--cor-contraste);
 }
 
@@ -28,7 +28,7 @@
     width: 100%;
     max-width: 800px;
     margin-bottom: 15px;
-    margin-top: -140px;
+    margin-top: -180px;
 }
 
 .pesquisa input {
@@ -99,7 +99,7 @@
 
 .card {
   background: linear-gradient(145deg, var(--cor-pastel-card), #fff0e1);
-  border: 2px solid #ffd4b8;
+  border: 2px solid #ffd900;
   padding: 15px;
   margin-bottom: 30px;
   border-radius: 20px;
