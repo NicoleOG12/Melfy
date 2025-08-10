@@ -8,11 +8,16 @@ main {
 
 .titulo {
   font-family: "Istok Web", sans-serif;
-  font-size: 40px;
+  font-size: 50px;
   margin-bottom: 10px;
-  color: var(--cor-link);
   text-align: center;
   width: 100%;
+  color: #ffe44b;
+  text-shadow:
+    -1px 1px 0 var(--cor-destaque),  
+     1px 1px 0 var(--cor-destaque),
+    -1px 1px 0 var(--cor-destaque),
+     1px 1px 0 var(--cor-destaque);
 }
   
 .container {
@@ -57,7 +62,7 @@ input {
   
 .link {
   font-size: 14px;
-  color: var(--cor-container);
+  color: #3a170a;
   margin-bottom: 40px;
   margin-left: 260px;
 }
