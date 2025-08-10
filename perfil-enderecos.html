@@ -17,31 +17,12 @@
 
 <body>
   <div class="header-bg"></div>
-  <header>
-    <div class="logo">
-      <img src="img/Melfy-versão final.svg" alt="Logo" />
-    </div>
-    <nav>
-      <a href="home.html">Home</a>
-      <a href="confeitarias.html">Produtos</a>
-      <a href="pedidos.html">Meus Pedidos</a>
-      <div class="iconbag">
-        <a href="carrinho.html"><i class="fas fa-shopping-bag"></i></a>
-      </div>
-      <div class="iconuser">
-        <a href="perfil.html"><img src="./img/Perfil.svg" alt=""></a>
-      </div>
-    </nav>
-    <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
-      <div class="toggle-icon"></div>
-    </div>
-  </header>
+  <div id="header"></div>
 
   <h1 class="main-title">Perfil</h1>
 
   <div class="container">
     <div class="item">
-      <!-- CONTAINER TÓPICOS DO PERFIL -->
       <div class="item-container-perfil">
         <img src="img/cute-bee-design.avif" alt="" id="image-profile">
         <div class="item-nome-email">
@@ -64,7 +45,6 @@
       </div>
     </div>
 
-    <!-- CONTAINER INPUTS MEUS DADOS -->
     <div class="item container-meus-dados">
       <h1 id="title-meus-dados">Endereços</h1>
       <div class="item-meus-dados-flex">
@@ -116,7 +96,6 @@
                           <option value="SP">São Paulo</option>
                           <option value="RJ">Rio de Janeiro</option>
                           <option value="MG">Minas Gerais</option>
-                          <!-- outros estados -->
                         </select>
                       </div>
                     </div>
@@ -213,6 +192,6 @@
 
 <div id="footer"></div>
 
-  <script src="./js/perfil-enderecos.js"></script>
+<script src="./js/perfil-enderecos.js"></script>
 </body>
 </html>
