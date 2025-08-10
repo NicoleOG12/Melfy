@@ -9,12 +9,18 @@ main {
 
 .page-title {
   font-family: 'Istok Web', sans-serif;
-  font-size: 40px;
+  font-size: 50px;
   padding: 50px 0;
-  color: var(--cor-link);
+  color: #ffd900;
+  text-shadow:
+    -1px 1px 0 var(--cor-destaque),  
+     1px 1px 0 var(--cor-destaque),
+    -1px 1px 0 var(--cor-destaque),
+     1px 1px 0 var(--cor-destaque);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-align: center;
+  margin-top: 30px;
 }
 
 .content {
@@ -302,7 +308,6 @@ input[type="checkbox"] {
   object-fit: cover;
 }
 
-/* Pecça Também */
 .h3Novidades {
   font-family: "Istok Web", sans-serif;
   color: var(--cor-link);

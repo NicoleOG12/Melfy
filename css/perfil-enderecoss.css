@@ -103,6 +103,12 @@ a{
     text-align: left;
     margin-top: 5%;
     font-size: 40px;
+    color: #ffd900;
+  text-shadow:
+    -1px 1px 0 var(--cor-destaque),  
+     1px 1px 0 var(--cor-destaque),
+    -1px 1px 0 var(--cor-destaque),
+     1px 1px 0 var(--cor-destaque);
 }
 
 #title-meus-dados{
@@ -126,12 +132,16 @@ h1{
 
 }
 
-.container-meus-dados{
-    display: flex;
-    border: 2px solid yellow;
-    background-color: transparent;
-    width: 100vh;
-    justify-content: center;
+.container-meus-dados {
+  display: flex;
+  border: 2px solid yellow;
+  background-color: rgba(255, 255, 255, 0.15); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); 
+  width: 100vh;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 20px; 
 }
 
 .item-meus-dados-flex{
