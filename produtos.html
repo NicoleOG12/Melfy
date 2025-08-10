@@ -1,124 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/produtos.css">
-    <link rel="stylesheet" href="./css/header.css">
-    <link rel="stylesheet" href="./css/footer.css">
-    <link rel="stylesheet" href="./css/cores.css">
-    <script src="./js/produto.js"></script>
-    <script src="./js/carrossel.js" defer></script>
-    <script src="./js/toggle.js" defer></script>
-    <script src="./js/header.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Melfy</title>
+  <link rel="stylesheet" href="./css/produtos.css" />
+  <link rel="stylesheet" href="./css/header.css" />
+  <link rel="stylesheet" href="./css/footer.css" />
+  <link rel="stylesheet" href="./css/cores.css" />
 
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <script src="./js/produto.js" defer></script>
+  <script src="./js/toggle.js" defer></script>
+  <script src="./js/header.js" defer></script>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
 </head>
 
 <body>
   <div class="header-bg"></div>
   <div id="header"></div>
-    <!-- #region Barra Pesquisar e botão filtr -->
 
-    <div class="inicio-botao-pesquisar">
-      <div class="filtro">
-        <button class="button-filtro">Filtro </button>
-        <i class='bx  bx-slider'  ></i>
+  <div class="inicio-botao-pesquisar" style="display:flex; justify-content:center; align-items:center; gap:12px; padding: 15px 20px;">
+    <section class="search-bar" style="flex-grow:1; max-width:600px; display:flex; align-items:center; position:relative;">
+      <input type="text" placeholder="Pesquisar..." />
+      <div class="iconsearch" style="position:absolute; right:15px; cursor:pointer;">
+        <i class="fas fa-search"></i>
       </div>
+    </section>
 
-      <section class="search-bar">
-          <input type="text" placeholder="Pesquisar..." />
-          <div class="iconsearch">
-              <i class="fas fa-search"></i>
-          </div>
-      </section>        
-   </div>
-  <!-- #endregion -->
+    <div class="filtro" style="display:flex; align-items:center; gap:6px;">
+      <button class="button-filtro">Filtro</button>
+      <i class='bx bx-slider'></i>
+    </div>
+  </div>
 
-    <!-- #region Conteudo Principal -->
-  <main> 
+  <main>
+<div class="cards-wrapper"></div>
 
-
-        <div class="container_produtos">
-          <!-- #region Perfil-Header-->
-          <div class="loja-categoria">
-            <img src="./img/Beijinho.svg" alt="Logo da Loja" class="perfil-logo">
-            <div class="perfil-nome-avaliacao">
-              <span class="nome-loja">Sucrier</span>
-              <img src="./img/Avaliação.svg" alt="Avaliação" class="perfil-avaliacao">
-            </div>
-          </div>
-          <!--endregion-->
-          <div class="carrossel">
-              <button class="arrow left"><img src="./img/seta esquerda.svg" alt="" srcset=""></button>
-
-              <!-- NOVO: container dos cards -->
-              <div class="cards-container">
-           
-                <div class="card">
-                  <img src="./img/BrigadeiroNozes.svg" alt="Brigadeiro" class="foto-produto">
-                  <div class="descricao">
-                    <h3>Brigadeiro de Nozes</h3>
-                  </div>
-                  <div class="preco-comprar">
-                    <div class="preco">
-                      <span class="icone-preco">R$</span>
-                      <span class="valor">2.00</span>
-                    </div>
-                    
-                  </div>
-                </div>
-             
-              </div>
-              <button class="arrow right"><img src="./img/seta direita.svg" alt="" srcset=""></button>
-            </div>
-        </div>
   </main>
-  <!-- #endregion -->
 
-  <!-- #region Modal Descrição do Produto-->
-      <div class="modal-overlay" id="product-modal">
-        <div class="modal-content">
-          <button class="modal-close" onclick="fecharModal()">×</button>
-      
-          <img src="" alt="" class="modal-img" />
-      
-          <div class="modal-info">
-            <div class="modal-header">
-              <div class="modal-loja">
-                <img src="" alt="Logo da loja" class="modal-logo" />
-                <span class="modal-nome-loja">Dama</span>
-                <span class="modal-avaliacoes">★ 4.8</span>
-              </div>
-            </div>
-      
-            <h2 class="modal-title"></h2>
-            <p class="modal-subtitulo"></p>
-            <p class="modal-description"></p>
-            <p class="modal-peso"></p>
-            <p class="modal-price"></p>
-      
-            <label class="comentario">Comentário</label>
-            <textarea id="comentario" rows="1" placeholder="Digite um comentário..." oninput="autoResize(this)"></textarea>
-      
-            <div class="modal-actions">
-              <div class="modal-quantity">
-                <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
-                <span id="qtd-value">1</span>
-                <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
-              </div>
-              <button class="btn-add">Adicionar</button>
-            </div>
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="fecharModal()">×</button>
+
+      <img src="" alt="" class="modal-img" />
+
+      <div class="modal-info">
+        <div class="modal-header">
+          <div class="modal-loja">
+            <img src="" alt="Logo da loja" class="modal-logo" />
+            <span class="modal-nome-loja">Dama</span>
+            <span class="modal-avaliacoes">★ 4.8</span>
           </div>
         </div>
-      </div>
 
-      <div id="footer"></div>
-      
+        <h2 class="modal-title"></h2>
+        <p class="modal-subtitulo"></p>
+        <p class="modal-description"></p>
+        <p class="modal-peso"></p>
+        <p class="modal-price"></p>
+
+        <label class="comentario">Comentário</label>
+        <textarea id="comentario" rows="1" placeholder="Digite um comentário..." oninput="autoResize(this)"></textarea>
+
+        <div class="modal-actions">
+          <div class="modal-quantity">
+            <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+            <span id="qtd-value">1</span>
+            <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+          </div>
+          <button class="btn-add">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
 </body>
 </html>
