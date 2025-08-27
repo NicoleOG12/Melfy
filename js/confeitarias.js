@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputPesquisa = document.getElementById('search-input');
   const botaoPesquisa = document.getElementById('search-button');
 
+  function formatarPreco(valor) {
+    return parseFloat(valor).toFixed(2).replace('.', ',');
+  }
+
+  function formatarPeso(peso) {
+    if (!peso) return 'Não informado';
+    if (peso >= 1000) return `${peso / 1000} kg`;
+    return `${peso} g`;
+  }
+
   function renderizarProdutos(listaProdutos) {
     cardsWrapper.innerHTML = '';
 
@@ -36,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="footerNovidades">
             <div class="preco">
               <span class="icone-preco">R$</span>
-              <span class="valor">${produto.preco}</span>
+              <span class="valor">${formatarPreco(produto.preco)}</span>
             </div>
             <div class="btn-carrinho">
               <i class="fas fa-shopping-bag"></i>
@@ -84,32 +94,42 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   renderizarProdutos(produtos);
-  
+
   inputPesquisa.addEventListener('input', filtrarProdutos);
   inputPesquisa.addEventListener('keyup', function (event) {
     if (event.key === 'Enter') filtrarProdutos();
   });
   botaoPesquisa.addEventListener('click', filtrarProdutos);
-
+  
   function openModal(produto) {
     const idLojaProduto = parseInt(produto.idLoja);
     const loja = lojas.find(l => l.idLoja === idLojaProduto);
-
+  
     document.querySelector('.modal-img').src = produto.foto || '';
     document.querySelector('.modal-img').alt = produto.nome || '';
+  
+    const modalLogo = document.querySelector('.modal-logo');
+    const modalNomeLoja = document.querySelector('.modal-nome-loja');
+    modalLogo.src = loja?.fotoPerfil || '';
+    modalNomeLoja.textContent = loja?.nomeLoja || 'Loja Desconhecida';
+  
+    modalLogo.onclick = modalNomeLoja.onclick = function () {
+      if (loja?.idLoja) {
+        localStorage.setItem('idLojaSelecionada', loja.idLoja);
+        window.location.href = 'loja.html';
+      }
+  };
 
-    document.querySelector('.modal-logo').src = loja?.fotoPerfil || '';
-    document.querySelector('.modal-nome-loja').textContent = loja?.nomeLoja || 'Loja Desconhecida';
+  document.querySelector('.modal-title').textContent = produto.nome || '';
+  document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
+  document.querySelector('.modal-description').textContent = produto.descricao || '';
+  document.querySelector('.modal-peso').textContent = `Peso: ${formatarPeso(produto.peso)}`;
+  document.querySelector('.modal-price').textContent = `R$ ${formatarPreco(produto.preco)}`;
 
-    document.querySelector('.modal-title').textContent = produto.nome || '';
-    document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
-    document.querySelector('.modal-description').textContent = produto.descricao || '';
-    document.querySelector('.modal-peso').textContent = `Peso: ${produto.peso || 'Não informado'}`;
-    document.querySelector('.modal-price').textContent = `R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}`;
+  document.getElementById('qtd-value').textContent = 1;
+  document.getElementById('product-modal').style.display = 'flex';
+}
 
-    document.getElementById('qtd-value').textContent = 1;
-    document.getElementById('product-modal').style.display = 'flex';
-  }
 
   const btnAdd = document.querySelector('.btn-add');
   btnAdd.addEventListener('click', function () {
