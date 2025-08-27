@@ -7,16 +7,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const logoLojaElement = document.querySelector('.logo-loja');
 
   const loja = lojas.find(l => parseInt(l.idLoja) === idLojaAtual);
-
+  
   if (loja) {
     nomeLojaElement.textContent = loja.nomeLoja || 'Loja Desconhecida';
-    logoLojaElement.style.backgroundImage = `url(${loja.fotoPerfil || 'placeholder.jpg'})`;
-    logoLojaElement.style.backgroundRepeat = 'no-repeat';
-    logoLojaElement.style.backgroundSize = 'cover';
-    logoLojaElement.style.backgroundPosition = 'center';
+    logoLojaElement.src = loja.fotoPerfil || 'placeholder.jpg';
+    logoLojaElement.alt = loja.nomeLoja || 'Loja Desconhecida';
   } else {
     nomeLojaElement.textContent = 'Loja Desconhecida';
-    logoLojaElement.style.backgroundImage = 'url(placeholder.jpg)';
+    logoLojaElement.src = 'placeholder.jpg';
+    logoLojaElement.alt = 'Loja Desconhecida';
   }
 
   const produtosWrapper = document.querySelector('.produtos');

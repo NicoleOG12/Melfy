@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById('product-modal').style.display = 'flex';
 }
 
-
   const btnAdd = document.querySelector('.btn-add');
   btnAdd.addEventListener('click', function () {
     adicionarNaSacola();

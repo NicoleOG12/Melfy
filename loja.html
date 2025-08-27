@@ -19,43 +19,46 @@
 <body>
   <div class="header-bg"></div>
   <div id="header"></div>
-
+  
   <main>
-    <div class="border">
-
-      <section class="banner">
-        <div class="banner">
-          <img src="./img/banner-sucrier.png" alt="Banner Sucrier">
-        </div>
-      </section>
+    <div class="main-container">
+      <div class="border">
+  
+        <section class="banner">
+          <div class="banner">
+            <img src="./img/banner.png" alt="Banner Sucrier">
+          </div>
+        </section>
+  
+        <section class="header-loja"> 
+          <img class="logo-loja" id="logo-loja" src="placeholder.jpg" alt="Logo da loja" />
+          <div class="detalhes">
+            <h2 id="nome-loja"></h2>
+            <span class="avaliacoes">★ 4.8</span>
+            <a href="#" class="ver-mais">ver mais</a>
+          </div>
+        </section>
       
-      <section class="header-loja"> 
-        <div class="logo-loja"></div>
-        <div class="detalhes">
-          <h2 id="nome-loja"></h2>
-          <span class="avaliacoes">★ 4.8</span>
-          <a href="#" class="ver-mais">ver mais</a>
-        </div>
-      </section>
-    
-      <section class="destaques">
-        <h3>Novidades</h3>
-        <div class="container">
-          <div class="produtos"></div>
-        </div>
-      </section>
-      
-      <section class="search-bar">
-        <input type="text" id="search-input" placeholder="Pesquisar..." />
-        <div class="iconsearch" id="search-button">
-          <i class="fas fa-search"></i>
-        </div>
-      </section>
-
-      <h3 class="lista-produtos">Todos os Produtos</h3>
-      <div class="cards-wrapper"></div>
+        <section class="destaques">
+          <h3>Novidades</h3>
+          <div class="container">
+            <div class="produtos"></div>
+          </div>
+        </section>
+        
+        <section class="search-bar">
+          <input type="text" id="search-input" placeholder="Pesquisar..." />
+          <div class="iconsearch" id="search-button">
+            <i class="fas fa-search"></i>
+          </div>
+        </section>
+  
+        <h3 class="lista-produtos">Todos os Produtos</h3>
+        <div class="cards-wrapper"></div>
+  
+      </div>
     </div>
-
+  
     <div class="modal-overlay" id="product-modal">
         <div class="modal-content">
           <button class="modal-close" onclick="fecharModal()">×</button>
