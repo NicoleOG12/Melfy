@@ -84,13 +84,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   renderizarProdutos(produtos);
-
-  botaoPesquisa.addEventListener('click', filtrarProdutos);
+  
+  inputPesquisa.addEventListener('input', filtrarProdutos);
   inputPesquisa.addEventListener('keyup', function (event) {
-    if (event.key === 'Enter') {
-      filtrarProdutos();
-    }
+    if (event.key === 'Enter') filtrarProdutos();
   });
+  botaoPesquisa.addEventListener('click', filtrarProdutos);
 
   function openModal(produto) {
     const idLojaProduto = parseInt(produto.idLoja);
