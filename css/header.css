@@ -327,3 +327,9 @@ nav .iconuser a:hover {
     display: flex;
   }
 }
+
+nav a.ativo {
+  background-color: var(--cor-laranja);
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
+}
