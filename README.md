@@ -17,7 +17,7 @@
 <h2>🛠️ Tecnologias Usadas</h2>
 <ul>
   <li>HTML5 🍪</li>
-  <li>CSS3 🍫 (com animações fofas!)</li>
+  <li>CSS3 🍫</li>
   <li>JavaScript 🍭</li>
   <li>JSON 🍬 (para armazenar e gerenciar os dados)</li>
 </ul>
