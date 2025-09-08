@@ -259,6 +259,8 @@ h3 {
 .imagem-produto {
   display: block;
   width: 200px;
+  max-width: 200px;
+  max-height: 200px;
   border-radius: 12px;
   margin: -5px auto 0; 
 }
