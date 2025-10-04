@@ -1,0 +1,235 @@
+.container{
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 3%;
+    margin-bottom: 10%;
+
+}
+
+.item{
+    border: 2px solid rgb(104, 104, 104);
+    width: 60vh;
+    height: 70vh;
+    border-radius: 3%;
+    background-color: #FFE787;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 3%;
+}
+
+
+
+.item-topicos-flex{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    line-height: 35px;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.item-container-perfil{
+    display: flex;
+    border-radius: 50%;
+    flex-direction: row;
+    gap: 20px;
+    object-fit: cover;
+}
+
+.a-topicos{
+    transition: 0.5s;
+    border-radius: 20px;    
+    width: 100px;
+}
+
+.item-nome-email{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#forma-pg{
+    width: 200px;
+}
+
+#meus-dados{
+    width: 120px;
+}
+
+#meus-dados:hover{
+    width: 120px;
+}
+
+.a-topicos:hover{
+    background-color: #F8A520;
+    color: #ffffff;
+    border-radius: 20px;
+    width: 100px;
+    padding-left: 4%;
+
+}
+
+#image-profile{
+    width: 90px;
+    border-radius: 50%;
+    object-fit: contain;
+
+}
+
+a{
+    font-family: "Istok Web", sans-serif;
+    color: #5B5B5B;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+.meus-dados{
+    background-color: transparent;
+    border: 2px solid #FFCC00;
+    width: 190vh;
+}
+
+.main-title{
+    margin-left: 6%;
+    text-align: left;
+    margin-top: 5%;
+    font-size: 40px;
+}
+
+#title-meus-dados{
+    color: #D36900;
+    margin-bottom: 7%;
+}
+
+#name-user{
+    font-weight: bold;
+}
+
+h1{
+    font-size: 25px;
+    margin: 10px;
+    
+}
+
+#titulo-perfil{
+    margin: 0;
+
+}
+
+.container-meus-dados {
+    display: flex;
+    border: 2px solid yellow;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 100vh;
+    justify-content: center;
+}
+
+
+.item-meus-dados-flex{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    border-radius: 20px;
+    height: 100vh;
+}
+
+.item-meus-dados{
+    width: 350px;
+}
+
+input{
+    background-color:  #ffffff;
+    border: 2px solid #efefef;
+    border-radius: 6px;
+    height: 25px;
+    width: 74%;
+    margin: 20px;
+    transition: 0.5s;
+    padding-left: 15px;
+    font-size: 12px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+}
+
+
+label{
+    margin: 20px;
+    font-weight: bold;    
+    color: #D36900;
+    font-size: 15px;
+}
+
+#nome-exibir{
+  margin-bottom: -15px;
+  font-weight: bold;
+}
+
+
+                                /* CONTAINER DOS BOTÕES */
+
+
+.item-container-buttons{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#botao-salvar{
+    background-color: #B8E033;
+    color: white;
+}
+
+#botao-editar{
+    background-color: #FF7F00;
+    color: white;
+}
+
+button{
+    height: 50px;
+    width: 120px;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.192);
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.5s;
+    left: 18%;
+    position: relative;
+}
+
+button:hover{
+    transform: scale(1.1);
+}
+
+
+
+                                /* CONTAINER PARA CENTRALIZAR A IMG LOGOUT */
+
+.item-container-logout{
+    display: flex;
+    align-items: flex-end;
+    height: 90vh;
+}
+
+.img-logout{
+    cursor: pointer;
+    width: 30px;
+}
+  
+.editando {
+  border: 2px solid #ff6600;
+  background-color: #fff;
+}
+
+input:focus,
+input-group select:focus {
+  outline: none;
+  border-color: var(--cor-laranja);
+  background-color: #fff;
+}
+

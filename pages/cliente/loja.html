@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Melfy</title>
+  <link rel="stylesheet" href="../../css/cliente/loja.css"/>
+  <link rel="stylesheet" href="../../css/components.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <script src="../../js/cliente/loja.js"></script>
+  <script src="../../js/toggle.js" defer></script>
+  <script src="../../js/main.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="header-bg"></div>
+  <div id="header"></div>
+  
+  <main>
+    <div class="main-container">
+      <div class="border">
+  
+        <section class="banner">
+          <div class="banner">
+            <img src="../../assents/img/Geral/banner.png" alt="Banner Sucrier">
+          </div>
+        </section>
+  
+        <section class="header-loja"> 
+          <img class="logo-loja" id="logo-loja" src="placeholder.jpg" alt="Logo da loja" />
+          <div class="detalhes">
+            <h2 id="nome-loja"></h2>
+            <span class="avaliacoes">★ 4.8</span>
+            <a href="#" class="ver-mais">ver mais</a>
+          </div>
+        </section>
+      
+        <section class="destaques">
+          <h3>Novidades</h3>
+          <div class="container">
+            <div class="produtos"></div>
+          </div>
+        </section>
+        
+        <section class="search-bar">
+          <input type="text" id="search-input" placeholder="Pesquisar..." />
+          <div class="iconsearch" id="search-button">
+            <i class="fas fa-search"></i>
+          </div>
+        </section>
+  
+        <h3 class="lista-produtos">Todos os Produtos</h3>
+        <div class="cards-wrapper"></div>
+  
+      </div>
+    </div>
+  
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+          <button class="modal-close" onclick="fecharModal()">×</button>
+      
+          <img src="" alt="" class="modal-img" />
+      
+          <div class="modal-info">
+            <div class="modal-header">
+              <div class="modal-loja">
+                <img src="" alt="Logo da loja" class="modal-logo" />
+                <span class="modal-nome-loja">Dama</span>
+                <span class="modal-avaliacoes">★ 4.8</span>
+              </div>
+            </div>
+      
+            <h2 class="modal-title"></h2>
+            <p class="modal-subtitulo"></p>
+            <p class="modal-description"></p>
+            <p class="modal-peso"></p>
+            <p class="modal-price"></p>
+      
+            <label class="comentario">Comentário</label>
+            <textarea id="comentario" rows="1" placeholder="Digite um comentário..." oninput="autoResize(this)"></textarea>
+      
+            <div class="modal-actions">
+              <div class="modal-quantity">
+                <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+                <span id="qtd-value">1</span>
+                <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+              </div>
+              <button class="btn-add">Adicionar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </main>
+
+  <div id="footer"></div>
+  
+</body>
+</html>

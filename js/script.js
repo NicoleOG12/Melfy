@@ -1,4 +1,4 @@
-import { carregarTodosOsDados } from '../confeiteira/js/dicionario.js';
+import { carregarTodosOsDados } from './dicionario.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   carregarTodosOsDados();

@@ -1,0 +1,99 @@
+.container-pedidos {
+    max-width: 1000px;
+    margin: 10px auto 0 auto;
+    padding: 20px;
+}
+
+.container-pedidos h1 {
+    font-family: "Istok Web", sans-serif;
+    font-size: 40px;
+    margin-bottom: 20px;
+    color: #3a2014;
+    text-align: center;
+    width: 100%;
+}
+
+.quadro-pedidos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px 60px;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #584019;
+    border-radius: 20px;
+    border: 10px solid #8d5900;
+}
+
+.post-it {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    min-height: 150px;
+    padding: 10px;
+    border: 2px solid #e5d67c;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    color: #403411;
+    background-color: #fff8a6;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-it::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at center, #d22, #800);
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.post-it.left {
+    align-self: flex-start;
+}
+
+.post-it.right {
+    align-self: flex-end;
+}
+
+.post-it:hover {
+    transform: scale(1.05);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.2);
+}
+
+.post-it h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #40210f;
+}
+
+.post-it p {
+    margin: 6px 0;
+    font-size: 0.95em;
+}
+
+.status {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.status.aguardando {
+    color: #b58b00;
+}
+
+.status.aprovado {
+    color: #008000;
+}
+
+.status.rejeitado {
+    color: #c00;
+}
+
+  

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Melfy</title>
+
+  <link rel="stylesheet" href="../../css/cliente/perfil.css" />
+  <link rel="stylesheet" href="../../css/components.css" />
+  <link rel="stylesheet" href="../../css/layout.css" />
+  <link rel="stylesheet" href="../../css/base.css" />
+
+  <script src="../../js/cliente/perfil.js"></script>
+  <script src="../../js/toggle.js" defer></script>
+  <script src="../../js/main.js"></script>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="header-bg"></div>
+  <div id="header"></div>
+
+  <h1 class="main-title"></h1>
+
+  <div class="container">
+    <div class="item">
+      <div class="item-container-perfil">
+        <img src="../../assents/img/Geral/cute-bee-design.avif" alt="" id="image-profile" />
+        <div class="item-nome-email">
+          <p id="nome-exibir"></p>
+          <p id="email-exibir">E-mail</p>
+        </div>
+      </div>
+
+      <div class="item-topicos-flex">
+        <div class="item-topicos"></div>
+        <a href="./perfil.html" class="a-topicos" onclick="mostrarSecao('meus-dados')"><strong>MEUS DADOS</strong></a>
+        <a href="./perfil-enderecos.html" class="a-topicos" onclick="mostrarSecao('enderecos')"><strong>ENDEREÇOS</strong></a>
+        <a href="./perfil-formas-pag.html" class="a-topicos" onclick="mostrarSecao('pagamentos')"><strong>FORMA DE PAGAMENTO</strong></a>
+      </div>
+
+      <div class="item-container-logout">
+        <a href="#" id="botao-sair">
+          <img src="../../assents/img/Geral/logout.png" class="img-logout" alt="" onclick="sairConta()" />
+        </a>
+        <p></p>
+      </div>
+    </div>
+
+    <div class="item container-meus-dados">
+      <h1 id="title-meus-dados">Meus Dados</h1>
+      <div class="item-meus-dados-flex">
+        <div class="item-meus-dados">
+          <div class="item-meus-dados-input">
+            <label>Nome</label>
+            <input type="text" id="nome-input" disabled />
+          </div>
+          <div class="item-meus-dados-input">
+            <label>Sobrenome</label>
+            <input type="text" id="sobrenome-input" disabled />
+          </div>
+          <div class="item-meus-dados-input">
+            <label>CPF</label>
+            <input type="text" id="cpf-input" disabled />
+          </div>
+        </div>
+
+        <div class="item-meus-dados">
+          <div class="item-meus-dados-input">
+            <label>Data de Nascimento</label>
+            <input type="text" id="dataNascimento-input" disabled />
+          </div>
+          <div class="item-meus-dados-input">
+            <label>E-mail</label>
+            <input type="text" id="email-input" disabled />
+          </div>
+          <div class="item-meus-dados-input">
+            <label>Celular</label>
+            <input type="text" id="celular-input" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div class="item-container-buttons">
+        <div class="item-buttons">
+          <button id="botao-editar" onclick="habilitarEdicao()">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>

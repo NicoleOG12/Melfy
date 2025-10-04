@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Melfy</title>
+  <link rel="stylesheet" href="../../css/confeiteira/painelADM.css"/>
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/base.css">
+  <script src="../../js/confeiteira/painelADM.js"></script>
+  <script src="../../js/toggle.js" defer></script>
+  <script src="../../js/main.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+
+<body class="body1">
+  <div id="header"></div>
+
+  <nav class="admin-nav">
+    <button class="nav-btn" onclick="mostrarSecao('gastos')">Meus Gastos</button>
+    <button class="nav-btn" onclick="mostrarSecao('lucros')">Meus Lucros Brutos</button>
+    <button class="nav-btn" onclick="mostrarSecao('resumo')">Resumo</button>
+  </nav>
+
+  <main>
+    <section id="gastos" class="section active">
+      <form class="input-form" onsubmit="event.preventDefault(); adicionarIngrediente();">
+        <input type="text" id="nome" placeholder="Nome do ingrediente" required />
+        <input type="number" id="gramas" placeholder="Gramas" required min="0" />
+        <input type="number" id="preco" placeholder="Preço (R$)" step="0.01" required min="0" />
+        <button type="submit" class="btn btn-adicionar">Adicionar Ingrediente</button>
+      </form>
+
+      <table id="tabelaIngredientes">
+        <thead>
+          <tr>
+            <th>Ingrediente</th>
+            <th>Gramas</th>
+            <th>Preço (R$)</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="total" class="total-info">Total Gasto: R$ 0.00</div>
+    </section>
+
+    <section id="lucros" class="section">
+      <form class="input-form" onsubmit="event.preventDefault(); adicionarLucro();">
+        <input type="text" id="produto" placeholder="Nome do produto" required />
+        <input type="number" id="valorVenda" placeholder="Valor de venda (R$)" step="0.01" required min="0" />
+        <input type="number" id="quantidade" placeholder="Quantidade vendida" required min="0" />
+        <button type="submit" class="btn btn-adicionar">Adicionar Produto</button>
+      </form>
+
+      <table id="tabelaLucros">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Valor Unitário (R$)</th>
+            <th>Quantidade</th>
+            <th>Total (R$)</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="totalLucro" class="total-info">Lucro Bruto Total: R$ 0.00</div>
+    </section>
+
+    <section id="resumo" class="section">
+      <h2>Resumo Financeiro</h2>
+      <p id="resumoFinal">Clique para visualizar o resumo dos seus lucros.</p>
+      <button class="btn btn-adicionar" onclick="gerarResumo()">Atualizar Resumo</button>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+</body>
+</html>
