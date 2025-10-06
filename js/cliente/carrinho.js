@@ -1,4 +1,5 @@
 import { rotasCliente } from '../rotas.js';
+import { openModal, adicionarNaSacola } from '../modal.js';
 
 function carregarSacola() {
   const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
@@ -11,7 +12,8 @@ function carregarSacola() {
   tbody.innerHTML = '';
 
   if (sacola.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Sua sacola está vazia.</td></tr>';
+    tbody.innerHTML =
+      '<tr><td colspan="5" style="text-align:center;">Sua sacola está vazia.</td></tr>';
     subtotalSpan.textContent = 'R$ 0,00';
     totalSpan.textContent = 'R$ 0,00';
     return;
@@ -83,9 +85,9 @@ function carregarSacola() {
         <td>R$ ${valorUnitario}</td>
         <td>
           <div class="qtd">
-            <button onclick="alterarQuantidade(${index}, -1)"> <i class='bx bx-minus'></i> </button>
+            <button onclick="alterarQuantidadeSacola(${index}, -1)"> <i class='bx bx-minus'></i> </button>
             <span>${item.quantidade}</span>
-            <button onclick="alterarQuantidade(${index}, 1)"> <i class='bx bx-plus'></i> </button>
+            <button onclick="alterarQuantidadeSacola(${index}, 1)"> <i class='bx bx-plus'></i> </button>
           </div>
         </td>
         <td>R$ ${valorTotal}</td>
@@ -103,44 +105,45 @@ function carregarSacola() {
 
 function LojaCheckbox(lojaCheckbox) {
   const idLoja = lojaCheckbox.getAttribute('data-idloja');
-  const checkboxesProdutos = document.querySelectorAll(`input.check-produto[data-idloja="${idLoja}"]`);
+  const checkboxesProdutos = document.querySelectorAll(
+    `input.check-produto[data-idloja="${idLoja}"]`
+  );
   checkboxesProdutos.forEach(checkbox => {
     checkbox.checked = lojaCheckbox.checked;
   });
   atualizarTotal();
 }
 
-function alterarQuantidade(index, delta) {
+function alterarQuantidadeSacola(index, delta) {
   const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-
   if (!sacola[index]) return;
 
   sacola[index].quantidade += delta;
-
-  if (sacola[index].quantidade < 1) {
-    sacola[index].quantidade = 1;
-  }
+  if (sacola[index].quantidade < 1) sacola[index].quantidade = 1;
 
   sacola[index].valorTotal = sacola[index].quantidade * sacola[index].valorUnitario;
-
   localStorage.setItem('Sacola', JSON.stringify(sacola));
+
   carregarSacola();
   atualizarTotal();
+  if (window.atualizarContadorSacola) atualizarContadorSacola();
 
-  if (window.atualizarContadorSacola) atualizarContadorSacola(); // **adicionado**
+  document.dispatchEvent(new Event('sacolaAtualizada'));
 }
+
+window.alterarQuantidadeSacola = alterarQuantidadeSacola;
 
 function removerItem(index) {
   if (confirm('Tem certeza que deseja remover este item da sacola?')) {
     const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-
     if (index >= 0 && index < sacola.length) {
       sacola.splice(index, 1);
       localStorage.setItem('Sacola', JSON.stringify(sacola));
       carregarSacola();
       atualizarTotal();
+      if (window.atualizarContadorSacola) atualizarContadorSacola();
 
-      if (window.atualizarContadorSacola) atualizarContadorSacola(); // **adicionado**
+      document.dispatchEvent(new Event('sacolaAtualizada'));
     }
   }
 }
@@ -151,14 +154,12 @@ function atualizarTotal() {
   const totalSpan = document.querySelector('#total');
   let subtotal = 0;
 
-  checkboxes.forEach((checkbox) => {
+  checkboxes.forEach(checkbox => {
     if (checkbox.checked) {
       const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
       const index = parseInt(checkbox.getAttribute('data-index'));
       const item = sacola[index];
-      if (item) {
-        subtotal += item.valorTotal;
-      }
+      if (item) subtotal += item.valorTotal;
     }
   });
 
@@ -168,6 +169,12 @@ function atualizarTotal() {
 
 window.onload = carregarSacola;
 
+document.addEventListener('sacolaAtualizada', () => {
+  carregarSacola();
+  atualizarTotal();
+});
+
+// ---------- MODAL DE COMPRA ----------
 function abrirModalCompra() {
   const modal = document.getElementById('modal-compra-buy');
   modal.style.display = 'flex';
@@ -195,7 +202,7 @@ function preencherProdutosModalCompra() {
 
   let subtotal = 0;
 
-  sacola.forEach((item, index) => {
+  sacola.forEach(item => {
     const produto = produtos.find(p => p.idProduto === item.idProduto);
     if (!produto) return;
 
@@ -208,11 +215,10 @@ function preencherProdutosModalCompra() {
 
     const divProduto = document.createElement('div');
     divProduto.style.display = 'flex';
-    divProduto.style.alignItems = 'flex-start';
-    divProduto.style.marginBottom = '20px';
     divProduto.style.flexDirection = 'column';
     divProduto.style.borderBottom = '1px solid var(--cor-botao-hover)';
     divProduto.style.paddingBottom = '12px';
+    divProduto.style.marginBottom = '20px';
 
     divProduto.innerHTML = `
       <div style="display: flex; width: 100%;">
@@ -226,11 +232,6 @@ function preencherProdutosModalCompra() {
           R$ ${(item.valorTotal).toFixed(2).replace('.', ',')}
         </div>
       </div>
-      <div style="margin-top: 10px; width: 100%;">
-        <label for="comentario-${index}" style="font-weight: bold; color: var(--cor-nome); display:block; margin-bottom:4px;">Comentário para este item:</label>
-        <textarea id="comentario-${index}" class="comentario-item" placeholder="Ex: Sem cebola, embalagem separada..." 
-          style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; resize: vertical; font-family: inherit; font-size: 14px;"></textarea>
-      </div>
     `;
 
     lista.appendChild(divProduto);
@@ -240,7 +241,6 @@ function preencherProdutosModalCompra() {
   window.modalSubtotalBuy = subtotal;
 }
 
-
 function atualizarFreteCompra() {
   const entrega = document.querySelector('input[name="entrega-buy"]:checked')?.value || 'retirada';
   const valorFreteSpan = document.getElementById('total-frete-buy');
@@ -248,27 +248,13 @@ function atualizarFreteCompra() {
   const totalModalSpan = document.getElementById('total-compra');
   const totalGeralSpan = document.getElementById('total-geral-buy');
 
-  let frete = 0;
-  if (entrega === 'delivery') {
-    frete = 10.00;
-  }
-
+  let frete = entrega === 'delivery' ? 10.0 : 0;
   valorFreteSpan.textContent = `R$ ${frete.toFixed(2).replace('.', ',')}`;
 
   const totalProdutos = window.modalSubtotalBuy || 0;
-
-  if (totalProdutosSpan) {
-    totalProdutosSpan.textContent = `R$ ${totalProdutos.toFixed(2).replace('.', ',')}`;
-  }
-
-  if (totalModalSpan) {
-    totalModalSpan.textContent = `R$ ${totalProdutos.toFixed(2).replace('.', ',')}`;
-  }
-
-  const totalGeral = totalProdutos + frete;
-  if (totalGeralSpan) {
-    totalGeralSpan.textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
-  }
+  totalProdutosSpan.textContent = `R$ ${totalProdutos.toFixed(2).replace('.', ',')}`;
+  totalModalSpan.textContent = `R$ ${totalProdutos.toFixed(2).replace('.', ',')}`;
+  totalGeralSpan.textContent = `R$ ${(totalProdutos + frete).toFixed(2).replace('.', ',')}`;
 }
 
 function finalizarCompra() {
@@ -279,216 +265,82 @@ function finalizarCompra() {
 
   localStorage.removeItem('Sacola');
   carregarSacola();
+  if (window.atualizarContadorSacola) atualizarContadorSacola();
 
-  if (window.atualizarContadorSacola) atualizarContadorSacola(); // **adicionado**
-
+  document.dispatchEvent(new Event('sacolaAtualizada'));
   fecharModalCompra();
 }
 
-document.addEventListener("DOMContentLoaded", function () { 
-    let produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
-    let lojas = JSON.parse(localStorage.getItem('Lojas')) || [];
+document.addEventListener('DOMContentLoaded', function () {
+  const produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
+  const lojas = JSON.parse(localStorage.getItem('Lojas')) || [];
+  const cardsWrapper = document.querySelector('.cards-wrapper');
 
-    const cardsWrapper = document.querySelector('.cards-wrapper');
+  function renderizarProdutosAleatorios(listaProdutos) {
+    cardsWrapper.innerHTML = '';
 
-    function renderizarProdutosAleatorios(listaProdutos) {
-        cardsWrapper.innerHTML = '';
-
-        if (listaProdutos.length === 0) {
-            cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
-            return;
-        }
-
-        const produtosAleatorios = listaProdutos
-            .slice()
-            .sort(() => 0.5 - Math.random())
-            .slice(0, 4);
-
-        produtosAleatorios.forEach(produto => {
-            const idLojaProduto = parseInt(produto.idLoja);
-            const loja = lojas.find(l => l.idLoja === idLojaProduto);
-
-            const card = document.createElement('div');
-            card.classList.add('card');
-            
-            card.innerHTML = `
-                <div class="border-card">
-                    <div class="headerNovidade">
-                        <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
-                    </div>
-                    <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
-                    <div class="descricao">
-                        <h3>${produto.nome}</h3>
-                        <p>${produto.subtitulo}</p>
-                    </div>
-                    <div class="footerNovidades">
-                        <div class="preco">
-                            <span class="icone-preco">R$</span>
-                            <span class="valor">${produto.preco}</span>
-                        </div>
-                        <div class="btn-carrinho">
-                            <i class="fas fa-shopping-bag"></i>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const logoLojaElement = card.querySelector('.logoLoja');
-
-            logoLojaElement.addEventListener('click', function (e) {
-                e.stopPropagation(); 
-                localStorage.setItem('idLojaSelecionada', loja.idLoja);
-                window.location.href = rotasCliente.loja;
-            });
-
-            card.addEventListener('click', function (event) {
-                const isHeader = event.target.closest('.headerNovidade');
-                if (!isHeader) {
-                    openModal(produto);
-                }
-            });
-
-            cardsWrapper.appendChild(card);
-        });
+    if (listaProdutos.length === 0) {
+      cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
+      return;
     }
 
-    renderizarProdutosAleatorios(produtos);
+    const produtosAleatorios = listaProdutos
+      .slice()
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 4);
 
-    document.querySelectorAll('.doce').forEach(doce => {
-        doce.addEventListener('click', function () {
-            const categoria = this.querySelector('p').textContent.trim();
-            localStorage.setItem('categoriaSelecionada', categoria); 
-            window.location.href = rotasCliente.produtos;
-        });
-    });
+    produtosAleatorios.forEach(produto => {
+      const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
+      const precoFormatado = parseFloat(produto.preco).toFixed(2).replace('.', ',');
 
-    const btnAdd = document.querySelector('.btn-add');
-    if (btnAdd) {
-        btnAdd.addEventListener('click', function() {
-            adicionarNaSacola();
-        });
-    }
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.innerHTML = `
+        <div class="border-card">
+          <div class="headerNovidade">
+            <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
+          </div>
+          <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
+          <div class="descricao">
+            <h3>${produto.nome}</h3>
+            <p>${produto.subtitulo}</p>
+          </div>
+          <div class="footerNovidades">
+            <div class="preco">
+              <span class="icone-preco">R$</span>
+              <span class="valor">${precoFormatado}</span>
+            </div>
+            <div class="btn-carrinho">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+          </div>
+        </div>
+      `;
 
-   function openModal(produto) {
-        const idLojaProduto = parseInt(produto.idLoja);
-        const loja = lojas.find(l => l.idLoja === idLojaProduto);
-      
-        document.querySelector('.modal-img').src = produto.foto || '';
-        document.querySelector('.modal-img').alt = produto.nome || '';
-      
-        document.querySelector('.modal-logo').src = loja?.fotoPerfil || '';
-        document.querySelector('.modal-nome-loja').textContent = loja?.nomeLoja || 'Loja Desconhecida';
-      
-        document.querySelector('.modal-title').textContent = produto.nome || '';
-        document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
-        document.querySelector('.modal-description').textContent = produto.descricao || '';
-        document.querySelector('.modal-peso').textContent = `Peso: ${produto.peso || 'Não informado'}`;
-        document.querySelector('.modal-price').textContent = `R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}`;
-      
-        document.getElementById('qtd-value').textContent = 1;
-        document.getElementById('product-modal').style.display = 'flex';
-    }
-    });
-
-    document.querySelectorAll('.doce').forEach(doce => {
-        doce.addEventListener('click', function () {
-          const categoria = this.querySelector('p').textContent.trim();
-          localStorage.setItem('categoriaSelecionada', categoria); 
-          window.location.href = rotasCliente.produtos;
-        });
+      const logoLojaElement = card.querySelector('.logoLoja');
+      logoLojaElement.addEventListener('click', e => {
+        e.stopPropagation();
+        localStorage.setItem('idLojaSelecionada', loja.idLoja);
+        window.location.href = rotasCliente.loja;
       });
 
-function alterarQuantidade(valor) {
-    const qtdSpan = document.getElementById('qtd-value');
-    let quantidade = parseInt(qtdSpan.textContent);
-    quantidade += valor;
-    if (quantidade < 1) quantidade = 1;
-    qtdSpan.textContent = quantidade;
-}
+      card.addEventListener('click', event => {
+        const isHeader = event.target.closest('.headerNovidade');
+        if (!isHeader) openModal(produto, lojas, rotasCliente);
+      });
 
-function autoResize(textarea) {
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-}
+      cardsWrapper.appendChild(card);
+    });
+  }
 
-function fecharModal() {
-    document.getElementById("product-modal").style.display = "none";
-}
+  renderizarProdutosAleatorios(produtos);
 
-function adicionarNaSacola() {
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
-    if (!usuarioLogado || !usuarioLogado.id) {
-        alert('Usuário não está logado corretamente!');
-        return;
-    }
+  document.querySelector('.btn-add').addEventListener('click', adicionarNaSacola);
+});
 
-    const nomeProduto = document.querySelector('.modal-title').textContent;
-    const produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
-
-    const produto = produtos.find(p => p.nome === nomeProduto);
-    if (!produto || !produto.idProduto) {
-        alert('Produto não encontrado ou sem ID válido.');
-        return;
-    }
-
-    const quantidadeAdicionada = parseInt(document.getElementById('qtd-value').textContent);
-
-    const agora = new Date();
-    const data = agora.toLocaleDateString();
-    const horario = agora.toLocaleTimeString();
-
-    const valorUnitario = parseFloat(produto.preco);
-    const valorTotalAdicionado = valorUnitario * quantidadeAdicionada;
-
-    let sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-
-    const itemExistente = sacola.find(item =>
-        item.idUsuario === usuarioLogado.id &&
-        item.idProduto === produto.idProduto
-    );
-
-    if (itemExistente) {
-        itemExistente.quantidade += quantidadeAdicionada;
-        itemExistente.valorTotal = itemExistente.quantidade * itemExistente.valorUnitario;
-        itemExistente.data = data;
-        itemExistente.horario = horario;
-    } else {
-        sacola.push({
-            idProduto: produto.idProduto,
-            idUsuario: usuarioLogado.id,
-            quantidade: quantidadeAdicionada,
-            valorUnitario,
-            valorTotal: valorTotalAdicionado,
-            data,
-            horario
-        });
-    }
-    localStorage.setItem('Sacola', JSON.stringify(sacola));
-     
-    mostrarAnimacaoCarrinho(produto.categoria, produto.nome);
-    fecharModal();
-
-    if (window.atualizarContadorSacola) atualizarContadorSacola(); // **adicionado**
-}
-
-function mostrarAnimacaoCarrinho(categoria, nomeProduto) {
-    const animacao = document.getElementById('carrinho-animacao');
-    const img = document.getElementById('img-doce-animado');
-    const mensagem = document.getElementById('mensagem-sacola');
-
-    const nomeCategoria = categoria || localStorage.getItem('categoriaSelecionada') || 'Beijinho';
-    img.src = `../../assents/img/Categorias/${nomeCategoria}.svg`;
-    img.alt = nomeCategoria;
-
-    mensagem.textContent = `"${nomeProduto}" foi adicionado à sacola com sucesso!`;
-
-    img.classList.remove('img-doce-sacola');
-    void img.offsetWidth;
-    img.classList.add('img-doce-sacola');
-
-    animacao.style.display = 'flex';
-
-    setTimeout(() => {
-        animacao.style.display = 'none';
-    }, 3000);
-}
+window.removerItem = removerItem;
+window.atualizarTotal = atualizarTotal;
+window.LojaCheckbox = LojaCheckbox;
+window.abrirModalCompra = abrirModalCompra;
+window.finalizarCompra = finalizarCompra;
+window.fecharModalCompra = fecharModalCompra;

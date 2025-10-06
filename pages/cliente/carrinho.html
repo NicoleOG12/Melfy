@@ -72,41 +72,45 @@
     <div class="cards-wrapper"></div>
 
     <div class="modal-overlay" id="product-modal">
-      <div class="modal-content">
-        <button class="modal-close" onclick="fecharModalCompra()">×</button>
-        <img src="" alt="" class="modal-img" />
-        <div class="modal-info">
-          <div class="modal-header">
-            <div class="modal-loja">
-              <img src="" alt="Logo da loja" class="modal-logo" />
-              <span class="modal-nome-loja">Dama</span>
-              <span class="modal-avaliacoes">★ 4.8</span>
+        <div class="modal-content">
+          <button class="modal-close" onclick="fecharModal()">×</button>
+      
+          <img src="" alt="" class="modal-img" />
+      
+          <div class="modal-info">
+            <div class="modal-header">
+              <div class="modal-loja">
+                <img src="" alt="Logo da loja" class="modal-logo" />
+                <span class="modal-nome-loja">Dama</span>
+                <span class="modal-avaliacoes">★ 4.8</span>
+              </div>
             </div>
-          </div>
-          <h2 class="modal-title"></h2>
-          <p class="modal-subtitulo"></p>
-          <p class="modal-description"></p>
-          <p class="modal-peso"></p>
-          <p class="modal-price"></p>
-          <div class="modal-actions">
-            <div class="modal-quantity">
-              <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
-              <span id="qtd-value">1</span>
-              <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+      
+            <h2 class="modal-title"></h2>
+            <p class="modal-subtitulo"></p>
+            <p class="modal-description"></p>
+            <p class="modal-peso"></p>
+            <p class="modal-price"></p>
+      
+            <div class="modal-actions">
+              <div class="modal-quantity">
+                <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+                <span id="qtd-value">1</span>
+                <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+              </div>
+              <button class="btn-add">Adicionar</button>
             </div>
-            <button class="btn-add">Adicionar</button>
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
-      <div class="animacao-conteudo">
-        <i class="fas fa-shopping-bag icone-sacola"></i>
-        <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
-        <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
+      <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
+        <div class="animacao-conteudo">
+          <i class="fas fa-shopping-bag icone-sacola"></i>
+          <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
+          <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
+        </div>
       </div>
-    </div>
   </main>
 
   <div id="modal-compra-buy" class="modal-overlay-buy" style="display:none;">
