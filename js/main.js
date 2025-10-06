@@ -23,15 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <a href="${baseURL}pages/cliente/doces.html">Doces</a>
         <a href="${baseURL}sobre.html">Sobre</a>
         <a href="${baseURL}pages/login.html">Login</a>
-        <div class="iconuser">
-          <a href="${baseURL}pages/login.html" id="link-perfil"> 
-            <i class="fas fa-user"></i>
-          </a>
-        </div>
       </nav>
-      <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
-        <div class="toggle-icon"></div>
-      </div>
     </header>
   `;
 
