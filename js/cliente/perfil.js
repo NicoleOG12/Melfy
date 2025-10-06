@@ -4,31 +4,47 @@ document.addEventListener("DOMContentLoaded", function () {
   exibirInformacoes();
 });
 
-function exibirInformacoes(){
+function exibirInformacoes() {
   const usuarioLogadoJSON = localStorage.getItem("usuarioLogado");
-  if (!usuarioLogadoJSON) return;
+  const confeiteiraLogadaJSON = localStorage.getItem("confeiteiraLogada");
 
-  const usuarioLogado = JSON.parse(usuarioLogadoJSON);
+  let usuarioAtual = null;
 
-  document.getElementById('nome-exibir').innerText = usuarioLogado.nome;
-  document.getElementById('email-exibir').innerText = usuarioLogado.email;
-  document.getElementById("nome-input").value = usuarioLogado.nome || "";
-  document.getElementById("sobrenome-input").value = usuarioLogado.sobrenome || "";
-  document.getElementById("email-input").value = usuarioLogado.email || "";
-  document.getElementById("celular-input").value = usuarioLogado.celular || "";
-  document.getElementById("cpf-input").value = usuarioLogado.cpf || "";
-  document.getElementById("dataNascimento-input").value = usuarioLogado.dataNascimento || "";
+  if (usuarioLogadoJSON) {
+    usuarioAtual = JSON.parse(usuarioLogadoJSON);
+  } else if (confeiteiraLogadaJSON) {
+    usuarioAtual = JSON.parse(confeiteiraLogadaJSON);
+  } else {
+    return;
+  }
+
+  document.getElementById('nome-exibir').innerText = usuarioAtual.nome;
+  document.getElementById('email-exibir').innerText = usuarioAtual.email;
+
+  document.getElementById("nome-input").value = usuarioAtual.nome || "";
+  document.getElementById("sobrenome-input").value = usuarioAtual.sobrenome || "";
+  document.getElementById("email-input").value = usuarioAtual.email || "";
+  document.getElementById("celular-input").value = usuarioAtual.celular || "";
+  document.getElementById("cpf-input").value = usuarioAtual.cpf || "";
+  document.getElementById("dataNascimento-input").value = usuarioAtual.dataNascimento || "";
 }
 
 function salvarDados() {
   const usuarioLogadoJSON = localStorage.getItem("usuarioLogado");
-  if (!usuarioLogadoJSON || usuarioLogadoJSON === "undefined") return;
+  const confeiteiraLogadaJSON = localStorage.getItem("confeiteiraLogada");
 
-  const usuarioLogado = JSON.parse(usuarioLogadoJSON);
-  const idUsuarioLogado = usuarioLogado.id;
-
+  let usuarioAtual = null;
   let listaUsuarios = JSON.parse(localStorage.getItem("Usuários")) || [];
-  const usuarioOriginal = listaUsuarios.find(u => u.id === idUsuarioLogado);
+
+  if (usuarioLogadoJSON) {
+    usuarioAtual = JSON.parse(usuarioLogadoJSON);
+  } else if (confeiteiraLogadaJSON) {
+    usuarioAtual = JSON.parse(confeiteiraLogadaJSON);
+  } else {
+    return;
+  }
+
+  const usuarioOriginal = listaUsuarios.find(u => u.id === usuarioAtual.id);
   if (!usuarioOriginal) return;
 
   const usuarioAtualizado = {
@@ -41,12 +57,15 @@ function salvarDados() {
     dataNascimento: document.getElementById("dataNascimento-input").value
   };
 
-  const novaListaUsuarios = listaUsuarios.map(usuario =>
-    usuario.id === idUsuarioLogado ? usuarioAtualizado : usuario
-  );
+  const novaListaUsuarios = listaUsuarios.map(u => u.id === usuarioAtual.id ? usuarioAtualizado : u);
 
   localStorage.setItem("Usuários", JSON.stringify(novaListaUsuarios));
-  localStorage.setItem("usuarioLogado", JSON.stringify(usuarioAtualizado));
+  if (usuarioLogadoJSON) {
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarioAtualizado));
+  } else if (confeiteiraLogadaJSON) {
+    localStorage.setItem("confeiteiraLogada", JSON.stringify(usuarioAtualizado));
+  }
+
   alert("Dados atualizados com sucesso!");
 }
 
@@ -76,6 +95,7 @@ window.habilitarEdicao = function() {
 
 window.sairConta = function() {
   localStorage.removeItem('usuarioLogado');
+  localStorage.removeItem('confeiteiraLogada');
   alert('Usuário deslogado');
   window.location.href = rotasGerais.home;
 }
