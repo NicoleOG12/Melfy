@@ -1,3 +1,5 @@
+import { rotasGerais } from '../rotas.js';
+
 window.onload = function () {
     document.querySelector('#nome').addEventListener('input', validarNome);
     document.querySelector('#email').addEventListener('input', validarEmail);

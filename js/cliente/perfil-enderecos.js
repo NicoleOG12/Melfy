@@ -20,8 +20,6 @@ function exibirInformacoes(){
  
 }
 
-
-
 function abrirModal() {
   let modal = document.getElementById('modal');
   let usuarios = JSON.parse(localStorage.getItem('Usuários')) || [];

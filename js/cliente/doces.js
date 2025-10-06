@@ -1,3 +1,5 @@
+import { rotasCliente } from '../rotas.js';
+
 document.addEventListener("DOMContentLoaded", function () {
   let produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
   let lojas = JSON.parse(localStorage.getItem('Lojas')) || [];

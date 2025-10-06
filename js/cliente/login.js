@@ -1,3 +1,5 @@
+import { rotasCliente, rotasConfeiteira, rotasGerais } from '../rotas.js';
+
 function dados() {
     if (!localStorage.getItem('Usuários')) {
         const usuarios = [
@@ -19,7 +21,7 @@ function dados() {
     }
 }
 
-function logar() {
+window.logar = function() {
     const usuarios = JSON.parse(localStorage.getItem('Usuários'));
     const Confeiteiras = JSON.parse(localStorage.getItem('Confeiteiras'));
 
@@ -56,13 +58,12 @@ function logar() {
     alert('Usuário ou senha inválidos.');
 }
 
-
-function logado() {
+window.logado = function() {
     let usuario = sessionStorage.getItem('user');
     document.querySelector('#usuario').value = usuario;
 }
 
-function redefinirSenha(event) {
+window.redefinirSenha = function(event) {
     event.preventDefault();
 
     let email = document.querySelector('#emailRedefinir').value.trim();

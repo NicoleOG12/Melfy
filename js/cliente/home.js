@@ -1,3 +1,5 @@
+import { rotasCliente } from '../rotas.js';
+
 const coordenadasIniciais = [-23.561684, -46.625378];
 const mapa = L.map("mapa").setView(coordenadasIniciais, 13);
 

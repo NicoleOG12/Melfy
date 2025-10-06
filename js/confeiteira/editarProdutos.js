@@ -1,3 +1,5 @@
+import { rotasConfeiteira } from '../rotas.js';
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const produtoId = urlParams.get('idProduto'); 

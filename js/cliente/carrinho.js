@@ -1,3 +1,5 @@
+import { rotasCliente } from '../rotas.js';
+
 function carregarSacola() {
   const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
   const produtos = JSON.parse(localStorage.getItem('Produtos')) || [];

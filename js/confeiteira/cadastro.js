@@ -1,4 +1,5 @@
 import { carregarTodosOsDados } from './dicionario.js';
+import { rotasConfeiteira} from '../rotas.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   carregarTodosOsDados();

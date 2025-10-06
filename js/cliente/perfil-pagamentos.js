@@ -4,9 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
-
-
 function exibirInformacoes(){
   const usuarioLogadoJSON = localStorage.getItem("usuarioLogado");
 
@@ -22,9 +19,6 @@ function exibirInformacoes(){
   document.getElementById('email-exibir').innerText = usuarioLogado.email
  
 }
-
-
-
 
 function abrirModal() {
   const modal = document.getElementById('modalPagamento');

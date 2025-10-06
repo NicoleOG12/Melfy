@@ -70,7 +70,7 @@ function dados() {
       }
 }
 
-function logar() {
+window.logar= function() {
     const Confeiteiras = JSON.parse(localStorage.getItem('Confeiteiras'));
 
     let lg = document.querySelector('#email').value.trim();
