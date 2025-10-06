@@ -74,9 +74,15 @@ document.addEventListener("DOMContentLoaded", function () {
       cardsWrapper.appendChild(card);
     });
   }
+  
+  function removerAcentos(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
 
   function filtrarProdutos() {
     const termo = removerAcentos(inputPesquisa.value.trim().toLowerCase());
+    cardsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     if (!termo) {
       renderizarProdutos(produtos);
       return;
@@ -140,10 +146,13 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.doce').forEach(doce => {
     doce.addEventListener('click', function () {
       const categoria = this.querySelector('p').textContent.trim();
-      localStorage.setItem('categoriaSelecionada', categoria);
-      window.location.href = rotasCliente.produtos
+      const produtosFiltrados = produtos.filter(p => p.categoria === categoria);
+      renderizarProdutos(produtosFiltrados);
+  
+      cardsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
+
 
 });
 
