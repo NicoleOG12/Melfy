@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('Produtos', JSON.stringify(produtos));
 
     alert("Produto adicionado com sucesso!");
-    window.location.href = "meusProdutos.html";
+    window.location.href = rotasConfeiteira.meusProdutos
   });
 
   updatePesoCounter();

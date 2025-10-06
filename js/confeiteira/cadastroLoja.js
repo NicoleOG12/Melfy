@@ -33,7 +33,7 @@ function continuar() {
   localStorage.setItem('idLojaAtual', idLoja);
 
   alert("Dados da loja salvos com sucesso!");
-  location.href = "adicionarProdutos.html";
+  window.location.href = rotasConfeiteira.adicionarProdutos
 }
 
 function gerarIdLoja() {

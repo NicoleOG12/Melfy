@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
             logoLojaElement.addEventListener('click', function (e) {
                 e.stopPropagation(); 
                 localStorage.setItem('idLojaSelecionada', loja.idLoja);
-                window.location.href = 'loja.html';
+                window.location.href = rotasCliente.loja;
             });
 
             card.addEventListener('click', function (event) {
@@ -356,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
         doce.addEventListener('click', function () {
             const categoria = this.querySelector('p').textContent.trim();
             localStorage.setItem('categoriaSelecionada', categoria); 
-            window.location.href = 'produtos.html';
+            window.location.href = rotasCliente.produtos;
         });
     });
 
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function () {
         doce.addEventListener('click', function () {
           const categoria = this.querySelector('p').textContent.trim();
           localStorage.setItem('categoriaSelecionada', categoria); 
-          window.location.href = 'produtos.html';
+          window.location.href = rotasCliente.produtos;
         });
       });
 
@@ -489,32 +489,4 @@ function mostrarAnimacaoCarrinho(categoria, nomeProduto) {
     setTimeout(() => {
         animacao.style.display = 'none';
     }, 3000);
-}
-
-function entrarPerfil() {
-  let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-
-  if (!usuarioLogado || Object.keys(usuarioLogado).length === 0) {
-      alert('Você precisa se logar primeiro!');
-      window.location.href = 'login.html';
-  } else {
-      alert('Usuário logado!!');
-      window.location.href = 'perfil.html';
-  }
-
-  console.log(usuarioLogado);
-}
-
-function entrarPerfil() {
-  let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-
-  if (!usuarioLogado || Object.keys(usuarioLogado).length === 0) {
-      alert('Você precisa se logar primeiro!');
-      window.location.href = 'login.html';
-  } else {
-      alert('Usuário logado!!');
-      window.location.href = 'perfil.html';
-  }
-
-  console.log(usuarioLogado);
 }

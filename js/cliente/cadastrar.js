@@ -37,7 +37,8 @@ function cadastrar() {
     localStorage.setItem('Usuários', JSON.stringify(usuarios));
 
     alert("Cadastro realizado com sucesso!");
-    window.location.href = 'login.html';
+    window.location.href = rotasGerais.login;
+
 }
 
 function validarNome() {

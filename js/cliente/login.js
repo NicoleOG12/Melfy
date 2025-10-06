@@ -35,7 +35,7 @@ function logar() {
     if (usuario) {
         sessionStorage.setItem("user", usuario.nome);
         localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
-        window.location.href = 'cliente/doces.html';
+        window.location.href = rotasCliente.doces
         return;
     }
 
@@ -49,7 +49,7 @@ function logar() {
             localStorage.setItem('idLojaAtual', idLoja);
         }
 
-        window.location.href = 'confeiteira/adicionarProdutos.html';
+        window.location.href = rotasConfeiteira.adicionarProdutos
         return;
     }
 
@@ -86,7 +86,7 @@ function redefinirSenha(event) {
         usuarios[userIndex].senha = novaSenha;
         localStorage.setItem('Usuários', JSON.stringify(usuarios));
         alert('Senha redefinida com sucesso!');
-        window.location.href = 'login.html';
+        window.location.href = rotasGerais.login
         return;
     }
 
@@ -97,7 +97,7 @@ function redefinirSenha(event) {
         Confeiteiras[confIndex].senha = novaSenha;
         localStorage.setItem('Confeiteiras', JSON.stringify(Confeiteiras));
         alert('Senha redefinida com sucesso!');
-        window.location.href = 'login.html';
+        window.location.href = rotasConfeiteira.login
         return;
     }
 

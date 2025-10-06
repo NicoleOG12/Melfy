@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!headerContainer) return;
 
-  // 🔹 Base da URL (ex: http://localhost:5500/ ou https://melfy.com/)
   const baseURL = window.location.origin + "/";
 
   const headerNaoLogado = `
@@ -148,3 +147,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (linkHref.endsWith(currentPage)) link.classList.add('ativo');
   });
 });
+
+function entrarPerfil() {
+  let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+  if (!usuarioLogado || Object.keys(usuarioLogado).length === 0) {
+      alert('Você precisa se logar primeiro!');
+      window.location.href = 'login.html';
+  } else {
+      alert('Usuário logado!!');
+      window.location.href = 'perfil.html';
+  }
+
+  console.log(usuarioLogado);
+}

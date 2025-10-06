@@ -111,7 +111,7 @@ function cadastrar() {
     localStorage.setItem('Confeiteiras', JSON.stringify(Confeiteiras));
     document.querySelector('form').reset();
     alert("Cadastro finalizado com sucesso!");
-    location.href = "cadastroLoja.html"; 
+    window.location.href = rotasConfeiteira.cadastroLoja
   } else {
     alert("Erro ao localizar a confeiteira.");
   }

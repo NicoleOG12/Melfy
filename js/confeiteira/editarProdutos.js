@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('Produtos', JSON.stringify(produtos));
 
             alert('Produto atualizado com sucesso!');
-            window.location.href = './meusProdutos.html';
+            window.location.href = rotasConfeiteira.meusProdutos
         });
 
         document.querySelector('.button-delete').addEventListener('click', function (event) {
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 produtos = produtos.filter(p => p.idProduto !== parseInt(produtoId));
                 localStorage.setItem('Produtos', JSON.stringify(produtos));
 
-                window.location.href = './meusProdutos.html';
+                window.location.href = rotasConfeiteira.meusProdutos
             }
         });
 

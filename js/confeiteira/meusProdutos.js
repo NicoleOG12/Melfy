@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const botaoEditar = card.querySelector('.botao-editar');
                 botaoEditar.addEventListener('click', function () {
-                    window.location.href = `./editarProdutos.html?idProduto=${produto.idProduto}`;
+                    window.location.href = `${rotasConfeiteira.editarProdutos}?idProduto=${produto.idProduto}`
                 });
 
                 cardsWrapper.appendChild(card);

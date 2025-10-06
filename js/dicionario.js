@@ -1,3 +1,7 @@
+const BASE_IMG = "../../assents/img";
+const LOJAS_IMG = `${BASE_IMG}/Lojas`;
+const DOCES_IMG = `${BASE_IMG}/Doces`;
+
 export const dadosIniciais = [
   { 
     id: 1, 
@@ -232,7 +236,7 @@ export const lojasIniciais = [
     nomeLoja: "Dama",
     horario: "08:00 - 18:00",
     descricao: "Bolos decorados e doces artesanais feitos com carinho.",
-    fotoPerfil: "../../assents/img/Lojas/Dama.svg",
+    fotoPerfil: `${LOJAS_IMG}/Dama.svg`,
     idConfeiteira: "1"
   },
   {
@@ -240,7 +244,7 @@ export const lojasIniciais = [
     nomeLoja: "Caseirinho",
     horario: "09:00 - 20:00",
     descricao: "Tortas gourmet, cupcakes e doces personalizados para eventos.",
-    fotoPerfil: "../../assents/img/Lojas/Caseirinho.svg",
+    fotoPerfil: `${LOJAS_IMG}/Dama.svg`,
     idConfeiteira: "2"
   },
   {
@@ -248,7 +252,7 @@ export const lojasIniciais = [
     nomeLoja: "Da Bê",
     horario: "10:00 - 17:00",
     descricao: "Bolos caseiros e brigadeiros feitos com ingredientes naturais.",
-    fotoPerfil: "../../assents/img/Lojas/Da Bê.svg",
+    fotoPerfil: `${LOJAS_IMG}/Da Bê.svg`,
     idConfeiteira: "3"
   },
   {
@@ -256,7 +260,7 @@ export const lojasIniciais = [
     nomeLoja: "Barcelle",
     horario: "11:00 - 19:00",
     descricao: "Brownies, cookies e sobremesas de potinho irresistíveis.",
-    fotoPerfil: "../../assents/img/Lojas/Barcelle.png",
+    fotoPerfil: `${LOJAS_IMG}/Barcelle.png`,
     idConfeiteira: "4"
   },
 
@@ -265,7 +269,7 @@ export const lojasIniciais = [
     nomeLoja: "Doce Mania",
     horario: "08:00 - 19:00",
     descricao: "Delícias doces feitas com ingredientes naturais.",
-    fotoPerfil: "../../assents/img/Lojas/Doce Mania.svg",
+    fotoPerfil: `${LOJAS_IMG}/Doce Mania.svg`,
     idConfeiteira: "5"
   },
   {
@@ -273,7 +277,7 @@ export const lojasIniciais = [
     nomeLoja: "Sabores da Vovó",
     horario: "09:00 - 21:00",
     descricao: "Doces caseiros com sabor de infância.",
-    fotoPerfil: "../../assents/img/Lojas/Sabores da Vovó.svg",
+    fotoPerfil: `${LOJAS_IMG}/Sabores da Vovó.svg`,
     idConfeiteira: "6"
   },
   {
@@ -281,7 +285,7 @@ export const lojasIniciais = [
     nomeLoja: "Delícias do Campo",
     horario: "07:00 - 17:00",
     descricao: "Receitas tradicionais e artesanais.",
-    fotoPerfil: "../../assents/img/Lojas/Delícias do Campo.svg",
+    fotoPerfil: `${LOJAS_IMG}/Delícias do Campo.svg`,
     idConfeiteira: "7"
   },
   {
@@ -289,7 +293,7 @@ export const lojasIniciais = [
     nomeLoja: "Bella Confeitaria ",
     horario: "10:00 - 18:00",
     descricao: "Doces finos para ocasiões especiais.",
-    fotoPerfil: "../../assents/img/Lojas/Bella Confeitaria.svg",
+    fotoPerfil: `${LOJAS_IMG}/Bella Confeitaria.svg`,
     idConfeiteira: "8"
   },
   {
@@ -297,7 +301,7 @@ export const lojasIniciais = [
     nomeLoja: "Caramelo Doces",
     horario: "08:30 - 20:00",
     descricao: "Doces gourmets e sobremesas exclusivas.",
-    fotoPerfil: "../../assents/img/Lojas/Caramelo Doces.svg",
+    fotoPerfil: `${LOJAS_IMG}/Caramelo Doces.svg`,
     idConfeiteira: "9"
   },
   {
@@ -305,7 +309,7 @@ export const lojasIniciais = [
     nomeLoja: "Cantinho Doce",
     horario: "09:00 - 19:30",
     descricao: "Delícias para adoçar o seu dia.",
-    fotoPerfil: "../../assents/img/Lojas/Cantinho Doce.svg",
+    fotoPerfil: `${LOJAS_IMG}/Cantinho Doce.svg`,
     idConfeiteira: "10"
   },
   {
@@ -313,7 +317,7 @@ export const lojasIniciais = [
     nomeLoja: "Sabor & Arte",
     horario: "08:00 - 18:30",
     descricao: "Combinação perfeita de sabor e beleza.",
-    fotoPerfil: "../../assents/img/Lojas/Sabor & Arte.svg",
+    fotoPerfil: `${LOJAS_IMG}/Sabor & Arte.svg`,
     idConfeiteira: "11"
   },
   {
@@ -321,7 +325,7 @@ export const lojasIniciais = [
     nomeLoja: "Cheiro Suave",
     horario: "10:00 - 22:00",
     descricao: "Doces sofisticados e irresistíveis.",
-    fotoPerfil: "../../assents/img/Lojas/Cheiro Suave.svg",
+    fotoPerfil: `${LOJAS_IMG}/Cheiro Suave.svg`,
     idConfeiteira: "12"
   },
   {
@@ -329,7 +333,7 @@ export const lojasIniciais = [
     nomeLoja: "Doce Encanto",
     horario: "07:00 - 16:00",
     descricao: "Encantando com doces artesanais.",
-    fotoPerfil: "../../assents/img/Lojas/Doce Encanto.svg",
+    fotoPerfil: `${LOJAS_IMG}/Doce Encanto.svg`,
     idConfeiteira: "13"
   },
   {
@@ -337,7 +341,7 @@ export const lojasIniciais = [
     nomeLoja: "Sonho Doce",
     horario: "09:00 - 20:00",
     descricao: "Sonhos e doces que derretem na boca.",
-    fotoPerfil: "../../assents/img/Lojas/Sonho Doce.svg",
+    fotoPerfil: `${LOJAS_IMG}/Sonho Doce.svg`,
     idConfeiteira: "14"
   }
 ];
@@ -350,7 +354,7 @@ export const produtosPadrao = [
       descricao: "Delicioso alfajor artesanal recheado com doce de leite argentino e coberto com chocolate ao leite",
       peso: 60,
       preco: 144.00,
-      foto: "../../assents/img/Doces/Alfajor.svg",
+      foto: `${DOCES_IMG}/Alfajor.svg`,
       idLoja: "10",
       idConfeiteira: "10",
       idProduto: 1
@@ -362,7 +366,7 @@ export const produtosPadrao = [
       descricao: "Caixa com 7 éclairs sortidas",
       peso: 210,
       preco: 133.00,
-      foto: "../../assents/img/Doces/Eclairs.svg",
+      foto: `${DOCES_IMG}/Eclairs.svg`,
       idLoja: "1",
       idConfeiteira: "1",
       idProduto: 2
@@ -374,7 +378,7 @@ export const produtosPadrao = [
       descricao: "Caixa com 36 doces",
       peso: 360,
       preco: 148.00,
-      foto: "../../assents/img/Doces/Bombons.svg",
+      foto: `${DOCES_IMG}/Bombons.svg`,
       idLoja: "2",
       idConfeiteira: "2",
       idProduto: 3
@@ -386,7 +390,7 @@ export const produtosPadrao = [
       descricao: "Caixa com 6 brigadeiros de chocolate",
       peso: 90,
       preco: 15.00,
-      foto: "../../assents/img/Doces/Brigadeiros.svg",
+      foto: `${DOCES_IMG}/Brigadeiros.svg`,
       idLoja: "3",
       idConfeiteira: "3",
       idProduto: 4
@@ -398,7 +402,7 @@ export const produtosPadrao = [
       descricao: "Marmita brownie de ninho e nutella",
       peso: 100,
       preco: 20.00,
-      foto: "../../assents/img/Doces/Brownie de Ninho.svg",
+      foto: `${DOCES_IMG}/Brownie de Ninho.svg`,
       idLoja: "4",
       idConfeiteira: "4",
       idProduto: 5
@@ -410,7 +414,7 @@ export const produtosPadrao = [
       descricao: "Cookie recheado de chocolate",
       peso: 40,
       preco: 6.00,
-      foto: "../../assents/img/Doces/Cookies de Chocolate.svg",
+      foto: `${DOCES_IMG}/Cookies de Chocolate.svg`,
       idLoja: "2",
       idConfeiteira: "2",
       idProduto: 6
@@ -422,7 +426,7 @@ export const produtosPadrao = [
       descricao: "Pudim tamanho família",
       peso: 1300,
       preco: 70.00,
-      foto: "../../assents/img/Doces/Pudim.svg",
+      foto: `${DOCES_IMG}/Pudim.svg`,
       idLoja: "4",
       idConfeiteira: "4",
       idProduto: 7
@@ -434,7 +438,7 @@ export const produtosPadrao = [
       descricao: "Sonhos tradicionais unidade",
       peso: 25,
       preco: 2.50,
-      foto: "../../assents/img/Doces/Mini Sonhos.svg",
+      foto: `${DOCES_IMG}/Mini Sonhos.svg`,
       idLoja: "1",
       idConfeiteira: "1",
       idProduto: 8
@@ -446,7 +450,7 @@ export const produtosPadrao = [
       descricao: "Cheescake de 8 fatias",
       peso: 1100,
       preco: 163.00,
-      foto: "../../assents/img/Doces/Cheescake.svg",
+      foto: `${DOCES_IMG}/Cheescake.svg`,
       idLoja: "3",
       idConfeiteira: "3",
       idProduto: 9
@@ -458,7 +462,7 @@ export const produtosPadrao = [
       descricao: "Pavê de chocolate preto e branco",
       peso: 150,
       preco: 16.00,
-      foto: "../../assents/img/Doces/Pave.svg",
+      foto: `${DOCES_IMG}/Pave.svg`,
       idLoja: "1",
       idConfeiteira: "1",
       idProduto: 10
@@ -470,7 +474,7 @@ export const produtosPadrao = [
       descricao: "Recheado com geléia de amoras",
       peso: 600, 
       preco: 120.00,
-      foto: "../../assents/img/Doces/Romcabole.svg",
+      foto: `${DOCES_IMG}/Romcabole.svg`,
       idLoja: "1", 
       idConfeiteira: "1", 
       idProduto: 11
@@ -482,7 +486,7 @@ export const produtosPadrao = [
     descricao: "Deliciosa torta com creme de limão siciliano e base crocante",
     peso: 500,
     preco: 45.00,
-    foto: "../../assents/img/Doces/Torta de Limão.svg",
+    foto: `${DOCES_IMG}/Torta de Limão.svg`,
     idLoja: "5",
     idConfeiteira: "5",
     idProduto: 12
@@ -494,7 +498,7 @@ export const produtosPadrao = [
     descricao: "Trufas cremosas com cobertura de cacau",
     peso: 200,
     preco: 35.00,
-    foto: "../../assents/img/Doces/Trufas de Chocolate.svg",
+    foto: `${DOCES_IMG}/Trufas de Chocolate.svg`,
     idLoja: "6",
     idConfeiteira: "6",
     idProduto: 13
@@ -506,7 +510,7 @@ export const produtosPadrao = [
     descricao: "Churros Recheados com vários sabores",
     peso: 300,
     preco: 15.00,
-    foto: "../../assents/img/Doces/Churros Recheado.svg",
+    foto: `${DOCES_IMG}/Churros Recheado.svg`,
     idLoja: "10",
     idConfeiteira: "10",
     idProduto: 14
@@ -518,7 +522,7 @@ export const produtosPadrao = [
     descricao: "Clássico cupcake red velvet com cobertura de cream cheese",
     peso: 80,
     preco: 12.00,
-    foto: "../../assents/img/Doces/Cupcake Red Velvet.svg",
+    foto: `${DOCES_IMG}/Cupcake Red Velvet.svg`,
     idLoja: "8",
     idConfeiteira: "8",
     idProduto: 15
@@ -530,7 +534,7 @@ export const produtosPadrao = [
     descricao: "Pão de mel macio com recheio cremoso",
     peso: 100,
     preco: 10.00,
-    foto: "../../assents/img/Doces/Pão de Mel.svg",
+    foto: `${DOCES_IMG}/Pão de Mel.svg`,
     idLoja: "9",
     idConfeiteira: "9",
     idProduto: 16
@@ -542,7 +546,7 @@ export const produtosPadrao = [
     descricao: "Delicioso cheesecake com base crocante e cobertura de framboesa",
     peso: 600,
     preco: 195.00,
-    foto: "../../assents/img/Doces/Cheesecake Framboesa.svg",
+    foto: `${DOCES_IMG}/Cheesecake Framboesa.svg`,
     idLoja: "7",
     idConfeiteira: "7",
     idProduto: 17
@@ -554,7 +558,7 @@ export const produtosPadrao = [
     descricao: "Mousse de maracujá com toque cítrico",
     peso: 150,
     preco: 18.00,
-    foto: "../../assents/img/Doces/Mousse de Maracujá.svg",
+    foto: `${DOCES_IMG}/Mousse de Maracujá.svg`,
     idLoja: "11",
     idConfeiteira: "11",
     idProduto: 18
@@ -566,7 +570,7 @@ export const produtosPadrao = [
     descricao: "Bolo fofinho de cenoura com cobertura de chocolate",
     peso: 800,
     preco: 70.00,
-    foto: "../../assents/img/Doces/Bolo de Cenoura.svg",
+    foto: `${DOCES_IMG}/Bolo de Cenoura.svg`,
     idLoja: "12",
     idConfeiteira: "12",
     idProduto: 19
@@ -578,7 +582,7 @@ export const produtosPadrao = [
     descricao: "Quindim com sabor autêntico e textura cremosa",
     peso: 90,
     preco: 8.00,
-    foto: "../../assents/img/Doces/Quindim.svg",
+    foto: `${DOCES_IMG}/Quindim.svg`,
     idLoja: "13",
     idConfeiteira: "13",
     idProduto: 20
@@ -590,7 +594,7 @@ export const produtosPadrao = [
     descricao: "Macarons Coloridos e Recheados",
     peso: 50,
     preco: 10.00,
-    foto: "../../assents/img/Doces/Macarons.svg",
+    foto: `${DOCES_IMG}/Macarons.svg`,
     idLoja: "14",
     idConfeiteira: "14",
     idProduto: 21
@@ -602,7 +606,7 @@ export const produtosPadrao = [
     descricao: "Clássica sobremesa Banoffe com base crocante",
     peso: 500,
     preco: 35.00,
-    foto: "../../assents/img/Doces/Banoffe.svg",
+    foto: `${DOCES_IMG}/Banoffe.svg`,
     idLoja: "14",
     idConfeiteira: "14",
     idProduto: 22
@@ -614,7 +618,7 @@ export const produtosPadrao = [
     descricao: "Croissant artesanal com recheio de frutas vermelhas",
     peso: 130,
     preco: 18.00,
-    foto: "../../assents/img/Doces/Croissant de Frutas Vermelhas.svg",
+    foto: `${DOCES_IMG}/Croissant de Frutas Vermelhas.svg`,
     idLoja: "8",
     idConfeiteira: "8",
     idProduto: 23
@@ -626,7 +630,7 @@ export const produtosPadrao = [
     descricao: "Coloridos e divertidos, ideais para festas",
     peso: 80,
     preco: 8.00,
-    foto: "../../assents/img/Doces/Cake pop.svg",
+    foto: `${DOCES_IMG}/Cake pop.svg`,
     idLoja: "5",
     idConfeiteira: "5",
     idProduto: 24
@@ -638,7 +642,7 @@ export const produtosPadrao = [
     descricao: "Clássico italiano em versão individual",
     peso: 120,
     preco: 22.00,
-    foto: "../../assents/img/Doces/Tiramisu.svg",
+    foto: `${DOCES_IMG}/Tiramisu.svg`,
     idLoja: "7",
     idConfeiteira: "7",
     idProduto: 25
@@ -650,7 +654,7 @@ export const produtosPadrao = [
     descricao: "Tradicional docinho de festa brasileiro",
     peso: 25,
     preco: 2.00,
-    foto: "../../assents/img/Doces/Beijinho.svg",
+    foto: `${DOCES_IMG}/Beijinho.svg`,
     idLoja: "14",
     idConfeiteira: "14",
     idProduto: 26
@@ -662,7 +666,7 @@ export const produtosPadrao = [
     descricao: "Bomba recheado com brigadeiro, morango e banhado no chocolate",
     peso: 150,
     preco: 10.00,
-    foto: "../../assents/img/Doces/Bomba de Morango.svg",
+    foto: `${DOCES_IMG}/Bomba de Morango.svg`,
     idLoja: "11",
     idConfeiteira: "11",
     idProduto: 27
@@ -674,7 +678,7 @@ export const produtosPadrao = [
     descricao: "Barra de chocolate recheada com kadayif e um creme de pistache e tahine",
     peso: 150,
     preco: 55.00,
-    foto: "../../assents/img/Doces/Chocolate de Dubai.svg",
+    foto: `${DOCES_IMG}/Chocolate de Dubai.svg`,
     idLoja: "3",
     idConfeiteira: "3",
     idProduto: 28
@@ -686,7 +690,7 @@ export const produtosPadrao = [
     descricao: "Morango com Brigadeiro de Ninho banhado no caramelo, viral das redes sociais!",
     peso: 100,
     preco: 15.00,
-    foto: "../../assents/img/Doces/Morango do amor.svg",
+    foto: `${DOCES_IMG}/Morango do amor.svg`,
     idLoja: "2",
     idConfeiteira: "2",
     idProduto: 29
@@ -698,7 +702,7 @@ export const produtosPadrao = [
     descricao: "Morango com Brigadeiro de Maracujá banhado no caramelo",
     peso: 100,
     preco: 18.00,
-    foto: "../../assents/img/Doces/Morango de Maracujá.svg",
+    foto: `${DOCES_IMG}/Morango de Maracujá.svg`,
     idLoja: "10",
     idConfeiteira: "10",
     idProduto: 30
