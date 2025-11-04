@@ -45,8 +45,22 @@ body::before {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #41200a; 
+  background-color:rgb(74 32 20); 
 }
+
+/* #header header {
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgb(74, 32, 20);
+  position: fixed;
+  top: 0;             
+  left: 0;       
+  width: 100%;     
+  box-sizing: border-box;
+} */
 
 .logo img {
   height: 80px;
