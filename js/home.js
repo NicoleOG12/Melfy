@@ -139,7 +139,7 @@ async function fetchProdutos(params = "") {
 async function fetchConfeitarias() {
   try {
     const res = await fetch(
-      "https://melfy-backend-production.up.railway.app/lojas",
+      "https://melfy-backend-production.up.railway.app/lojas/fetchAll",
       {
         method: "GET",
         headers: {
