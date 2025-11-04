@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <nav>
         <a href="${baseURL}index.html">Home</a>
         <a href="${baseURL}pages/cliente/doces.html">Doces</a>
-        <a href="${baseURL}sobre.html">Sobre</a>
+        <a href="${baseURL}pages/sobre.html">Sobre</a>
         <a href="${baseURL}pages/login.html">Login</a>
       </nav>
     </header>
