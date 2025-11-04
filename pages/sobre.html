@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melfy - Conectamos Você às Melhores Confeitarias do Brasil | Delivery de Doces Premium</title>
+    <meta name="description" content="A maior plataforma de delivery de confeitarias do Brasil. Bolos, doces finos, salgados e kits festa com entrega rápida.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Melfy - Confeitarias Premium em Todo Brasil">
+    <meta property="og:description" content="Peça doces incríveis das melhores confeitarias da sua cidade com entrega rápida.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1089&q=80">
+    <meta property="og:url" content="https://melfy.com.br">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Delius+Swash+Caps&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#FFF9E6',
+                            100: '#FFEFBF',
+                            200: '#FFE399',
+                            300: '#FFD773',
+                            400: '#FFCB4D',
+                            500: '#FFC027',
+                            600: '#E5A70F',
+                            700: '#B2830B',
+                            800: '#7F5F08',
+                            900: '#4C3A05'
+                        },
+                        secondary: {
+                            50: '#F9F5F0',
+                            100: '#EDE4D6',
+                            200: '#D6C6AB',
+                            300: '#BFA880',
+                            400: '#A88B55',
+                            500: '#916D2A',
+                            600: '#745720',
+                            700: '#574116',
+                            800: '#3A2B0F',
+                            900: '#1D1607'
+                        },
+                        'mellow-yellow': {
+                            100: '#FFF9E6',
+                            200: '#FFF0B3',
+                            300: '#FFE680',
+                            400: '#FFDD4D',
+                            500: '#FFD11A',
+                            600: '#E6BC00',
+                            700: '#B38F00',
+                        },
+                        'cosy-brown': {
+                            100: '#F5EEE6',
+                            200: '#E8D5C0',
+                            300: '#D9BB95',
+                            400: '#C9A06A',
+                            500: '#BA8540',
+                            600: '#9C6A2D',
+                            700: '#754F1F',
+                        },
+                        'sweet-pink': '#FFB6C1',
+                        'cream': '#FFFDD0',
+                    },
+                    fontFamily: {
+                        'comfortaa': ['Comfortaa', 'cursive'],
+                        'delius': ['Delius Swash Caps', 'cursive'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'marquee': 'marquee 30s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sobre.css">
+</head>
+
+<body>
+    <section id="sobre">
+    <div class="breadcrumb">
+        <div class="container">
+            <nav class="breadcrumb-nav">
+                <a href="index.html">Início</a>
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+                <span>Sobre Nós</span>
+            </nav>
+        </div>
+    </div>
+    
+    <main>
+        <section class="about-hero">
+            <div class="container">
+                <h1 class="font-delius">Adoçando a vida, um pedido de cada vez.</h1>
+                <p>Nascemos da paixão por doces e do desejo de conectar os melhores confeiteiros artesanais diretamente a você.</p>
+            </div>
+        </section>
+
+        <section class="section story-section">
+            <div class="container">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="story-image reveal">
+                        <img src="../assents/img/melfy.svg" alt="Melfy">
+                    </div>
+                    <div class="reveal">
+                        <h2 class="text-3xl font-bold mb-4 font-delius">Nossa Doce Jornada</h2>
+                        <p class="text-text-light mb-4">A Melfy começou como um pequeno sonho em uma cozinha caseira. Víamos o incrível talento de confeiteiros locais que criavam verdadeiras obras de arte, mas que muitas vezes não tinham a visibilidade que mereciam. Decidimos criar uma ponte: uma plataforma que não só facilita o delivery, mas que celebra a arte da confeitaria.</p>
+                        <p class="text-text-light">De uma ideia simples, crescemos para nos tornar a maior comunidade de amantes de doces do Brasil, apoiando pequenos negócios e levando felicidade para milhares de lares.</p>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                            <div class="stat-item">
+                                <p class="stat-number" data-target="500">0</p>
+                                <p class="stat-label">Confeitarias Parceiras</p>
+                            </div>
+                            <div class="stat-item">
+                                <p class="stat-number" data-target="100000">0</p>
+                                <p class="stat-label">Pedidos Entregues</p>
+                            </div>
+                            <div class="stat-item col-span-2 md:col-span-1">
+                                <p class="stat-number" data-target="25000">0</p>
+                                <p class="stat-label">Clientes Satisfeitos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section values-section">
+            <div class="container">
+                <h2 class="section-title font-delius">Nossos Ingredientes Secretos</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="value-card reveal">
+                        <div class="value-icon"><ion-icon name="heart-outline"></ion-icon></div>
+                        <h3 class="value-title font-delius">Paixão</h3>
+                        <p class="value-description">Somos apaixonados por doces e pela alegria que eles proporcionam.</p>
+                    </div>
+                    <div class="value-card reveal" style="animation-delay: 0.1s;">
+                        <div class="value-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
+                        <h3 class="value-title font-delius">Qualidade</h3>
+                        <p class="value-description">Selecionamos apenas confeitarias que usam os melhores ingredientes.</p>
+                    </div>
+                    <div class="value-card reveal" style="animation-delay: 0.2s;">
+                        <div class="value-icon"><ion-icon name="people-outline"></ion-icon></div>
+                        <h3 class="value-title font-delius">Comunidade</h3>
+                        <p class="value-description">Apoiamos o crescimento de pequenos empreendedores locais.</p>
+                    </div>
+                    <div class="value-card reveal" style="animation-delay: 0.3s;">
+                        <div class="value-icon"><ion-icon name="rocket-outline"></ion-icon></div>
+                        <h3 class="value-title font-delius">Inovação</h3>
+                        <p class="value-description">Buscamos constantemente a melhor experiência de delivery para você.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section team-section">
+            <div class="container">
+                <h2 class="section-title font-delius">Conheça Quem Faz Acontecer</h2>
+                <p class="text-center text-lg text-text-light max-w-3xl mx-auto mb-12">Nossa equipe apaixonada trabalha incansavelmente para conectar você às melhores experiências doces do Brasil.</p>
+                
+                <!-- Floating decorative elements -->
+                <div class="team-floating-element team-floating-element-1">
+                    <ion-icon name="diamond-outline" style="font-size: 48px;"></ion-icon>
+                </div>
+                <div class="team-floating-element team-floating-element-2">
+                    <ion-icon name="star" style="font-size: 48px;"></ion-icon>
+                </div>
+                
+                <!-- Carousel Container -->
+                <div class="team-carousel-container">
+                    <div class="team-carousel" id="team-carousel">
+                        <!-- Team Member 1 -->
+                        <div class="team-member reveal">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/emilly.jpeg" alt="Emilly Budri" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/EmillyBudriBognar"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Emilly Budri</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 2 -->
+                        <div class="team-member reveal" style="animation-delay: 0.1s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/iris.jpg" alt="Íris Oliveira" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/%C3%ACris-oliveira-b22161365/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/iris-oli"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Íris Oliveira</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 3 -->
+                        <div class="team-member reveal" style="animation-delay: 0.2s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/isabella.jpg" alt="Isabella Apolinario" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/isabella-apolinario-dos-santos/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/IsahApoli"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Isabella Apolinario</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 4 -->
+                        <div class="team-member reveal" style="animation-delay: 0.3s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/julia.png" alt="Júlia Lins" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/j%C3%BAlia-lins-pereira-da-silva-71ab862a3/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/linsjulia"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Júlia Lins</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 5 -->
+                        <div class="team-member reveal" style="animation-delay: 0.4s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/laura.jpg" alt="Laura Cristini" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/laura-cristini-silva-5b6098380/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/Laura677"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Laura Cristini</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 6 -->
+                        <div class="team-member reveal" style="animation-delay: 0.5s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/nicole.png" alt="Nicole Oliveira" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/nicole-oliveira-gon%C3%A7alves/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/NicoleOG12"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Nicole Oliveira</h3>
+                            </div>
+                        </div>
+                        
+                        <!-- Team Member 7 -->
+                        <div class="team-member reveal" style="animation-delay: 0.6s;">
+                            <div class="team-image-container">
+                                <img src="../assents/img/Membros/stela.jpg" alt="Stela dos Santos" class="team-image">
+                                <div class="team-overlay">
+                                    <div class="team-social">
+                                        <a href="https://www.linkedin.com/in/stelasm/"><ion-icon name="logo-linkedin"></ion-icon></a>
+                                        <a href="https://github.com/stela-sm"><ion-icon name="logo-github"></ion-icon></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="team-info">
+                                <h3 class="team-name font-delius">Stela dos Santos</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel Navigation -->
+                    <div class="carousel-nav">
+                        <button class="carousel-btn" id="team-prev">
+                            <ion-icon name="chevron-back-outline"></ion-icon>
+                        </button>
+                        <button class="carousel-btn" id="team-next">
+                            <ion-icon name="chevron-forward-outline"></ion-icon>
+                        </button>
+                    </div>
+                    
+                    <div class="carousel-dots" id="team-dots">
+                        <!-- Dots will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 flex items-center justify-center bg-gradient-to-r from-cosy-brown-600 to-cosy-brown-700 text-white relative overflow-hidden">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl text-white font-bold mb-6">
+                <span class="font-delius text-5xl md:text-6xl block mb-4">Pronto para começar?</span>
+                Sua próxima aventura doce espera por você!
+            </h2>
+            <p class="text-xl mb-10 max-w-2xl mx-auto opacity-90">
+                Junte-se a milhares de confeiteiras e amantes de doces que já transformaram suas paixões em realidade com o Melfy.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="#" class="px-8 py-4 bg-mellow-yellow-400 hover:bg-mellow-yellow-500 text-cosy-brown-700 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                    <i class="fas fa-oven mr-2"></i> Quero vender doces
+                </a>
+                <a href="#products" class="px-8 py-4 bg-white hover:bg-gray-100 text-cosy-brown-700 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center">
+                    <i class="fas fa-cookie mr-2"></i> Quero comprar doces
+                </a>
+            </div>
+        </div>
+    </section>
+    </main>
+    </section>
+    <script src="../js/sobre.js" defer></script>
+</body>
+</html>
