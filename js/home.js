@@ -171,7 +171,7 @@ async function fetchConfeitarias() {
       bakerCard.innerHTML = `
         <div class="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full">
           <div class="relative h-48 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1608198093002-ad4e005484b7?auto=format&fit=crop&w=800&q=80" 
+            <img src="${loja.pfp}" 
                  alt="${loja.nome}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
             <div class="absolute bottom-4 left-4 text-white">
