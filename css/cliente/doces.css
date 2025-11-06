@@ -2,20 +2,20 @@
 h3 {
   margin-top: 10px;
   margin-bottom: -10px;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Nunito", sans-serif;
   font-size: 16px;
   margin-left: 20px;
 }
   
 .carrossel-container {
-  font-family: "Istok Web", sans-serif;
+  font-family: "Nunito", sans-serif;
   color: var(--cor-destaque);
   padding: 5px;
-  max-width: 1120px;
+  max-width: 100%;
   margin: auto;
-  padding-top: 20px;
+  padding: 20px 60px;
 }
-  
+    
 .carrossel {
   display: flex;
   align-items: center;
@@ -127,8 +127,9 @@ h3 {
 
 .doce p,
 .categoria p {
-  margin-top: 15px;
+  margin-top: 25px;
   text-align: center;
+  font-size: 13px;
 }
  
 .arrow img {

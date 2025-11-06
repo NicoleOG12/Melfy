@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
       const card = document.createElement('div');
       card.classList.add('card');
-
+      
       card.innerHTML = `
         <div class="border-card">
           <div class="headerNovidade">
@@ -41,10 +41,11 @@ document.addEventListener("DOMContentLoaded", function () {
               <span class="icone-preco">R$</span>
               <span class="valor">${formatarPreco(produto.preco)}</span>
             </div>
-            <div class="btn-carrinho">
-              <i class="fas fa-shopping-bag"></i>
-            </div>
           </div>
+          <button class="btn-carrinho">
+            <span>COMPRAR</span>
+            <i class="fas fa-shopping-bag"></i>
+          </button>
         </div>
       `;
 
