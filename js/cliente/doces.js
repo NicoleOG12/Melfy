@@ -27,10 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
       card.classList.add('card');
       
       card.innerHTML = `
+        <div class="headerNovidade">
+          <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
+        </div>
         <div class="border-card">
-          <div class="headerNovidade">
-            <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
-          </div>
           <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
           <div class="descricao">
             <h3>${produto.nome}</h3>
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </div>
           <button class="btn-carrinho">
-            <span>COMPRAR</span>
+            <span>ADICIONAR</span>
             <i class="fas fa-shopping-bag"></i>
           </button>
         </div>
