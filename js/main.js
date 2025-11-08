@@ -118,26 +118,84 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
-
+  
   if (footerContainer) {
     footerContainer.innerHTML = `
-      <footer class="footer">
-        <div class="footer-top">
-          <div class="social-icons">
-            <a href="#"><img src="${baseURL}assents/img/Geral/Instagram.svg" alt="Instagram" /></a>
-            <a href="#"><img src="${baseURL}assents/img/Geral/Facebook.svg" alt="Facebook" /></a>
-            <a href="#"><img src="${baseURL}assents/img/Geral/Linkedin.svg" alt="LinkedIn" /></a>
+      <footer class="melfy-footer">
+        <div class="container-header-and-footer">
+          <div class="footer-grid">
+     
+            <div class="footer-brand">
+              <div class="footer-logo">
+                <img src="${baseURL}assents/img/Geral/Melfy-versão final.svg" alt="Logo" class="footer-logo-image" />
+              </div>
+              <p class="footer-description">
+                Conectamos você aos melhores confeiteiros da sua região. Descubra sabores únicos e experiências doces inesquecíveis.
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link">
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="social-link">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+  
+            <div class="footer-section">
+              <h3>Navegação</h3>
+              <div class="footer-links">
+                <a href="${baseURL}index.html" class="footer-link">Início</a>
+                <a href="${baseURL}pages/cliente/doces.html" class="footer-link">Doces</a>
+                <a href="${baseURL}pages/sobre.html" class="footer-link">Sobre nós</a>
+                <a href="${baseURL}pages/cliente/contato.html" class="footer-link">Contato</a>
+              </div>
+            </div>
+  
+            <div class="footer-section">
+              <h3>Suporte</h3>
+              <div class="footer-links">
+                <a href="${baseURL}pages/cliente/faq.html" class="footer-link">FAQ</a>
+                <a href="${baseURL}pages/cliente/privacidade.html" class="footer-link">Privacidade</a>
+                <a href="${baseURL}pages/cliente/termos.html" class="footer-link">Termos</a>
+                <a href="${baseURL}pages/cliente/trocas.html" class="footer-link">Trocas</a>
+              </div>
+            </div>
+  
+            <div class="footer-section">
+              <h3>Contato</h3>
+              <div class="contact-info">
+                <div class="contact-item">
+                  <i class="fas fa-phone contact-icon"></i>
+                  <span>(11) 95934-3957</span>
+                </div>
+                <div class="contact-item">
+                  <i class="fas fa-envelope contact-icon"></i>
+                  <span>melfy@gmail.com</span>
+                </div>
+                <div class="contact-item">
+                  <i class="fas fa-map-marker-alt contact-icon"></i>
+                  <span>Rua das Flores, nº 255<br>Jardim Rosinha, SP</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p>Rua das Flores, nº 255, Jardim Rosinha, SP, Brasil</p>
-          <p>
-            <i class="fas fa-phone-alt"></i> (11) 959343957 &nbsp;
-            <i class="fas fa-envelope"></i> melfy@gmail.com
-          </p>
-        </div>
-        <div class="footer-bottom">
-          <a href="#">Política de Privacidade</a>
-          <span>© Copyright, 2025</span>
-          <a href="#">Termos e Condições</a>
+  
+          <div class="footer-bottom">
+            <div class="footer-bottom-content">
+              <p class="copyright">
+                © ${new Date().getFullYear()} Melfy. Todos os direitos reservados.
+              </p>
+              <p class="heart-text">
+                <span>Feito com</span>
+                <i class="fas fa-heart heart-icon"></i>
+                <span>para doces momentos</span>
+              </p>
+            </div>
+          </div>
         </div>
       </footer>
     `;

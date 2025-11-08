@@ -4,7 +4,6 @@ body {
   background-position: center;
   height: 100vh;
   width: 100%;
-  /*cursor: url('../img/abelha.png'), auto;*/
 }
 
 body::before {
@@ -37,7 +36,6 @@ body::before {
   background-color: rgba(255, 255, 255, 0.623);
   z-index: -1;
 }
- 
 
 #header header {
   z-index: 1;
@@ -45,22 +43,8 @@ body::before {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color:rgb(74 32 20); 
+  background-color: rgb(74 32 20);
 }
-
-/* #header header {
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: rgb(74, 32, 20);
-  position: fixed;
-  top: 0;             
-  left: 0;       
-  width: 100%;     
-  box-sizing: border-box;
-} */
 
 .logo img {
   height: 80px;
@@ -79,18 +63,17 @@ body::before {
 
 nav {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   flex-grow: 2;
-  margin-left: 0; 
+  margin-left: 0;
   margin-top: 20px;
 }
-
 
 nav a {
   margin: 0 15px;
   text-decoration: none;
-  color:#ffbb00;
+  color: #ffbb00;
   font-size: 15px;
   font-family: "Istok Web", sans-serif;
   font-weight: 700;
@@ -186,7 +169,7 @@ nav .iconuser a:hover {
 .toggle-btn {
   position: absolute;
   margin-top: 20px;
-  right: 140px; 
+  right: 140px;
   width: 60px;
   height: 24px;
   background: linear-gradient(145deg, var(--cor-ativa), var(--cor-ativa));
@@ -308,9 +291,9 @@ nav .iconuser a:hover {
 
 .contador-sacola {
   position: absolute;
-  top: 0;  
-  right: 0;    
-  background-color: #ffbe3e; 
+  top: 0;
+  right: 0;
+  background-color: #ffbe3e;
   color: #7c5600;
   border-radius: 50%;
   padding: 2px 7px;
@@ -318,13 +301,12 @@ nav .iconuser a:hover {
   font-weight: bold;
   pointer-events: none;
   user-select: none;
-  transform: translate(-80%, -20%); 
+  transform: translate(-80%, -20%);
 }
 
 .iconbag {
   position: relative;
 }
-
 
 @media (max-width: 768px) {
   nav {
@@ -354,68 +336,184 @@ nav a.ativo {
   box-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
 }
 
+.melfy-footer {
+  background: #f59e0b;
+  color: #78350f;
+  padding: 48px 20px 32px;
+  margin-top: auto;
+}
 
-footer {
-    background: #41200a;
-    font-family: 'Quicksand', sans-serif;
-    color: var(--cor-footer-text);
-    text-align: center;
-    padding: 20px 0px;
-    border-top: 2px solid;
-    width: 100%;
-    box-sizing: border-box;
-    height: 170px;
+.melfy-footer .container-header-and-footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
-  
-.footer-top .social-icons {
-    margin-bottom: 10px;
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
 }
-  
-.footer-top .social-icons a {
-    margin: 0 8px;
-    display: inline-block;
-    background-color: #fff;
-    padding: 8px;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-  
-.footer-top .social-icons a img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
-  
-.footer-top p {
-    margin: 5px 0;
-    font-size: 14px;
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-  
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo-image {
+  height: 60px;
+  width: auto;
+}
+
+.footer-description {
+  color: #2e1200;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.social-link {
+  color: #92400e;
+  padding: 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-link:hover {
+  color: #270f00;
+  background: #fcd34d;
+  transform: translateY(-1px);
+}
+
+.footer-section h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #2e1200;
+  margin-left: 40px;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.footer-link {
+  color: #2e1200;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 0 4px 16px;
+  position: relative;
+  transition: all 0.3s ease;
+  margin-left: 20px;
+}
+
+.footer-link::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #270f00;
+  padding-left: 20px;
+}
+
+.footer-link:hover::before {
+  transform: translateY(-50%) translateX(4px);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #2e1200;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.contact-icon {
+  color: #2e1200;
+  width: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
 .footer-bottom {
-    background:#41200a;
-    border-top: 2px solid;
-    margin-top: 15px;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-between; 
-    padding-left: 50px;
-    padding-right: 50px;
-    font-size: 14px;
-    color: var(--cor-footer-text);
-    width: 100%;
-    box-sizing: border-box;
+  border-top: 1px solid #fbbf24;
+  padding-top: 24px;
 }
-  
-.footer-bottom a {
-    text-decoration: none;
-    color: var(--cor-footer-text);
-    font-size: 14px;
+
+.footer-bottom-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
 }
-  
-.footer-bottom span {
-    color: var(--cor-footer-text);
-    font-size: 14px;
-    text-align: center; 
-    flex-grow: 1; 
+
+@media (min-width: 768px) {
+  .footer-bottom-content {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.copyright {
+  color: #2e1200;
+  font-size: 0.875rem;
+}
+
+.heart-text {
+  color: #2e1200;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.heart-icon {
+  color: #dc2626;
 }
