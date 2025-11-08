@@ -8,14 +8,8 @@
   <link rel="stylesheet" href="../../css/components.css">
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/base.css">
-  <script type="module" src="../../js/cliente/doces.js"></script>
-  <script src="../../js/cliente/carrossel.js" defer></script>
-  <script src="../../js/toggle.js" defer></script>
-  <script src="../../js/main.js"></script>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
@@ -23,14 +17,40 @@
   <div id="header"></div>
 
   <main>
+    <!-- <section class="hero">
+      <div class="hero-content">
+        <h1>
+          Doçuras feitas com <span>amor</span>,<br />
+          entregues perto de você.
+        </h1>
+    
+        <div class="search-bar">
+          <input type="text" placeholder="Digite o que procura..." />
+          <button class="search-btn">
+            <i data-lucide="search"></i>
+          </button>
+        </div>
+    
+        <div class="hero-circles">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    
+      <div class="hero-image">
+        <img src="#" alt="" />
+      </div>
+    </section> -->
+
     <section class="search-bar">
-      <input type="text" id="search-input" placeholder="Pesquisar..." />
+      <input type="text" id="search-input" placeholder="Digite o que procura..." />
       <div class="iconsearch" id="search-button">
         <i class="fas fa-search"></i>
       </div>
     </section>
 
-    <div class="carrossel-container">
+    <section class="carrossel-container">
         <h3>Doces Queridinhos</h3>
         <div class="carrossel">
           <button class="arrow left"><img src="../../assents/img/Geral/seta esquerda.svg" alt="" srcset=""></button>
@@ -182,9 +202,9 @@
           </div>
           <button class="arrow right"><img src="../../assents/img/Geral/seta direita.svg" alt="" srcset=""></button>
         </div>
-    </div>
+      </section>
 
-      <div class="carrossel-container">
+      <section class="carrossel-container">
         <h3>Categoria</h3>
         <div class="carrossel">
           <button class="arrow left"><img src="../../assents/img/Geral/seta esquerda.svg" alt="" srcset=""></button>
@@ -412,12 +432,15 @@
           </div>
           <button class="arrow right"><img src="../../assents/img/Geral/seta direita.svg" alt="" srcset=""></button>
         </div>
-      </div>
+      </section>
       
-      <h3 class="h3Novidades">Novidades</h3>
-      <div class="cards-wrapper"></div>
+      <section class="lojas-proximas">
+        <div class="lojas-scroll" id="lojas-container"></div>
+      </section>
 
-      <div class="modal-overlay" id="product-modal">
+      <section class="cards-wrapper"></section>
+
+      <section class="modal-overlay" id="product-modal">
         <div class="modal-content">
           <button class="modal-close" onclick="fecharModal()">×</button>
       
@@ -448,7 +471,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
         <div class="animacao-conteudo">
@@ -458,8 +481,12 @@
         </div>
       </div>
   </main>
+  
+  <div id="footer"></div>
 
-<div id="footer"></div>
-
+  <script type="module" src="../../js/cliente/doces.js"></script>
+  <script src="../../js/cliente/carrossel.js" defer></script>
+  <script src="../../js/toggle.js" defer></script>
+  <script src="../../js/main.js"></script>
 </body>
 </html>

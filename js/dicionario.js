@@ -244,7 +244,7 @@ export const lojasIniciais = [
     nomeLoja: "Caseirinho",
     horario: "09:00 - 20:00",
     descricao: "Tortas gourmet, cupcakes e doces personalizados para eventos.",
-    fotoPerfil: `${LOJAS_IMG}/Dama.svg`,
+    fotoPerfil: `${LOJAS_IMG}/Caseirinho.svg`,
     idConfeiteira: "2"
   },
   {
@@ -601,7 +601,7 @@ export const produtosPadrao = [
   },
   {
     nome: "Banoffe",
-    subtitulo: "Torta de banana com doce de leite e chantilly",
+    subtitulo: "Torta de banana com doce de leite",
     categoria: "Banoffe",
     descricao: "Clássica sobremesa Banoffe com base crocante",
     peso: 500,
@@ -661,7 +661,7 @@ export const produtosPadrao = [
   },
   {
     nome: "Bomba de Morango",
-    subtitulo: "Recheado com brigadeiro e banhado no chocolate",
+    subtitulo: "Recheado com brigadeiro",
     categoria: "Bomba de Morango",
     descricao: "Bomba recheado com brigadeiro, morango e banhado no chocolate",
     peso: 150,
