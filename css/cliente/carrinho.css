@@ -309,150 +309,13 @@ input[type="checkbox"] {
 }
 
 .h3Novidades {
-  font-family: "Istok Web", sans-serif;
+  font-family: "Nunito", sans-serif;
   color: var(--cor-link);
   font-size: 28px;
-  padding-left: 50px;
+  margin-left: 50px;
   padding-top: 20px;
   font-weight: 700;
   letter-spacing: 0.03em;
-}
-
-.cards-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
-  padding: 40px 60px 60px;
-}
-
-.card {
-  height: 330px;
-  width: 220px;
-  background-color: var(--cor-card);
-  border-radius: 20px;
-  padding: 12px;
-  font-family: 'Arial', sans-serif;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  background-color: var(--cor-hover-card);
-  box-shadow: 0 12px 30px var(--cor-glow);
-}
-
-.border-card {
-  border: 2px solid #53151554;
-  border-radius: 20px;
-  padding: 10px 10px -1px;
-  background-color: rgba(255, 255, 255, 0.18);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.headerNovidade {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0;
-}
-
-.logoLoja {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  object-fit: cover;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-  margin-top: -35px;
-  z-index: 2;
-}
-
-.imagem-produto {
-  display: block;
-  width: 200px;
-  border-radius: 12px;
-  margin: -5px auto 0; 
-}
-
-.descricao {
-  text-align: center;
-  padding: 8px 0;
-}
-
-.descricao h3 {
-  font-size: 17px;
-  margin: 0;
-  margin-bottom: 4px;
-  color: white;
-}
-
-.descricao p {
-  font-size: 13px;
-  color: #ffffffcc;
-  margin: 0;
-}
-
-.footerNovidades {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 0 8px;
-  margin-top: 10px;
-}
-
-.preco {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: white;
-  margin-left: 30px;
-}
-
-.icone-preco {
-  font-size: 18px;
-  color: #fff2d9;
-  transition: transform 0.2s ease;
-}
-
-.icone-preco:hover {
-  transform: scale(1.2);
-}
-
-.valor {
-  font-size: 18px;
-}
-
-.btn-carrinho {
-  background: linear-gradient(145deg, #fff7d1, #ffe8a0);
-  padding: 10px 14px;
-  border-radius: 16px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 10px rgba(255, 215, 130, 0.3);
-  margin-left: 7px;
-}
-
-.btn-carrinho i {
-  color: #a35c00;
-  font-size: 20px;
-}
-
-.btn-carrinho:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(255, 200, 100, 0.4);
-  background: linear-gradient(145deg, #ffeab4, #ffdf91);
 }
 
 .modal-overlay-buy {
@@ -704,22 +567,6 @@ input[type="checkbox"] {
     padding: 20px;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
-
-  footer {
-    height: auto;
-    padding: 10px;
-  }
 }
 
-.footer-bottom a {
-  text-decoration: none;
-  color: #666;
-  font-size: 14px;
-}
 
-.footer-bottom span {
-  color: #666;
-  font-size: 14px;
-  text-align: center;
-  flex-grow: 1;
-}

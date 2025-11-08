@@ -276,6 +276,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const lojas = JSON.parse(localStorage.getItem('Lojas')) || [];
   const cardsWrapper = document.querySelector('.cards-wrapper');
 
+  function formatarPreco(valor) {
+    return parseFloat(valor).toFixed(2).replace('.', ',');
+  }
+
+
   function renderizarProdutosAleatorios(listaProdutos) {
     cardsWrapper.innerHTML = '';
 
@@ -287,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const produtosAleatorios = listaProdutos
       .slice()
       .sort(() => 0.5 - Math.random())
-      .slice(0, 4);
+      .slice(0, 5);
 
     produtosAleatorios.forEach(produto => {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
@@ -296,10 +301,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const card = document.createElement('div');
       card.classList.add('card');
       card.innerHTML = `
+        <div class="headerNovidade">
+          <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
+        </div>
         <div class="border-card">
-          <div class="headerNovidade">
-            <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
-          </div>
           <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
           <div class="descricao">
             <h3>${produto.nome}</h3>
@@ -308,12 +313,13 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="footerNovidades">
             <div class="preco">
               <span class="icone-preco">R$</span>
-              <span class="valor">${precoFormatado}</span>
-            </div>
-            <div class="btn-carrinho">
-              <i class="fas fa-shopping-bag"></i>
+              <span class="valor">${formatarPreco(produto.preco)}</span>
             </div>
           </div>
+          <button class="btn-carrinho">
+            <span>Adicionar ao carrinho </span>
+            <i class="fas fa-shopping-bag"></i>
+          </button>
         </div>
       `;
 
