@@ -244,7 +244,7 @@ export const lojasIniciais = [
     nomeLoja: "Caseirinho",
     horario: "09:00 - 20:00",
     descricao: "Tortas gourmet, cupcakes e doces personalizados para eventos.",
-    fotoPerfil: `${LOJAS_IMG}/Dama.svg`,
+    fotoPerfil: `${LOJAS_IMG}/Caseirinho.svg`,
     idConfeiteira: "2"
   },
   {

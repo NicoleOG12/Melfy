@@ -138,28 +138,26 @@
   display: flex;
   gap: 20px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE e Edge antigos */
-  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
   cursor: grab;
-  user-select: none; 
+  user-select: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.lojas-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .lojas-scroll:active {
   cursor: grabbing;
 }
-
-/* Remove o scroll no Chrome/Safari */
-.lojas-scroll::-webkit-scrollbar {
-  display: none;
-}
-
 .loja-card {
+  position: relative;
   flex: 0 0 250px;
   background: var(--card);
   border: 2px solid var(--brown-3);
+  font-family: "Nunito", sans-serif;
   border-radius: 14px;
   padding: 10px 12px;
   display: flex;
@@ -184,7 +182,7 @@
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.25s ease;
-  margin-top: -40px;
+  margin-top: -30px;
 }
 
 .logo-loja:hover {
@@ -195,6 +193,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 
 .info-loja h3 {
@@ -211,6 +211,9 @@
 }
 
 .btn-loja {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
   background: linear-gradient(90deg, var(--brown-3), var(--brown));
   color: var(--bg);
   border: none;
@@ -219,10 +222,15 @@
   font-weight: 600;
   cursor: pointer;
   font-size: 0.8rem;
-  transition: transform 0.2s ease, background 0.3s ease;
-  align-self: flex-end;
-  margin-top: -15px;
-  margin-left: -80px;
+  transition: transform 0.2s ease, background 0.3s ease, opacity 0.3s ease;
+  opacity: 0; 
+  pointer-events: none; 
+  margin-top: 200px;
+}
+
+.loja-card:hover .btn-loja {
+  opacity: 1; 
+  pointer-events: auto; 
 }
 
 .btn-loja:hover {

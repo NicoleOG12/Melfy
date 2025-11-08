@@ -33,16 +33,21 @@
 .search-bar:hover .iconsearch {
   transform: translateY(-6px) scale(1.02);
 }
-
 .search-bar input {
   width: 600px;
   padding: 15px;
   border-radius: 20px;
-  border: 1px solid #ffdd99;
+  border: 1px solid var(--accent-yellow); 
   background-color: var(--bg);
   color: var(--cor-cinza);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar input:focus {
+  border-color: var(--accent-yellow-2);
+  box-shadow: 0 0 8px rgba(255, 211, 100, 0.5);
+  outline: none; 
 }
 
 .search-bar:hover input {
@@ -208,9 +213,9 @@
   justify-content: center;
   gap: 6px;
   font-family: "Nunito", sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--brown);
-  font-size: 14px;
+  font-size: 16px;
   transition: background var(--transition), box-shadow var(--transition), transform 0.2s ease;
 }
 

@@ -8,14 +8,8 @@
   <link rel="stylesheet" href="../../css/components.css">
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/base.css">
-  <script type="module" src="../../js/cliente/doces.js"></script>
-  <script src="../../js/cliente/carrossel.js" defer></script>
-  <script src="../../js/toggle.js" defer></script>
-  <script src="../../js/main.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
@@ -441,64 +435,9 @@
       </section>
       
       <section class="lojas-proximas">
-      
-        <div class="lojas-scroll">
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Confeitaria Doce Encanto</h3>
-              <p>Bolos e doces finos feitos com amor.</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-      
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Melfy Confeitaria</h3>
-              <p>Doces artesanais e sabores únicos!</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-      
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Sabor do Mel</h3>
-              <p>Delícias que adoçam o seu dia 🍯</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-          
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Confeitaria Doce Encanto</h3>
-              <p>Bolos e doces finos feitos com amor.</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-      
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Melfy Confeitaria</h3>
-              <p>Doces artesanais e sabores únicos!</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-      
-          <div class="loja-card">
-            <img src="#" alt="" class="logo-loja">
-            <div class="info-loja">
-              <h3>Sabor do Mel</h3>
-              <p>Delícias que adoçam o seu dia 🍯</p>
-              <button class="btn-loja">Ver loja</button>
-            </div>
-          </div>
-        </div>
+        <div class="lojas-scroll" id="lojas-container"></div>
       </section>
-      
+
       <section class="cards-wrapper"></section>
 
       <section class="modal-overlay" id="product-modal">
@@ -542,8 +481,12 @@
         </div>
       </div>
   </main>
+  
+  <div id="footer"></div>
 
-<div id="footer"></div>
-
+  <script type="module" src="../../js/cliente/doces.js"></script>
+  <script src="../../js/cliente/carrossel.js" defer></script>
+  <script src="../../js/toggle.js" defer></script>
+  <script src="../../js/main.js"></script>
 </body>
 </html>
