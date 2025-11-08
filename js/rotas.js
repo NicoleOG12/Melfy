@@ -33,3 +33,16 @@ export const rotasGerais = {
   esqueceuSenha: `${baseURL}pages/esqueceuSenha.html`,
   sobre: `${baseURL}pages/sobre.html`
 };
+
+const cssFiles = [
+  `${baseURL}css/components.css`,
+  `${baseURL}css/layout.css`,
+  `${baseURL}css/base.css`
+];
+
+cssFiles.forEach(href => {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+});

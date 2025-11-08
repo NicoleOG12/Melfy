@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Melfy</title>
   <link rel="stylesheet" href="../../css/cliente/perfil-enderecoss.css" />
-  <link rel="stylesheet" href="../../css/layout.css" />
-  <link rel="stylesheet" href="../../css/base.css" />
-  <script type="module" src="../../js/cliente/perfil-enderecos.js"></script>
-  <script src="../../js/toggle.js" defer></script>
-  <script src="../../js/main.js"></script>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
@@ -18,7 +12,7 @@
 <body>
   <div class="header-bg"></div>
   <div id="header"></div>
-
+  
   <h1 class="main-title"></h1>
 
   <div class="container">
@@ -136,60 +130,64 @@
       </div>
     </div>
   </div>
-
-<div id="modal-dois" class="modal" style="display: none;">
-  <div class="modal-conteudo">
-    <span class="fechar" onclick="fecharModalEndereco()">&times;</span>
-    <h2>Detalhes do Endereço</h2>
-
-    <form id="form-editar-endereco">
-      <div class="input-group">
-        <label for="edit-logradouro">Logradouro:</label>
-        <input type="text" id="edit-logradouro" disabled />
-      </div>
-
-      <div class="input-group">
-        <label for="edit-numero">Número:</label>
-        <input type="text" id="edit-numero" disabled />
-      </div>
-
-      <div class="input-group">
-        <label for="edit-complemento">Complemento:</label>
-        <input type="text" id="edit-complemento" disabled />
-      </div>
-
-      <div class="input-group">
-        <label for="edit-bairro">Bairro:</label>
-        <input type="text" id="edit-bairro" disabled />
-      </div>
-
-      <div class="input-group">
-        <label for="edit-cidade">Cidade:</label>
-        <input type="text" id="edit-cidade" disabled />
-      </div>
-
-      <div class="input-group">
-        <label for="edit-cep">CEP:</label>
-        <input type="text" id="edit-cep" disabled />
-      </div>
-
-      <div class="input-group tipo">
-        <label for="edit-tipo">Tipo:</label>
-        <select id="edit-tipo" disabled>
-          <option value="Residencial">Residencial</option>
-          <option value="Comercial">Comercial</option>
-          <option value="Outro">Outro</option>
-        </select>
-      </div>
-
-      <div class="container-botoes">
-        <button type="button" id="btn-editar-endereco" onclick="editarEndereco()">Editar</button>
-        <button type="button" id="btn-remover-endereco" onclick="removerEndereco()">Remover</button>
-      </div>
-    </form>
+  
+  <div id="modal-dois" class="modal" style="display: none;">
+    <div class="modal-conteudo">
+      <span class="fechar" onclick="fecharModalEndereco()">&times;</span>
+      <h2>Detalhes do Endereço</h2>
+  
+      <form id="form-editar-endereco">
+        <div class="input-group">
+          <label for="edit-logradouro">Logradouro:</label>
+          <input type="text" id="edit-logradouro" disabled />
+        </div>
+  
+        <div class="input-group">
+          <label for="edit-numero">Número:</label>
+          <input type="text" id="edit-numero" disabled />
+        </div>
+  
+        <div class="input-group">
+          <label for="edit-complemento">Complemento:</label>
+          <input type="text" id="edit-complemento" disabled />
+        </div>
+  
+        <div class="input-group">
+          <label for="edit-bairro">Bairro:</label>
+          <input type="text" id="edit-bairro" disabled />
+        </div>
+  
+        <div class="input-group">
+          <label for="edit-cidade">Cidade:</label>
+          <input type="text" id="edit-cidade" disabled />
+        </div>
+  
+        <div class="input-group">
+          <label for="edit-cep">CEP:</label>
+          <input type="text" id="edit-cep" disabled />
+        </div>
+  
+        <div class="input-group tipo">
+          <label for="edit-tipo">Tipo:</label>
+          <select id="edit-tipo" disabled>
+            <option value="Residencial">Residencial</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+  
+        <div class="container-botoes">
+          <button type="button" id="btn-editar-endereco" onclick="editarEndereco()">Editar</button>
+          <button type="button" id="btn-remover-endereco" onclick="removerEndereco()">Remover</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+  
+  <div id="footer"></div>
 
-<div id="footer"></div>
+  <script type="module" src="../../js/cliente/perfil-enderecos.js"></script>
+  <script type="module" src="../../js/main.js"></script>
+  
 </body>
 </html>

@@ -1,3 +1,24 @@
+import { carregarTodosOsDados } from './dicionario.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const baseURL = window.location.origin + "/";
+
+  const cssFiles = [
+    `${baseURL}css/components.css`,
+    `${baseURL}css/layout.css`,
+    `${baseURL}css/base.css`
+  ];
+
+  cssFiles.forEach(href => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  });
+
+  carregarTodosOsDados();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
   const confeiteiraLogada = JSON.parse(localStorage.getItem('confeiteiraLogada'));
@@ -54,11 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="nomeuser">Nome</p>
         </div>
       </nav>
-      <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
-        <div class="toggle-icon"></div>
-      </div>
     </header>
   `;
+
+      // <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
+      //   <div class="toggle-icon"></div>
+      // </div>
 
   const headerConfeiteira = `
     <header>
@@ -82,9 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="nomeuser">Nome</p>
         </div>
       </nav>
-      <div id="toggle-dark-mode" class="toggle-btn" aria-pressed="false">
-        <div class="toggle-icon"></div>
-      </div>
     </header>
   `;
 
@@ -213,15 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const menuToggle = document.getElementById('menu-toggle');
-  const nav = headerContainer.querySelector('nav');
-  if (menuToggle && nav) {
-    menuToggle.addEventListener('click', () => {
-      nav.classList.toggle('active');
-      menuToggle.classList.toggle('open');
-    });
-  }
-
   const linksNav = headerContainer.querySelectorAll('nav a');
   linksNav.forEach(link => {
     const linkHref = link.getAttribute('href');
@@ -229,3 +239,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (linkHref.endsWith(currentPage)) link.classList.add('ativo');
   });
 });
+
