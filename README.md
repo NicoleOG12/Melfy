@@ -64,7 +64,7 @@
 <hr>
 
 <h2>✨ Quer fazer parte?</h2>
-<p>Se você é <strong>confeiteira</strong> e quer ver seus doces brilhando em uma loja só sua, ou é uma <strong>cliente</strong> apaixonada por açúcar...</p>
+<p>Se você é <strong>confeiteira</strong> e quer ver seus doces brilhando em uma loja só sua, ou é um <strong>cliente</strong> apaixonado por açúcar...</p>
 
 <h3>👉 <a href="https://melfy.vercel.app/" target="_blank" rel="noopener noreferrer">Cadastre-se agora no Melfy e espalhe doçura por aí!</a></h3>
 
