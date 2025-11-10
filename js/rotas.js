@@ -19,7 +19,7 @@ export const rotasConfeiteira = {
   editarProdutos: `${baseURL}pages/confeiteira/editarProdutos.html`,
   login: `${baseURL}pages/confeiteira/login.html`,
   meusProdutos: `${baseURL}pages/confeiteira/meusProdutos.html`,
-  painelADM: `${baseURL}pages/confeiteira/painelADM.html`,
+  painelADM: `${baseURL}pages/confeiteira/dashboard.html`,
   pedidos: `${baseURL}pages/confeiteira/pedidos.html`,
   perfilEnderecos: `${baseURL}pages/confeiteira/perfil-enderecos.html`,
   perfilFormasPag: `${baseURL}pages/confeiteira/perfil-formas-pag.html`,

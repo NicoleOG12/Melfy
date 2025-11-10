@@ -1,0 +1,50 @@
+.config-container {
+  margin-top: 60px;
+  display: block;
+  position: relative;
+  text-align: center;
+}
+
+.config-container img {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-top: 40px;
+}
+
+.config-text {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--card);
+  color: var(--brown-2);
+  padding: 10px 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  max-width: 340px;
+  z-index: 10;
+}
+
+.config-text::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid var(--card);
+}
+
+.gear-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-left: -2px;
+}
