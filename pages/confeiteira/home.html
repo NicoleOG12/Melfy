@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Confeiteira Melfy</title>
+  <link rel="stylesheet" href="/css/confeiteira/style.css">
+  <link rel="stylesheet" href="/css/confeiteira/pedidos.css">
+  <link rel="stylesheet" href="/css/confeiteira/dashboard.css">
+  <link rel="stylesheet" href="/css/confeiteira/manutencao.css">
+  <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  
+  <div class="app" role="application" aria-label="Tela de Entregas Melfy">
+    <aside class="sidebar" aria-hidden="false">
+      <div class="sidebar-content">
+        <div class="top-melfy">
+          <div class="logo" aria-hidden="true">
+            <img src="/assents/img/Geral/Melfy-versão final.svg" alt="Logo da Melfy">
+          </div>
+          <div>
+            <h1>Melfy Confeiteira</h1>
+            <p>Gerencie seus produtos e pedidos 🍯</p>
+          </div>
+        </div>
+    
+        <div class="summary" aria-hidden="false">
+          <div class="left">
+            <span>Pedidos agora</span>
+            <small class="tiny">Atualizadas em tempo real</small>
+          </div>
+          <div class="right" id="countBadge">3</div>
+        </div>
+    
+        <nav class="nav-menu" aria-label="Menu lateral">
+          <h2>Análise</h2>
+          <a href="#dashboard" class="nav-item active"><i data-lucide="pie-chart"></i> Visão Geral</a>
+          <a href="#desempenho" class="nav-item"><i data-lucide="trending-up"></i> Desempenho</a>
+          <a href="#avaliações" class="nav-item"><i data-lucide="heart"></i> Avaliações</a>
+          <a href="#controle" class="nav-item"><i data-lucide="gauge"></i> Controle</a>
+    
+          <h2>Gerenciamento</h2>
+          <a href="#cardápio" class="nav-item"><i data-lucide="utensils-crossed"></i> Cardápio</a>
+          <a href="#pedidos" class="nav-item"><i data-lucide="package"></i> Pedidos</a>
+          <a href="#ofertas" class="nav-item"><i data-lucide="ticket-percent"></i> Ofertas</a>
+          <a href="#estabelecimento" class="nav-item"><i data-lucide="store"></i> Estabelecimento</a>
+          <a href="#configurações" class="nav-item"><i data-lucide="settings"></i> Configurações</a>
+          <a href="#logout" class="nav-item logout"><i data-lucide="door-open"></i> Sair</a>
+        </nav>
+      </div>
+    
+      <div class="user-info">
+        <img src="/img/angel.png" alt="Foto do usuário" class="user-avatar">
+        <div class="user-meta">
+          <div class="user-name">Ana Silva</div>
+          <div class="user-role">Confeiteira Melfy</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="dashboard">
+        <section class="top-cards">
+          <div class="top-cards-div">
+            <div class="card">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-basket">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M15.949 3.684l1.104 3.316h1.947a3 3 0 0 1 2.962 3.477l-1.252 7.131a4 4 0 0 1 -3.954 3.392h-9.512a3.994 3.994 0 0 1 -3.95 -3.371l-1.258 -7.173a3 3 0 0 1 2.964 -3.456h1.945l1.105 -3.316a1 1 0 0 1 1.898 .632l-.895 2.684h5.893l-.895 -2.684a1 1 0 1 1 1.898 -.632m-3.949 7.316a3 3 0 0 0 -2.995 2.824l-.005 .176a3 3 0 1 0 3 -3"/>
+                </svg>
+              </div>
+              <div class="text">
+                <span class="indicador">424</span> Pedidos Recebidos
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-file-dollar">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 2l.117 .007a1 1 0 0 1 .876 .876l.007 .117v4l.005 .15a2 2 0 0 0 1.838 1.844l.157 .006h4l.117 .007a1 1 0 0 1 .876 .876l.007 .117v9a3 3 0 0 1 -2.824 2.995l-.176 .005h-10a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-14a3 3 0 0 1 2.824 -2.995l.176 -.005zm0 8a1 1 0 0 0 -1 1v.05a2.5 2.5 0 0 0 .5 4.95h1a.5 .5 0 1 1 0 1h-2.5a1 1 0 0 0 0 2h1a1 1 0 0 0 2 0v-.05a2.5 2.5 0 0 0 -.5 -4.95h-1a.5 .5 0 1 1 0 -1h2.5a1 1 0 0 0 0 -2h-1a1 1 0 0 0 -1 -1"/>
+                  <path d="M19 7h-4l-.001 -4.001z"/>
+                </svg>
+              </div>
+              <div class="text">
+                <span class="indicador">R$424,00</span> Em vendas
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-archive">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M2 3m0 2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2z"/>
+                  <path d="M19 9c.513 0 .936 .463 .993 1.06l.007 .14v7.2c0 1.917 -1.249 3.484 -2.824 3.594l-.176 .006h-10c-1.598 0 -2.904 -1.499 -2.995 -3.388l-.005 -.212v-7.2c0 -.663 .448 -1.2 1 -1.2h14zm-5 2h-4l-.117 .007a1 1 0 0 0 0 1.986l.117 .007h4l.117 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z"/>
+                </svg>
+              </div>
+              <div class="text">
+                <span class="indicador">21</span> Produtos à venda
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-alert-triangle">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 1.67c.955 0 1.845 .467 2.39 1.247l.105 .16l8.114 13.548a2.914 2.914 0 0 1 -2.307 4.363l-.195 .008h-16.225a2.914 2.914 0 0 1 -2.582 -4.2l.099 -.185l8.11 -13.538a2.914 2.914 0 0 1 2.491 -1.403zm.01 13.33l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007zm-.01 -7a1 1 0 0 0 -.993 .883l-.007 .117v4l.007 .117a1 1 0 0 0 1.986 0l.007 -.117v-4l-.007 -.117a1 1 0 0 0 -.993 -.883z"/>
+                </svg>
+              </div>
+              <div class="text">
+                <span class="indicador">1</span> Alertas de estoque
+              </div>
+            </div>
+          </div>
+        </section>
+  
+        <section>
+          <div class="dashboard-grid">
+            <div class="graph1">
+              <span class="title">Vendas por Produtos</span>
+              <canvas id="graph-vendas-produto" style="margin-top:20px"></canvas>
+            </div>
+            <div class="graph2">
+              <span class="title">Vendas por mês do ano</span>
+              <canvas id="graph-vendas-mes"></canvas>
+            </div>
+            <div class="graph3">
+              <span class="title">Pedidos por Status</span>
+              <canvas id="graph-pedidos" style="margin:0; padding:0; max-height:28vh;"></canvas>
+            </div>
+            <div class="graph4">
+              <span class="title">Estoque Crítico</span>
+              <canvas id="graph-estoque" style="min-height:28vh;"></canvas>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="desempenho">
+        <header class="header">
+          <div class="title">
+            <h2>Desempenho</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="avaliações">
+        <header class="header">
+          <div class="title">
+            <h2>Avaliações</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="controle">
+        <header class="header">
+          <div class="title">
+            <h2>Controle</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="cardápio">
+        <header class="header">
+          <div class="title">
+            <h2>Cardápio</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pedidos">
+        <header class="header">
+          <div class="title">
+            <h2>Meus Pedidos</h2>
+            <p class="subtitle">Veja todos os docinhos que estão esperando seu preparo</p>
+          </div>
+          <div class="header-actions">
+            <div class="search" role="search" aria-label="Pesquisar entregas">
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 21l-4.35-4.35" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="11" cy="11" r="6" stroke="var(--muted)" stroke-width="1.6"/>
+              </svg>
+              <input id="searchInput" placeholder="Pesquisar: confeitaria, bairro..." aria-label="Pesquisar entregas"/>
+            </div>
+          </div>
+        </header>
+        <div class="kanban">
+          <div class="kanban-column" id="aberto">
+            <h3><i data-lucide="clock"></i> Pedidos em Aberto</h3>
+            <div class="kanban-cards" id="coluna-aberto"></div>
+          </div>
+  
+          <div class="kanban-column" id="preparo">
+            <h3><i data-lucide="chef-hat"></i> Em Preparo</h3>
+            <div class="kanban-cards" id="coluna-preparo"></div>
+          </div>
+  
+          <div class="kanban-column" id="entrega">
+            <h3><i data-lucide="truck"></i> Em Entrega</h3>
+            <div class="kanban-cards" id="coluna-entrega"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ofertas">
+        <header class="header">
+          <div class="title">
+            <h2>Ofertas</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="estabelecimento">
+        <header class="header">
+          <div class="title">
+            <h2>Estabelecimento</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="configurações">
+        <header class="header">
+          <div class="title">
+            <h2>Configurações</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="logout">
+        <header class="header">
+          <div class="title">
+            <h2>Logout</h2>
+            <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
+          </div>
+        </header>
+        <div class="config-container">
+          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
+          <div class="config-text">
+            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
+              <span>Volte em alguns dias.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/confeiteira/script.js"></script>
+  <script src="/js/confeiteira/pedidos.js"></script>
+  <script src="/js/confeiteira/dashboard.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
+

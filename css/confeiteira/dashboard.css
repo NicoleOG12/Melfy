@@ -1,0 +1,150 @@
+.top-cards-div {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.top-cards-div > .card {
+  color: var(--brown-2);
+  background-color: var(--card);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(107, 63, 42, 0.04);
+}
+
+.top-cards-div > .card:hover {
+  background-color: var(--card-hover);
+  transform: translateY(-3px);
+}
+
+.top-cards-div > .card > .icon {
+  background-color: var(--accent-yellow);
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--brown-2);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top-cards-div > .card > .text {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  font-size: 0.8em;
+}
+
+.top-cards-div > .card > .text > .indicador {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--brown);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.graph1, .graph2, .graph3, .graph4 {
+  color: var(--brown-2);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 20px;
+  font-weight: 400;
+  height: min-content;
+  box-shadow: var(--shadow);
+  transition: all 0.25s ease;
+  border: 1px solid rgba(107, 63, 42, 0.04);
+}
+
+.graph1:hover, .graph2:hover, .graph3:hover, .graph4:hover {
+  transform: translateY(-3px);
+}
+
+.graph1 {
+  grid-column: span 3 / span 3;
+  grid-row: span 7 / span 7;
+  min-height: 73vh;
+}
+
+.graph2 {
+  grid-column: span 6 / span 6;
+  grid-row: span 3 / span 3;
+  grid-column-start: 4;
+}
+
+.graph3 {
+  grid-column: span 3 / span 3;
+  grid-row: span 4 / span 4;
+  grid-column-start: 4;
+  grid-row-start: 4;
+}
+
+.graph4 {
+  grid-column: span 3 / span 3;
+  grid-row: span 4 / span 4;
+  grid-column-start: 7;
+  grid-row-start: 4;
+}
+
+#graph-pedidos {
+  margin: 0;
+}
+
+#graph-vendas-mes {
+  max-height: 25vh;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .top-cards-div {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  .top-cards-div::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-cards-div > .card {
+    flex: 0 0 90%; 
+    scroll-snap-align: center;
+    justify-content: flex-start;
+    padding: 15px;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .graph1, .graph2, .graph3, .graph4 {
+    width: 100%;
+    min-height: auto;
+    grid-column: auto;
+    grid-row: auto;
+  }
+}

@@ -91,7 +91,7 @@ window.logar = function() {
             localStorage.setItem('idLojaAtual', idLoja);
         }
 
-        window.location.href = 'adicionarProdutos.html';
+        window.location.href = 'home.html';
         return;
     }
 
