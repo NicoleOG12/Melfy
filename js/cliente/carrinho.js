@@ -280,66 +280,74 @@ document.addEventListener('DOMContentLoaded', function () {
     return parseFloat(valor).toFixed(2).replace('.', ',');
   }
 
+  function limitarDescricao(texto, limite = 45) {
+    if (!texto) return "";
+    const clean = texto.normalize("NFC");
+    const arr = [...clean];
+    const textoCortado = arr.slice(0, limite).join("");
+    return arr.length > limite
+      ? `${textoCortado}... <strong>ver mais</strong>`
+      : texto;
+  }
 
   function renderizarProdutosAleatorios(listaProdutos) {
     cardsWrapper.innerHTML = '';
-
+  
     if (listaProdutos.length === 0) {
       cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
       return;
     }
-
+  
     const produtosAleatorios = listaProdutos
       .slice()
       .sort(() => 0.5 - Math.random())
       .slice(0, 5);
-
+  
     produtosAleatorios.forEach(produto => {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
-      const precoFormatado = parseFloat(produto.preco).toFixed(2).replace('.', ',');
-
+  
       const card = document.createElement('div');
       card.classList.add('card');
+  
       card.innerHTML = `
         <div class="headerNovidade">
-          <img src="${loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
+          <img src="${loja?.pfp || loja?.fotoPerfil || ''}" class="logoLoja" />
         </div>
         <div class="border-card">
-          <img src="${produto.foto}" alt="Imagem do Produto" class="imagem-produto" />
+          <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" class="imagem-produto" />
           <div class="descricao">
             <h3>${produto.nome}</h3>
-            <p>${produto.subtitulo}</p>
+            <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
           </div>
           <div class="footerNovidades">
             <div class="preco">
               <span class="icone-preco">R$</span>
-              <span class="valor">${formatarPreco(produto.preco)}</span>
+              <span class="valor">${formatarPreco(produto.valor_uni || produto.preco)}</span>
             </div>
           </div>
           <button class="btn-carrinho">
-            <span>Adicionar ao carrinho </span>
+            <span>Adicionar ao carrinho</span>
             <i class="fas fa-shopping-bag"></i>
           </button>
         </div>
       `;
-
-      const logoLojaElement = card.querySelector('.logoLoja');
-      logoLojaElement.addEventListener('click', e => {
+  
+      card.querySelector('.logoLoja').addEventListener('click', e => {
         e.stopPropagation();
-        localStorage.setItem('idLojaSelecionada', loja.idLoja);
-        window.location.href = rotasCliente.loja;
+        window.location.href = `${rotasCliente.loja}?id=${loja.idLoja}`;
       });
-
-      card.addEventListener('click', event => {
-        const isHeader = event.target.closest('.headerNovidade');
-        if (!isHeader) openModal(produto, lojas, rotasCliente);
+  
+      card.addEventListener('click', e => {
+        if (!e.target.closest('.headerNovidade'))
+          openModal(produto, lojas, rotasCliente);
       });
-
+  
       cardsWrapper.appendChild(card);
     });
   }
-
+  
   renderizarProdutosAleatorios(produtos);
+
 
   document.querySelector('.btn-add').addEventListener('click', adicionarNaSacola);
 });
