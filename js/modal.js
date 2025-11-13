@@ -1,8 +1,16 @@
+const API_URL = "https://melfy-backend-production.up.railway.app";
+let produtoAtual = null;
+
 export function openModal(produto, lojas, rotasCliente) {
-  const idLojaProduto = parseInt(produto.idLoja);
+  produtoAtual = produto;
+
+  const idLojaProduto = parseInt(produto.id_loja);
   const loja = lojas.find(l => l.idLoja === idLojaProduto);
 
-  document.querySelector('.modal-img').src = produto.foto || '';
+  document.querySelector('.modal-img').src =
+    produto.midia?.imagens?.[0]?.path ||
+    produto.foto ||
+    '';
   document.querySelector('.modal-img').alt = produto.nome || '';
 
   const modalLogo = document.querySelector('.modal-logo');
@@ -20,8 +28,18 @@ export function openModal(produto, lojas, rotasCliente) {
   document.querySelector('.modal-title').textContent = produto.nome || '';
   document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
   document.querySelector('.modal-description').textContent = produto.descricao || '';
-  document.querySelector('.modal-peso').textContent = `Peso: ${produto.peso >= 1000 ? produto.peso/1000+' kg' : produto.peso+' g'}`;
-  document.querySelector('.modal-price').textContent = `R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}`;
+  document.querySelector('.modal-peso').textContent =
+    `Peso: ${produto.peso >= 1000 ? produto.peso / 1000 + ' kg' : produto.peso + ' g'}`;
+
+  const preco = parseFloat(
+    produto.valor_uni ??
+    produto.preco ??
+    produto.valor ??
+    0
+  );
+
+  document.querySelector('.modal-price').textContent =
+    `R$ ${parseFloat(preco).toFixed(2).replace('.', ',')}`;
 
   document.getElementById('qtd-value').textContent = 1;
   document.getElementById('product-modal').style.display = 'flex';
@@ -44,33 +62,31 @@ export function autoResize(textarea) {
   textarea.style.height = textarea.scrollHeight + "px";
 }
 
-export function adicionarNaSacola() {
+export async function adicionarNaSacola() {
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
-  if (!usuarioLogado || !usuarioLogado.id) {
-    alert('Usuário não está logado corretamente!');
-    return;
-  }
+  if (!usuarioLogado || !usuarioLogado.id) return alert('Usuário não está logado corretamente!');
+  if (!produtoAtual || !produtoAtual.id_produto) return alert('Produto não encontrado ou sem ID válido.');
 
-  const nomeProduto = document.querySelector('.modal-title').textContent;
-  const produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
-  const produto = produtos.find(p => p.nome === nomeProduto);
-  if (!produto || !produto.idProduto) {
-    alert('Produto não encontrado ou sem ID válido.');
-    return;
-  }
+  const resposta = await fetch(`${API_URL}/api/doces/${produtoAtual.id_produto}`);
+  if (!resposta.ok) return alert("Erro ao buscar produto na API.");
 
+  const produtoApi = await resposta.json();
   const quantidadeAdicionada = parseInt(document.getElementById('qtd-value').textContent);
+
   const agora = new Date();
   const data = agora.toLocaleDateString();
   const horario = agora.toLocaleTimeString();
-  const valorUnitario = parseFloat(produto.preco);
-  const valorTotalAdicionado = valorUnitario * quantidadeAdicionada;
+
+  const preco = parseFloat(
+    produtoApi.valor_uni ??
+    produtoApi.preco ??
+    produtoApi.valor ??
+    0
+  );
 
   let sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-
   const itemExistente = sacola.find(item =>
-    item.idUsuario === usuarioLogado.id &&
-    item.idProduto === produto.idProduto
+    item.idUsuario === usuarioLogado.id && item.idProduto === produtoApi.id_produto
   );
 
   if (itemExistente) {
@@ -80,21 +96,37 @@ export function adicionarNaSacola() {
     itemExistente.horario = horario;
   } else {
     sacola.push({
-      idProduto: produto.idProduto,
+      idProduto: produtoApi.id_produto,
       idUsuario: usuarioLogado.id,
       quantidade: quantidadeAdicionada,
-      valorUnitario,
-      valorTotal: valorTotalAdicionado,
+      valorUnitario: preco,
+      valorTotal: preco * quantidadeAdicionada,
       data,
       horario
     });
   }
 
   localStorage.setItem('Sacola', JSON.stringify(sacola));
-  if (typeof atualizarContadorSacola === 'function') atualizarContadorSacola();
-  mostrarAnimacaoCarrinho(produto.categoria, produto.nome);
-  document.getElementById("product-modal").style.display = "none";
 
+  try {
+    await fetch(`${API_URL}/carrinho`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        idUsuario: usuarioLogado.id,
+        idProduto: produtoApi.id_produto,
+        quantidade: quantidadeAdicionada,
+        valorUnitario: preco,
+        valorTotal: preco * quantidadeAdicionada,
+        data,
+        horario
+      })
+    });
+  } catch {}
+
+  if (typeof atualizarContadorSacola === 'function') atualizarContadorSacola();
+  mostrarAnimacaoCarrinho(produtoApi.categorias?.[0], produtoApi.nome);
+  fecharModal();
   document.dispatchEvent(new CustomEvent('sacolaAtualizada'));
 }
 

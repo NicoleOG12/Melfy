@@ -171,6 +171,11 @@
   color: var(--muted);
 }
 
+.descricao p strong {
+  font-weight: 800;
+}
+
+
 .footerNovidades {
   display: flex;
   justify-content: left;
