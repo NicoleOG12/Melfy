@@ -271,10 +271,10 @@ function finalizarCompra() {
   fecharModalCompra();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const produtos = JSON.parse(localStorage.getItem('Produtos')) || [];
-  const lojas = JSON.parse(localStorage.getItem('Lojas')) || [];
+document.addEventListener('DOMContentLoaded', async function () {
   const cardsWrapper = document.querySelector('.cards-wrapper');
+  let produtos = [];
+  let lojas = [];
 
   function formatarPreco(valor) {
     return parseFloat(valor).toFixed(2).replace('.', ',');
@@ -292,23 +292,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderizarProdutosAleatorios(listaProdutos) {
     cardsWrapper.innerHTML = '';
-  
+
     if (listaProdutos.length === 0) {
       cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
       return;
     }
-  
+
     const produtosAleatorios = listaProdutos
       .slice()
       .sort(() => 0.5 - Math.random())
       .slice(0, 5);
-  
+
     produtosAleatorios.forEach(produto => {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
-  
+
       const card = document.createElement('div');
       card.classList.add('card');
-  
+
       card.innerHTML = `
         <div class="headerNovidade">
           <img src="${loja?.pfp || loja?.fotoPerfil || ''}" class="logoLoja" />
@@ -331,25 +331,37 @@ document.addEventListener('DOMContentLoaded', function () {
           </button>
         </div>
       `;
-  
+
       card.querySelector('.logoLoja').addEventListener('click', e => {
         e.stopPropagation();
         window.location.href = `${rotasCliente.loja}?id=${loja.idLoja}`;
       });
-  
+
       card.addEventListener('click', e => {
         if (!e.target.closest('.headerNovidade'))
           openModal(produto, lojas, rotasCliente);
       });
-  
+
       cardsWrapper.appendChild(card);
     });
   }
-  
-  renderizarProdutosAleatorios(produtos);
 
+  try {
+    const resProdutos = await fetch('https://melfy-backend-production.up.railway.app/produtos');
+    const dataProdutos = await resProdutos.json();
+    produtos = dataProdutos.result || [];
 
-  document.querySelector('.btn-add').addEventListener('click', adicionarNaSacola);
+    const resLojas = await fetch('https://melfy-backend-production.up.railway.app/lojas/fetchAll');
+    const dataLojas = await resLojas.json();
+    lojas = dataLojas.result || [];
+
+    renderizarProdutosAleatorios(produtos);
+  } catch (erro) {
+    console.error('Erro ao carregar produtos ou lojas:', erro);
+    cardsWrapper.innerHTML = '<p>Não foi possível carregar os produtos.</p>';
+  }
+
+  document.querySelector('.btn-add')?.addEventListener('click', adicionarNaSacola);
 });
 
 window.removerItem = removerItem;
