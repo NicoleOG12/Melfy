@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
       const card = document.createElement('div');
       card.classList.add('card');
-      console.log(loja)
-      console.log(loja.pfp)
+      console.log("loja"+loja)
+    
       
       
       card.innerHTML = `
