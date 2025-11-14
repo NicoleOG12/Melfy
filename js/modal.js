@@ -5,7 +5,7 @@ export function openModal(produto, lojas, rotasCliente) {
   produtoAtual = produto;
 
   const idLojaProduto = parseInt(produto.id_loja);
-  const loja = lojas.find(l => l.idLoja === idLojaProduto);
+  const loja = lojas.find(l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto);
 
   document.querySelector('.modal-img').src =
     produto.midia?.imagens?.[0]?.path ||
@@ -15,12 +15,15 @@ export function openModal(produto, lojas, rotasCliente) {
 
   const modalLogo = document.querySelector('.modal-logo');
   const modalNomeLoja = document.querySelector('.modal-nome-loja');
-  modalLogo.src = loja?.fotoPerfil || '';
-  modalNomeLoja.textContent = loja?.nomeLoja || 'Loja Desconhecida';
+
+  modalLogo.src = loja?.pfp || loja?.fotoPerfil || '';
+  modalLogo.alt = loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja';
+  modalNomeLoja.textContent = loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja Desconhecida';
 
   modalLogo.onclick = modalNomeLoja.onclick = function () {
-    if (loja?.idLoja) {
-      localStorage.setItem('idLojaSelecionada', loja.idLoja);
+    const idLoja = loja?.id_loja || loja?.idLoja;
+    if (idLoja) {
+      localStorage.setItem('idLojaSelecionada', idLoja);
       window.location.href = rotasCliente.loja;
     }
   };
@@ -31,15 +34,9 @@ export function openModal(produto, lojas, rotasCliente) {
   document.querySelector('.modal-peso').textContent =
     `Peso: ${produto.peso >= 1000 ? produto.peso / 1000 + ' kg' : produto.peso + ' g'}`;
 
-  const preco = parseFloat(
-    produto.valor_uni ??
-    produto.preco ??
-    produto.valor ??
-    0
-  );
-
+  const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
   document.querySelector('.modal-price').textContent =
-    `R$ ${parseFloat(preco).toFixed(2).replace('.', ',')}`;
+    `R$ ${preco.toFixed(2).replace('.', ',')}`;
 
   document.getElementById('qtd-value').textContent = 1;
   document.getElementById('product-modal').style.display = 'flex';
@@ -66,10 +63,8 @@ export async function adicionarNaSacola() {
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
   if (!usuarioLogado || !usuarioLogado.id) return alert('Usuário não está logado corretamente!');
   if (!produtoAtual || !produtoAtual.id_produto) return alert('Produto não encontrado ou sem ID válido.');
-  
-  alert("id produto atual:" + produtoAtual.id_produto)
+
   const resposta = await fetch(`${API_URL}/produtos?id=${produtoAtual.id_produto}`);
-  
   if (!resposta.ok) return alert("Erro ao buscar produto na API.");
 
   const produtoApi = await resposta.json();
@@ -79,12 +74,7 @@ export async function adicionarNaSacola() {
   const data = agora.toLocaleDateString();
   const horario = agora.toLocaleTimeString();
 
-  const preco = parseFloat(
-    produtoApi.valor_uni ??
-    produtoApi.preco ??
-    produtoApi.valor ??
-    0
-  );
+  const preco = parseFloat(produtoApi.valor_uni ?? produtoApi.preco ?? produtoApi.valor ?? 0);
 
   let sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
   const itemExistente = sacola.find(item =>

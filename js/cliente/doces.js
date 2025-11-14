@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const resLojas = await fetch(`${API_URL}/lojas/fetchAll`);
     const dataLojas = await resLojas.json();
     lojas = dataLojas.result || [];
+
   } catch (erro) {
     console.error("Erro ao carregar API:", erro);
   }
@@ -46,13 +47,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     [...listaProdutos].reverse().forEach(produto => {
-      const loja = {"id": produto.id_loja, "nome": produto.loja_nome, "pfp": produto.pfp}
+      const loja = {
+        id: produto.id_loja,
+        nome: produto.loja_nome,
+        pfp: produto.pfp
+      };
+
       const card = document.createElement('div');
       card.classList.add('card');
-      console.log("loja"+loja)
-    
-      
-      
+
       card.innerHTML = `
         <div class="headerNovidade">
           <img src="${loja?.pfp || ''}" alt="Logo da Loja" class="logoLoja" />
@@ -78,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       card.querySelector('.logoLoja').addEventListener('click', e => {
         e.stopPropagation();
-        window.location.href = `${rotasCliente.loja}?id=${loja.idLoja}`;
+        window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
       });
 
       card.addEventListener('click', e => {
@@ -92,23 +95,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   renderizarProdutos(produtos);
 
-  inputPesquisa.addEventListener('input', () => 
-    filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper)
-  );
-
   inputPesquisa.addEventListener('keyup', e => {
     if (e.key === 'Enter')
-      filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper);
+      filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper, true)
   });
 
-  botaoPesquisa.addEventListener('click', () => 
-    filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper)
+  botaoPesquisa.addEventListener('click', () =>
+    filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper, true)
   );
 
   document.querySelectorAll('.doce').forEach(doce => {
     doce.addEventListener('click', function () {
       const categoria = this.querySelector('p').textContent.trim();
-      const filtrados = produtos.filter(p => 
+      const filtrados = produtos.filter(p =>
         p.categorias?.includes(categoria) || p.categoria === categoria
       );
       renderizarProdutos(filtrados);
@@ -122,21 +121,24 @@ document.addEventListener("DOMContentLoaded", async function () {
   const slider = document.querySelector('.lojas-scroll');
   container.innerHTML = "";
 
-  lojas.forEach(loja => {
+  [...lojas].reverse().forEach(loja => {
     const card = document.createElement('div');
     card.classList.add('loja-card');
 
     card.innerHTML = `
-      <img src="${loja.pfp || loja.fotoPerfil}" alt="${loja.nomeLoja || loja.nome}" class="logo-loja">
+      <img src="${loja.pfp || loja.fotoPerfil}" 
+           alt="${loja.nomeLoja || loja.loja_nome || loja.nome}" 
+           class="logo-loja">
+
       <div class="info-loja">
-        <h3>${loja.nomeLoja || loja.nome}</h3>
+        <h3>${loja.nomeLoja || loja.loja_nome || loja.nome}</h3>
         <p>${loja.descricao || "Confeitaria artesanal"}</p>
         <button class="btn-loja">Ver loja</button>
       </div>
     `;
 
     card.querySelector('.btn-loja').addEventListener('click', () => {
-      window.location.href = `${rotasCliente.loja}?id=${loja.idLoja}`;
+      window.location.href = `${rotasCliente.loja}?id=${loja.idLoja || loja.id_loja}`;
     });
 
     container.appendChild(card);
@@ -186,47 +188,24 @@ document.addEventListener("DOMContentLoaded", async function () {
     slider.scrollLeft = scrollLeft - walk;
   });
 
-
-
-
-
-
-
-
-
-
-
-//lógica para buscar por categoria
   document.querySelectorAll(".categoria-click-event-listener").forEach(cat => {
-  cat.addEventListener("click", async () => {
+    cat.addEventListener("click", async () => {
+      const id = cat.dataset.id;
 
-    const id = cat.dataset.id; 
-    console.log("id:", id);
+      try {
+        const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
+        if (resp.status === 204) {
+          renderizarProdutos([]);
+          return;
+        }
 
-    try {
-      const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
+        const dataCat = await resp.json();
+        const produtosCat = Array.isArray(dataCat.result) ? dataCat.result : [];
+        renderizarProdutos(produtosCat);
 
-      if (resp.status === 204) {
-        console.log("Nenhum produto encontrado para essa categoria.");
-        renderizarProdutos([]); // envia lista vazia
-        return;
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
       }
-    
-      const dataCat = await resp.json();
-
-      const produtosCat = Array.isArray(dataCat.result) ? dataCat.result : [];
-
-      console.log("Produtos da categoria", id, produtosCat);
-
-      renderizarProdutos(produtosCat);
-
-    } catch (error) {
-      console.error("Erro ao buscar produtos:", error);
-    }
-
+    });
   });
-});
-
-
-
 });

@@ -347,17 +347,10 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   letter-spacing: 0.02em;
 }
 
-.modal-subtitulo {
-  font-size: 18px;
-  color: #8a7b65;
-  margin-top: -10px;
-  font-style: italic;
-}
-
 .modal-description {
   font-size: 15px;
   color: #6b5a4a;
-  margin-top: -6px;
+  margin-top: -60px;
   line-height: 1.5;
 }
 
