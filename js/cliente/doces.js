@@ -185,4 +185,48 @@ document.addEventListener("DOMContentLoaded", async function () {
     const walk = (x - startX) * 2;
     slider.scrollLeft = scrollLeft - walk;
   });
+
+
+
+
+
+
+
+
+
+
+
+//lógica para buscar por categoria
+  document.querySelectorAll(".categoria-click-event-listener").forEach(cat => {
+  cat.addEventListener("click", async () => {
+
+    const id = cat.dataset.id; 
+    console.log("id:", id);
+
+    try {
+      const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
+
+      if (resp.status === 204) {
+        console.log("Nenhum produto encontrado para essa categoria.");
+        renderizarProdutos([]); // envia lista vazia
+        return;
+      }
+    
+      const dataCat = await resp.json();
+
+      const produtosCat = Array.isArray(dataCat.result) ? dataCat.result : [];
+
+      console.log("Produtos da categoria", id, produtosCat);
+
+      renderizarProdutos(produtosCat);
+
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+    }
+
+  });
+});
+
+
+
 });
