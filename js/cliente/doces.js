@@ -49,10 +49,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       const loja = lojas.find(l => l.idLoja === parseInt(produto.idLoja));
       const card = document.createElement('div');
       card.classList.add('card');
+      console.log(loja)
+      console.log(loja.pfp)
+      
       
       card.innerHTML = `
         <div class="headerNovidade">
-          <img src="${loja?.pfp || loja?.fotoPerfil || ''}" alt="Logo da Loja" class="logoLoja" />
+          <img src="${loja?.pfp}" alt="Logo da Loja" class="logoLoja" />
         </div>
         <div class="border-card">
           <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
