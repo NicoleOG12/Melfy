@@ -1,5 +1,15 @@
 function dados() {
-    if (!localStorage.getItem('Confeiteiras')) {
+    let Confeiteiras = JSON.parse(localStorage.getItem('Confeiteiras')) || [];
+    
+    // Atualizar conta ana@melfy.com se já existir
+    const anaIndex = Confeiteiras.findIndex(c => c.email === 'ana@melfy.com');
+    if (anaIndex !== -1) {
+        Confeiteiras[anaIndex].status = 'ativo';
+        Confeiteiras[anaIndex].bloqueado = false;
+        localStorage.setItem('Confeiteiras', JSON.stringify(Confeiteiras));
+    }
+    
+    if (Confeiteiras.length === 0) {
         const dadosIniciais = [
             { 
                 id: 1, 
@@ -10,6 +20,8 @@ function dados() {
                 celular: "(11) 91234-5678", 
                 email: "ana@melfy.com", 
                 senha: "ana123",
+                status: "ativo",
+                bloqueado: false,
                 dadosBancarios: {
                     banco: "Banco do Brasil",
                     agencia: "1234",
@@ -26,6 +38,8 @@ function dados() {
                 celular: "(19) 99876-5432", 
                 email: "bruno@melfy.com", 
                 senha: "bruno456",
+                status: "ativo",
+                bloqueado: false,
                 dadosBancarios: {
                     banco: "Caixa Econômica",
                     agencia: "5678",
@@ -42,6 +56,8 @@ function dados() {
                 celular: "(21) 98765-4321", 
                 email: "camila@melfy.com", 
                 senha: "camila789",
+                status: "ativo",
+                bloqueado: false,
                 dadosBancarios: {
                     banco: "Itaú",
                     agencia: "3456",
@@ -58,6 +74,8 @@ function dados() {
                 celular: "(31) 91234-9988", 
                 email: "debora@melfy.com", 
                 senha: "debora321",
+                status: "ativo",
+                bloqueado: false,
                 dadosBancarios: {
                     banco: "Santander",
                     agencia: "7890",
@@ -83,6 +101,12 @@ window.logar = function() {
 
     const confeiteira = Confeiteiras.find(c => c.email === lg && c.senha === sn);
     if (confeiteira) {
+        // Verificar se a conta está bloqueada
+        if (confeiteira.bloqueado === true || (confeiteira.status && confeiteira.status !== 'ativo')) {
+            alert('Sua conta está bloqueada. Entre em contato com o suporte.');
+            return;
+        }
+
         sessionStorage.setItem("user", confeiteira.nome);
         localStorage.setItem('confeiteiraLogada', JSON.stringify(confeiteira));
 

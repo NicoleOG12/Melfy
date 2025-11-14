@@ -8,7 +8,7 @@ main {
 }
 
 .page-title {
-  font-family: 'Istok Web', sans-serif;
+  font-family: 'Delius', cursive;
   font-size: 50px;
   padding: 50px 0;
   color: #ffd900;
@@ -346,7 +346,7 @@ input[type="checkbox"] {
   flex-direction: column;
   gap: 24px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  font-family: 'Istok Web', sans-serif;
+  font-family: 'Nunito', sans-serif;
   box-sizing: border-box;
 }
 

@@ -7,7 +7,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; scroll-padding-top: 80px; }
         body { color: var(--text-dark); line-height: 1.6; overflow-x: hidden; background-color: #fefdf9; }
-        h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--secondary-dark); }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Delius', cursive; font-weight: 700; color: var(--secondary-dark); }
+        body, p, span, div, a, button, input, textarea, select, label, li, td, th { font-family: 'Nunito', sans-serif; }
         .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
         
         /* Espaçamentos consistentes */

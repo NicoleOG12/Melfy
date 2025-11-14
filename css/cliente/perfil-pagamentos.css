@@ -86,7 +86,7 @@
 }
 
 a{
-    font-family: "Istok Web", sans-serif;
+    font-family: "Delius", cursive;
     color: #5B5B5B;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -220,7 +220,7 @@ button:hover{
 
 footer {
   background: linear-gradient(150deg, var(--cor-footer), var(--cor-ativa));
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Nunito', sans-serif;
   color: #666;
   text-align: center;
   padding: 20px 0px;
@@ -351,7 +351,7 @@ footer {
   height: 40px;
   border-radius: 10px;
   background-color: #ffe16a;
-  font-family: 'Istok Web', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .info-cartao p,

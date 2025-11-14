@@ -25,9 +25,9 @@
   --cor-container: #fff1a6;
   
   /* Fontes */
-  --font-titulo: 'Anton', sans-serif;
-  --font-principal: 'Outfit', sans-serif;
-  --font-texto: 'Istok Web', sans-serif;
+  --font-titulo: 'Delius', cursive;
+  --font-principal: 'Nunito', sans-serif;
+  --font-texto: 'Nunito', sans-serif;
 }
 
 body.dark-mode {

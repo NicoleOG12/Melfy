@@ -63,7 +63,7 @@ h1 {
   border-radius: 25px;
   border: 2px solid var(--cor-borda);
   font-size: 0.95rem;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
   background-position: center;
   height: 100vh;
   width: 100%;
@@ -26,7 +26,7 @@ main {
 }
 
 .titulo {
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
   font-size: 40px;
   margin-bottom: 10px;
   color: #ffe44b;

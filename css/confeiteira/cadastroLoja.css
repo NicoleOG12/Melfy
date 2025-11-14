@@ -32,7 +32,7 @@ main{
   font-size: 32px;
   color: #7c4931;
   margin-bottom: 20px;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
 }
 
 .welcome-box p {
@@ -60,7 +60,7 @@ form {
 }
 
 h2{
-    font-family: "Istok Web", sans-serif;
+    font-family: "Delius", cursive;
     font-size: 25px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -134,7 +134,7 @@ textarea {
   margin: 10px 30px;
   min-height: 80px;
   resize: none;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
 }
 
 .btn-logar {

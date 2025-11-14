@@ -129,7 +129,7 @@ main {
   margin-top: -5px;
   font-size: 15px;
   color: #5f4f48;
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
 }
 
 .produtos {
@@ -205,7 +205,7 @@ main {
 }
 
 .lista-produtos{
-  font-family: "Istok Web", sans-serif;
+  font-family: "Delius", cursive;
   margin-top: 40px;
   padding-left: 70px;
 }
@@ -224,7 +224,7 @@ main {
   background-color: var(--cor-card);
   border-radius: 16px;
   padding: 10px;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Nunito', sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   color: #fff;
 }

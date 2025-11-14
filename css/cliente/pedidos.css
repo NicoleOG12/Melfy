@@ -45,7 +45,7 @@
 
 .titulo-pedidos {
   width: 100%;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Delius', cursive;
   font-size: 36px;
   color: #7a4c2f;
   text-align: center;
@@ -147,7 +147,7 @@
 }
 
 #title-historico {
-  font-family: 'Anton', sans-serif;
+  font-family: 'Delius', cursive;
   font-size: 28px;
   color: #7a4c2f;
   margin: 40px auto 20px;
