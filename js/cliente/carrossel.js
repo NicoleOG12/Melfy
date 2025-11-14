@@ -27,8 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // lógica para buscar produtos por categoria
 const resp = await fetch(`${API_URL}/categorias`);
-const categorias = await resp.json();
 
+const categorias = await resp.json();
+console.log(categorias)
 categoriasDiv.innerHTML = "";
 
 categorias.forEach(categoria => {
