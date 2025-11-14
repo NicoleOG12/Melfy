@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => { 
+    const API_URL = "https://melfy-backend-production.up.railway.app";
+  const categoriasDiv = document.getElementById("categorias-div")
+
   const scrollAmount = 300;
   const carrosseis = document.querySelectorAll('.carrossel');
 
@@ -17,5 +20,32 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     });
   });
+
+
+
+
+
+// lógica para buscar produtos por categoria
+const resp = await fetch(`${API_URL}/categorias`);
+const categorias = await resp.json();
+
+categoriasDiv.innerHTML = "";
+
+categorias.forEach(categoria => {
+  categoriasDiv.innerHTML += `
+       <div class="categoria categoria-click-event-listener" data-id="${categoria.id}">
+              <div class="hex-externo">
+                <div class="hex-interno">
+                  <div class="hex-img">
+                    <img src="${categoria.icone}" alt="${categoria.nome}">
+                  </div>
+                </div>
+              </div>
+              <p>${categoria.nome}</p>
+       </div>`;
 });
+
+
+});
+
 
