@@ -32,7 +32,7 @@ const categorias = await resp.json();
 console.log(categorias)
 categoriasDiv.innerHTML = "";
 
-categorias.forEach(categoria => {
+categorias.result.forEach(categoria => {
   categoriasDiv.innerHTML += `
        <div class="categoria categoria-click-event-listener" data-id="${categoria.id}">
               <div class="hex-externo">
