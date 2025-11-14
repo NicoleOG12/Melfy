@@ -204,7 +204,7 @@ document.querySelectorAll(".categoria-click-event-listener").forEach(cat => {
     console.log("id: "+ id)
     try {
       const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
-      const produtos = await resp.json();
+      var produtos = await resp.json();
       produtos = produtos.result || [];
       console.log(produtos)
       renderizarProdutos(produtos)
