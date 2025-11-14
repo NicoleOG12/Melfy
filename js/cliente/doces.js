@@ -185,4 +185,36 @@ document.addEventListener("DOMContentLoaded", async function () {
     const walk = (x - startX) * 2;
     slider.scrollLeft = scrollLeft - walk;
   });
+
+
+
+
+
+
+
+
+
+
+
+//lógica para buscar por categoria
+  
+document.querySelectorAll(".categoria-click-event-listener").forEach(cat => {
+  cat.addEventListener("click", async () => {
+    const id = cat.dataset.id; 
+    console.log("id: "+ id)
+    try {
+      const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
+      const produtos = await resp.json();
+      produtos = produtos.result || [];
+      console.log(produtos)
+      renderizarProdutos(produtos)
+      console.log("Produtos da categoria", id, produtos);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+    }
+
+  });
+});
+
+
 });
