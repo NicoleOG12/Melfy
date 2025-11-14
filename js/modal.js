@@ -66,8 +66,10 @@ export async function adicionarNaSacola() {
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
   if (!usuarioLogado || !usuarioLogado.id) return alert('Usuário não está logado corretamente!');
   if (!produtoAtual || !produtoAtual.id_produto) return alert('Produto não encontrado ou sem ID válido.');
-
-  const resposta = await fetch(`${API_URL}/api/doces/${produtoAtual.id_produto}`);
+  
+  alert("id produto atual:" + produtoAtual.id_produto)
+  const resposta = await fetch(`${API_URL}/produtos?id=${produtoAtual.id_produto}`);
+  
   if (!resposta.ok) return alert("Erro ao buscar produto na API.");
 
   const produtoApi = await resposta.json();
