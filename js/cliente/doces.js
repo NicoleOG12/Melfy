@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     [...listaProdutos].reverse().forEach(produto => {
-      const loja = {"id": idLoja, "nome": loja_nome, "pfp": pfp}
+      const loja = {"id": id_loja, "nome": loja_nome, "pfp": pfp}
       const card = document.createElement('div');
       card.classList.add('card');
       console.log("loja"+loja)
