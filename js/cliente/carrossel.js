@@ -34,7 +34,7 @@ categoriasDiv.innerHTML = "";
 
 categorias.result.forEach(categoria => {
   categoriasDiv.innerHTML += `
-       <div class="categoria categoria-click-event-listener" data-id="${categoria.id}">
+       <div class="categoria categoria-click-event-listener" data-id="${categoria.id_categoria}">
               <div class="hex-externo">
                 <div class="hex-interno">
                   <div class="hex-img">
