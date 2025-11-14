@@ -42,9 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <!-- Ações Mobile -->
                     <div class="header-actions">
-                        <a href="${baseURL}pages/cliente/carrinho.html" class="header-icon">
-                            <i class="fas fa-shopping-bag"></i>
-                        </a>
                         <div class="user-dropdown-container">
                             <button class="header-icon user-dropdown-toggle" id="userDropdownToggle" type="button">
                                 <i class="fas fa-user"></i>
