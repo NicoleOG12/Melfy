@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       card.innerHTML = `
         <div class="headerNovidade">
-          <img src="${loja?.pfp}" alt="Logo da Loja" class="logoLoja" />
+          <img src="${loja?.pfp || ''}" alt="Logo da Loja" class="logoLoja" />
         </div>
         <div class="border-card">
           <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
