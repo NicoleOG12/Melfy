@@ -2,6 +2,14 @@ export function abrirModalLogin(tipoUsuario) {
   console.log(tipoUsuario)
   let modalOverlay = document.getElementById('loginModalOverlay');
   const baseURL = window.location.origin + "/";
+
+  if (!document.getElementById('modalLoginCSS')) {
+    const link = document.createElement('link');
+    link.id = 'modalLoginCSS';
+    link.rel = 'stylesheet';
+    link.href = `${baseURL}css/modalLogin.css`;
+    document.head.appendChild(link);
+  }
  
   if (!modalOverlay) {
     const modalHTML = `
@@ -117,31 +125,7 @@ export function abrirModalLogin(tipoUsuario) {
        } catch (error) {
          console.error("Erro no login:", error);
        }
-     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     })
 
 
 
