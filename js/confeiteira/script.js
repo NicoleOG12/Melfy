@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+
+
+
+
   const hamburger = document.getElementById('hamburger');
   const sidebar = document.querySelector('.sidebar');
-  const lojaNome = document.getElementById("lojaNome");
-  const lojaPFP = document.getElementById("lojaPFP");
-
 
   hamburger.addEventListener('click', () => {
     sidebar.classList.toggle('open');
@@ -111,13 +112,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", async () => {
 const baseURL = window.location.origin + "/";
-document.addEventListener("DOMContentLoaded", () => {
+  const lojaNome = document.getElementById("lojaNome");
+  const lojaPFP = document.getElementById("lojaPFP");
+  const API_URL = "https://melfy-backend-production.up.railway.app";
+
 
   var dados = JSON.parse(localStorage.getItem("infoLoja"));
   console.log(dados)
   lojaNome.textContent = dados[0].nome;
   lojaPFP.src = dados[0].pfp;
+
+
+const res = await fetch(`${API_URL}/pedidos`, {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("tokenLoja")}`,
+  },
+});
+
+const pedidos = await res.json();
+
+if (Array.isArray(pedidos) && pedidos.length > 0) {
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+}
+
 
 
 
