@@ -86,7 +86,6 @@ function renderizarModalEdicao() {
                       </div><br><br>
 
                       <div class="buttons">
-                        <button type="button" class="button-delete">Excluir</button>
                         <button type="submit" class="button-save">Salvar</button>
                       </div>
                   </form>
