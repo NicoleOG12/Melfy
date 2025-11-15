@@ -1,4 +1,5 @@
 import { carregarTodosOsDados } from './dicionario.js';
+import { abrirModalLogin } from './modalLogin.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const baseURL = window.location.origin + "/";
@@ -25,121 +26,117 @@ document.addEventListener('DOMContentLoaded', () => {
   const footerContainer = document.getElementById('footer');
 
   const headerNaoLogado = `
-            <header class="melfy-header">
-            <div class="container-header-and-footer">
-                <div class="header-content">
-                    <!-- Logo -->
-                    <a href="${baseURL}index.html" class="header-logo">
-                        <img src="${baseURL}assents/img/Logo/logo-melfy-dark.svg" alt="Melfy" class="logo-image">
-                    </a>
-
-                    <!-- Navegação Desktop -->
-                    <nav class="nav-desktop">
-                        <a href="${baseURL}index.html" class="nav-link">Início</a>
-                        <a href="${baseURL}pages/cliente/doces.html" class="nav-link">Doces</a>
-                        <a href="${baseURL}pages/sobre.html" class="nav-link">Sobre</a>
-                    </nav>
-
-                    <!-- Ações Mobile -->
-                    <div class="header-actions">
-                        <div class="user-dropdown-container">
-                            <button class="header-icon user-dropdown-toggle" id="userDropdownToggle" type="button">
-                                <i class="fas fa-user"></i>
-                            </button>
-                            <div class="user-dropdown-menu" id="userDropdownMenu">
-                                <a href="${baseURL}pages/confeiteira/login.html" class="user-dropdown-item">Sou confeiteira</a>
-                                <a href="${baseURL}pages/login.html" class="user-dropdown-item">Sou cliente</a>
-                                <a href="${baseURL}pages/login.html" class="user-dropdown-item">Sou entregador</a>
-                            </div>
-                        </div>
-                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Menu Mobile -->
-                <div class="mobile-menu" id="mobileMenu">
-                    <nav class="mobile-nav">
-                        <a href="${baseURL}index.html" class="mobile-nav-link">Início</a>
-                        <a href="${baseURL}pages/cliente/doces.html" class="mobile-nav-link">Doces</a>
-                        <a href="${baseURL}pages/sobre.html" class="mobile-nav-link">Sobre</a>
-                    </nav>
-                </div>
+    <header class="melfy-header">
+      <div class="container-header-and-footer">
+        <div class="header-content">
+          <a href="${baseURL}index.html" class="header-logo">
+            <img src="${baseURL}assents/img/Logo/logo-melfy-dark.svg" alt="Melfy" class="logo-image">
+          </a>
+          <nav class="nav-desktop">
+            <a href="${baseURL}index.html" class="nav-link">Início</a>
+            <a href="${baseURL}pages/cliente/doces.html" class="nav-link">Doces</a>
+            <a href="${baseURL}pages/sobre.html" class="nav-link">Sobre</a>
+          </nav>
+          <div class="header-actions">
+            <div class="user-dropdown-container">
+              <button class="header-icon user-dropdown-toggle" id="userDropdownToggle" type="button">
+                <i class="fas fa-user"></i>
+              </button>
+              <div class="user-dropdown-menu" id="userDropdownMenu">
+                <a href="#" class="user-dropdown-item">Sou confeiteira</a>
+                <a href="#" class="user-dropdown-item">Sou cliente</a>
+                <a href="#" class="user-dropdown-item">Sou entregador</a>
+              </div>
             </div>
-        </header>
-    `;
-
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+          <nav class="mobile-nav">
+            <a href="${baseURL}index.html" class="mobile-nav-link">Início</a>
+            <a href="${baseURL}pages/cliente/doces.html" class="mobile-nav-link">Doces</a>
+            <a href="${baseURL}pages/sobre.html" class="mobile-nav-link">Sobre</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+  `;
 
   const headerLogado = `
     <header class="melfy-header">
-            <div class="container-header-and-footer">
-                <div class="header-content">
-                    <!-- Logo -->
-                    <a href="${baseURL}index.html" class="header-logo">
-                        <img src="${baseURL}assents/img/Logo/logo-melfy-dark.svg" alt="Melfy" class="logo-image">
-                    </a>
-
-                    <!-- Navegação Desktop -->
-                    <nav class="nav-desktop">
-                        <a href="${baseURL}index.html" class="nav-link">Início</a>
-                        <a href="${baseURL}pages/cliente/doces.html" class="nav-link">Doces</a>
-                        <a href="${baseURL}pages/sobre.html" class="nav-link">Sobre</a>
-                    </nav>
-
-                    <!-- Ações Usuário Logado -->
-                    <div class="header-actions">
-                        <a href="${baseURL}pages/cliente/carrinho.html" class="header-icon">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span class="cart-count" id="cartCount"></span>
-                        </a>
-                        <a href="${baseURL}pages/cliente/perfil.html" class="user-profile">
-                            <div class="user-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <span class="user-name">${usuarioLogado?.nome || 'Usuário'}</span>
-                        </a>
-                        <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Menu Mobile -->
-                <div class="mobile-menu" id="mobileMenu">
-                    <nav class="mobile-nav">
-                        <a href="index.html" class="mobile-nav-link">Início</a>
-                        <a href="doces.html" class="mobile-nav-link">Doces</a>
-                        <a href="sobre.html" class="mobile-nav-link">Sobre</a>
-                    </nav>
-                </div>
-            </div>
-        </header>
+      <div class="container-header-and-footer">
+        <div class="header-content">
+          <a href="${baseURL}index.html" class="header-logo">
+            <img src="${baseURL}assents/img/Logo/logo-melfy-dark.svg" alt="Melfy" class="logo-image">
+          </a>
+          <nav class="nav-desktop">
+            <a href="${baseURL}index.html" class="nav-link">Início</a>
+            <a href="${baseURL}pages/cliente/doces.html" class="nav-link">Doces</a>
+            <a href="${baseURL}pages/sobre.html" class="nav-link">Sobre</a>
+          </nav>
+          <div class="header-actions">
+            <a href="${baseURL}pages/cliente/carrinho.html" class="header-icon">
+              <i class="fas fa-shopping-bag"></i>
+              <span class="cart-count" id="cartCount"></span>
+            </a>
+            <a href="${baseURL}pages/cliente/perfil.html" class="user-profile">
+              <div class="user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <span class="user-name">${usuarioLogado?.nome || 'Usuário'}</span>
+            </a>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+          <nav class="mobile-nav">
+            <a href="index.html" class="mobile-nav-link">Início</a>
+            <a href="doces.html" class="mobile-nav-link">Doces</a>
+            <a href="sobre.html" class="mobile-nav-link">Sobre</a>
+          </nav>
+        </div>
+      </div>
+    </header>
   `;
 
   if (!confeiteiraLogada) {
     if (headerContainer) headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
-    
-    // Configurar dropdown do usuário não logado
+
     if (!usuarioLogado && headerContainer) {
       const dropdownToggle = headerContainer.querySelector('#userDropdownToggle');
       const dropdownMenu = headerContainer.querySelector('#userDropdownMenu');
-      
+
       if (dropdownToggle && dropdownMenu) {
         dropdownToggle.addEventListener('click', (e) => {
           e.stopPropagation();
           dropdownMenu.classList.toggle('active');
         });
-        
-        // Fechar dropdown ao clicar fora
+
         document.addEventListener('click', (e) => {
           if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
             dropdownMenu.classList.remove('active');
           }
         });
+
+        const dropdownLinks = dropdownMenu.querySelectorAll('.user-dropdown-item');
+        dropdownLinks.forEach(link => {
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            dropdownMenu.classList.remove('active');
+            let tipoUsuario = '';
+            if (link.textContent.includes('confeiteira')) tipoUsuario = 'confeiteira';
+            else if (link.textContent.includes('cliente')) tipoUsuario = 'cliente';
+            else if (link.textContent.includes('entregador')) tipoUsuario = 'entregador';
+            abrirModalLogin(tipoUsuario);
+          });
+        });
       }
     }
-    
+
     if (usuarioLogado && headerContainer) {
       const nomeElem = headerContainer.querySelector('.nomeuser');
       if (nomeElem) nomeElem.textContent = usuarioLogado.nome || 'Usuário';
