@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <span class="valor">${formatarPreco(produto.valor_uni || produto.preco)}</span>
             </div>
           </div>
-          <button class="btn-carrinho">
+          <button class="btn-carrinho add-carrinho-btn" data-id=${produto.id_produto}>
             <span>Adicionar ao carrinho</span>
             <i class="fas fa-shopping-bag"></i>
           </button>
@@ -208,4 +208,21 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
     });
   });
+
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -59,68 +59,71 @@ export function autoResize(textarea) {
   textarea.style.height = textarea.scrollHeight + "px";
 }
 
+
+
+
 export async function adicionarNaSacola() {
-  const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado')) || null;
-  if (!usuarioLogado || !usuarioLogado.id) return alert('Usuário não está logado corretamente!');
-  if (!produtoAtual || !produtoAtual.id_produto) return alert('Produto não encontrado ou sem ID válido.');
+  const usuarioLogado = JSON.parse(localStorage.getItem("infoCliente")) || null;
 
-  const resposta = await fetch(`${API_URL}/produtos?id=${produtoAtual.id_produto}`);
-  if (!resposta.ok) return alert("Erro ao buscar produto na API.");
-
-  const produtoApi = await resposta.json();
-  const quantidadeAdicionada = parseInt(document.getElementById('qtd-value').textContent);
-
-  const agora = new Date();
-  const data = agora.toLocaleDateString();
-  const horario = agora.toLocaleTimeString();
-
-  const preco = parseFloat(produtoApi.valor_uni ?? produtoApi.preco ?? produtoApi.valor ?? 0);
-
-  let sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-  const itemExistente = sacola.find(item =>
-    item.idUsuario === usuarioLogado.id && item.idProduto === produtoApi.id_produto
-  );
-
-  if (itemExistente) {
-    itemExistente.quantidade += quantidadeAdicionada;
-    itemExistente.valorTotal = itemExistente.quantidade * itemExistente.valorUnitario;
-    itemExistente.data = data;
-    itemExistente.horario = horario;
-  } else {
-    sacola.push({
-      idProduto: produtoApi.id_produto,
-      idUsuario: usuarioLogado.id,
-      quantidade: quantidadeAdicionada,
-      valorUnitario: preco,
-      valorTotal: preco * quantidadeAdicionada,
-      data,
-      horario
-    });
+  if(usuarioLogado === null){
+      alert("Você precisa estar logado para adicionar produtos à cesta.");
+      return;
   }
 
-  localStorage.setItem('Sacola', JSON.stringify(sacola));
+  if (!produtoAtual || !produtoAtual.id_produto) {
+    alert("Produto não encontrado ou sem ID válido.");
+    return;
+  }
+
+  const quantidade = parseInt(document.getElementById("qtd-value").textContent);
+
+  const body = {
+    "qtd": quantidade,
+  };
+
+  let respostaJson = null;
 
   try {
-    await fetch(`${API_URL}/carrinho`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        idUsuario: usuarioLogado.id,
-        idProduto: produtoApi.id_produto,
-        quantidade: quantidadeAdicionada,
-        valorUnitario: preco,
-        valorTotal: preco * quantidadeAdicionada,
-        data,
-        horario
-      })
-    });
-  } catch {}
+    const resposta = await fetch(
+      `${API_URL}/carrinho?id=${produtoAtual.id_produto}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("tokenCliente")}`,
+        },
+        body: JSON.stringify(body),
+      }
+    );
 
-  if (typeof atualizarContadorSacola === 'function') atualizarContadorSacola();
-  mostrarAnimacaoCarrinho(produtoApi.categorias?.[0], produtoApi.nome);
+    const text = await resposta.text();
+    respostaJson = text ? JSON.parse(text) : null;
+
+    if (!resposta.ok) {
+      console.error("Erro API:", respostaJson);
+      alert("Erro ao adicionar o produto ao carrinho.");
+      return;
+    }
+  } catch (err) {
+    console.error("Falha ao conectar API:", err);
+    alert("Não foi possível adicionar ao carrinho agora.");
+    return;
+  }
+
+  if (respostaJson?.carrinho) {
+    localStorage.setItem("Sacola", JSON.stringify(respostaJson.carrinho));
+  }
+
+  mostrarAnimacaoCarrinho(produtoAtual.categorias?.[0], produtoAtual.nome);
+
   fecharModal();
-  document.dispatchEvent(new CustomEvent('sacolaAtualizada'));
+
+  document.dispatchEvent(new CustomEvent("sacolaAtualizada"));
+  if (typeof atualizarContadorSacola === "function") {
+    atualizarContadorSacola();
+  }
 }
+
 
 export function mostrarAnimacaoCarrinho(categoria, nomeProduto) {
   const animacao = document.getElementById('carrinho-animacao');
