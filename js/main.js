@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const logoutBTN = document.getElementById("logoutBtn");
 
-  console.log(usuarioLogado)
 
   if (!confeiteiraLogada) {
     const cssFiles = [

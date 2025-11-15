@@ -144,7 +144,8 @@ const baseURL = window.location.origin + "/";
 
 
   var dados = JSON.parse(localStorage.getItem("infoLoja"));
-  console.log(dados)
+  console.log("dados",dados[0].nome)
+  lojaNome.textContent = "";
   lojaNome.textContent = dados[0].nome;
   lojaPFP.src = dados[0].pfp;
 
