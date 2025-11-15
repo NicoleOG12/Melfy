@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const hamburger = document.getElementById('hamburger');
   const sidebar = document.querySelector('.sidebar');
-  
+  const lojaNome = document.getElementById("lojaNome");
+  const lojaPFP = document.getElementById("lojaPFP");
+
+
   hamburger.addEventListener('click', () => {
     sidebar.classList.toggle('open');
     hamburger.classList.toggle('open');
@@ -110,6 +113,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const baseURL = window.location.origin + "/";
 document.addEventListener("DOMContentLoaded", () => {
+
+  var dados = JSON.parse(localStorage.getItem("infoLoja"));
+  console.log(dados)
+  lojaNome.textContent = dados[0].nome;
+  lojaPFP.src = dados[0].pfp;
+
+
+
+
+
+
   const logoutBtn = document.getElementById("logoutBtn");
 
   logoutBtn.addEventListener("click", (event) => {

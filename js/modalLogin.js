@@ -106,7 +106,7 @@ export function abrirModalLogin(tipoUsuario) {
          const data = await res.json();
          if(data.error == false){
             localStorage.setItem(token, data.token);
-            localStorage.setItem(info, data.dados);
+            localStorage.setItem(info, JSON.stringify(data.dados));
             alert("Login efetuado com sucesso!");
           window.location.href = nextPage;
 
