@@ -57,13 +57,6 @@
   color: #803822;
 }
 
-.container{
-    display: flex;
-    flex-direction: row;
-    padding: 0%;
-    margin: 0px;
-}
-
 .image-slider {
   position: relative;
   width: 100%;
