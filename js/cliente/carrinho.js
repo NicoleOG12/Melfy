@@ -33,6 +33,8 @@ async function carregarSacola() {
       data = JSON.parse(texto);
       
     renderizarCarrinhoCarrinhoAPI(data.result);
+    localStorage.setItem("Sacola", JSON.stringify(data.result));
+
     } catch (e) {
       console.error(e);
       return [];
@@ -172,6 +174,7 @@ function renderizarCarrinhoCarrinhoAPI(data) {
   subtotalSpan.textContent = `R$ ${subtotal.toFixed(2).replace(".", ",")}`;
   totalSpan.textContent = `R$ ${subtotal.toFixed(2).replace(".", ",")}`;
 
+
 }
 
 // ============================================================
@@ -265,7 +268,7 @@ async function preencherResumoCompra() {
   const sacola = await fetchSacola();
 
   let subtotal = sacola.reduce((t, i) => t + i.valorTotal, 0);
-  document.querySelectorAll("#subtotal, #subtotal-modal").forEach((el) => {
+  document.querySelectorAll("#subtotal-modal").forEach((el) => {
     el.textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
   });
 
@@ -307,20 +310,66 @@ function atualizarFreteCompra(inicial = false) {
 // ============================================================
 // FINALIZAR COMPRA
 // ============================================================
-
 async function finalizarCompra() {
-  const tipo = document.querySelector(
-    '.modal_tipo:not([style*="display: none"])'
-  )?.id;
+  try {
+    const token = localStorage.getItem("tokenCliente");
+    if (!token) {
+      alert("Você precisa estar logado para finalizar a compra.");
+      return;
+    }
 
-  alert(
-    "Compra finalizada! Forma: " +
-      (tipo ? tipo.replace("modal_", "") : "Nenhuma")
-  );
+    let sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
 
-  await salvarSacolaBackend([]);
-  carregarSacola();
-  fecharModalCompra();
+    if (!sacola.length) {
+      alert("Sua sacola está vazia.");
+      return;
+    }
+
+   
+    const itens = {};
+    sacola.forEach((p, i) => {
+      console.log(p)
+      itens[`item${i + 1}`] = {
+        id_produto: p.idProduto || p.id_produto,
+        valor_uni: p.valorUnitario || p.valor_uni,
+        qtd: p.quantidade || p.qtd,
+      };
+    });
+
+    const pedido = {
+      itens,
+      "id_pagamento": 1,
+      "id_entrega":1,
+       "id_status": 1
+
+    };
+
+    const res = await fetch(`${API_URL}/pedidos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(pedido),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      console.error("Erro:", data);
+      alert("Erro ao finalizar compra.");
+      return;
+    }
+
+    alert("Pedido criado com sucesso!");
+
+    localStorage.removeItem("Sacola");
+
+    window.location.reload();
+  } catch (err) {
+    console.error(err);
+    alert("Erro inesperado ao finalizar compra.");
+  }
 }
 
 window.finalizarCompra = finalizarCompra;
