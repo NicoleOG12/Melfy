@@ -5,7 +5,7 @@
   gap: 20px;
 }
 
-.top-cards-div > .card {
+.top-cards-div > .cardD {
   color: var(--brown-2);
   background-color: var(--card);
   border-radius: var(--radius);
@@ -21,12 +21,12 @@
   border: 1px solid rgba(107, 63, 42, 0.04);
 }
 
-.top-cards-div > .card:hover {
+.top-cards-div > .cardD:hover {
   background-color: var(--card-hover);
   transform: translateY(-3px);
 }
 
-.top-cards-div > .card > .icon {
+.top-cards-div > .cardD > .icon {
   background-color: var(--accent-yellow);
   padding: 8px;
   border-radius: 50%;
@@ -38,14 +38,14 @@
   justify-content: center;
 }
 
-.top-cards-div > .card > .text {
+.top-cards-div > .cardD > .text {
   display: flex;
   flex-direction: column;
   gap: 0px;
   font-size: 0.8em;
 }
 
-.top-cards-div > .card > .text > .indicador {
+.top-cards-div > .cardD > .text > .indicador {
   font-size: 1.5em;
   font-weight: 600;
   color: var(--brown);

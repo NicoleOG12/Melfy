@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="/css/confeiteira/style.css">
   <link rel="stylesheet" href="/css/confeiteira/pedidos.css">
   <link rel="stylesheet" href="/css/confeiteira/dashboard.css">
+  <link rel="stylesheet" href="/css/confeiteira/meusProdutos.css">
   <link rel="stylesheet" href="/css/confeiteira/manutencao.css">
   <link rel="stylesheet" href="https://unpkg.com/lucide-static@latest/font/lucide.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700;800&display=swap" rel="stylesheet">
 </head>
 
@@ -70,7 +72,7 @@
       <section id="dashboard">
         <section class="top-cards">
           <div class="top-cards-div">
-            <div class="card">
+            <div class="cardD">
               <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-basket">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -82,7 +84,7 @@
               </div>
             </div>
   
-            <div class="card">
+            <div class="cardD">
               <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-file-dollar">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -95,7 +97,7 @@
               </div>
             </div>
   
-            <div class="card">
+            <div class="cardD">
               <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-archive">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -108,7 +110,7 @@
               </div>
             </div>
   
-            <div class="card">
+            <div class="cardD">
               <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-alert-triangle">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -201,15 +203,21 @@
             <h2>Cardápio</h2>
             <p class="subtitle">Em breve, novas opções serão disponibilizadas. Fique ligado!</p>
           </div>
-        </header>
-        <div class="config-container">
-          <img src="/assents/img/Geral/Abelha Construtora.png" alt="Em Construção">
-          <div class="config-text">
-            <p>Seção em construção! <i data-lucide="settings" class="gear-icon"></i><br>
-              <span>Volte em alguns dias.</span>
-            </p>
+           <div class="header-actions">
+            <div class="search" role="search" aria-label="Pesquisar entregas">
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 21l-4.35-4.35" stroke="var(--muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="11" cy="11" r="6" stroke="var(--muted)" stroke-width="1.6"/>
+              </svg>
+              <input id="searchInput" placeholder="Pesquisar: confeitaria, bairro..." aria-label="Pesquisar entregas"/>
+            </div>
           </div>
-        </div>
+        </header>
+        <button id="btn-criar-produto" class="create-product-btn">
+          + Criar Produto
+        </button>
+        <div class="cards-wrapper"></div>
+
       </section>
 
       <section id="pedidos">
@@ -321,6 +329,7 @@
   <script src="/js/confeiteira/script.js"></script>
   <script src="/js/confeiteira/pedidos.js"></script>
   <script src="/js/confeiteira/dashboard.js"></script>
+  <script src="/js/confeiteira/meusProdutos.js"></script>
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
