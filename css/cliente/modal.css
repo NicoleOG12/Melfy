@@ -1,0 +1,322 @@
+:root {
+  --bg:#fff9f1;
+  --card:#fff;
+  --card-hover:#ffedb5;
+  --accent-yellow:#FFD868;
+  --accent-yellow-2:#FFC43D;
+  --brown:#6B3F2A;
+  --brown-2:#4a2b1d;
+  --muted:#8a6f5e;
+  --success:#23cf71;
+  --success-2:#38ca7a;
+  --danger:#FF6B6B;
+  --glass:rgba(255,255,255,0.7);
+  --shadow:0 8px 20px rgba(106,72,43,0.12);
+  --radius:14px;
+  --radius-sm:10px;
+}
+body{
+ margin: 0;
+ padding: 10px;
+ /* font-family: "Comfortaa", sans-serif; */
+ font-family: "Nunito", sans-serif;
+  
+}
+/* Modal exterior */
+.calda_fofo{
+    margin: 0;
+    width: 700px;
+}
+h1{
+    margin-top: -40px;
+    text-align: center;
+    font-weight: 800;
+    color: var(--brown-2);
+}
+.modal_compra{
+   
+    margin: auto ;
+    padding-bottom:  50px; ;
+    width: 700px;
+    max-height: 900px;
+    background-color: var(--bg);
+      max-height: 90vh;         /* limita a altura pra ativar o scroll */
+  overflow-y: auto;         /* ativa o scroll vertical */
+  scrollbar-width: thin;    /* scroll fino (Firefox) */
+  scrollbar-color: var(--accent-yellow-2); /* cor da barra e fundo (Firefox) */
+}
+
+.container_opcao{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+
+.opcao{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 30px; /* <-- Adicionado */
+  cursor: pointer;
+  width: 650px;
+  height: 50px;
+  margin-left: auto;
+  margin-right:auto ;
+  margin-top: 10px;
+  background-color: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--accent-yellow);
+  box-shadow: var(--shadow);
+}
+
+.subs {
+  flex: 0 0 250px;
+  background-color: var(--card);
+  border-radius: 20px;
+  padding: 5px 20px;
+  box-shadow: var(--shadow);
+  width: 2px;
+  height: fit-content;
+  position: sticky;
+  margin-top: 50px;
+  color: var(--cor-nome);
+  font-weight: 700;
+  font-size: 18px;
+  border: 1px solid var(--accent-yellow);
+  align-items: center;
+   box-shadow: var(--shadow);
+
+}
+.info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+h4{
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.cep{
+  background-color: var(--card);
+  border-radius: 30px;
+  width: 220px;
+  height: 30px;
+  border: 1px solid var(--accent-yellow);
+  box-shadow: var(--shadow);
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-bottom: 15px;
+  margin-left: -10px;
+
+}
+
+.conteudo_pagamento {
+  padding: 15px 5px;
+  font-size: 15px;
+  color: var(--brown-2);
+}
+
+.conteudo_pagamento div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-weight: 600;
+
+}
+#btn_calcular{
+    width: 100px;
+    height: 20px;
+    margin-top: 5px;
+    margin-bottom: 21.280px;
+    border-radius: 5px;
+    background-color: var(--accent-yellow-2);
+    border: none;
+    letter-spacing: 1.5px;
+    box-shadow: 0 6px 16px var(--accent-yellow);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.titulo_btn{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+
+
+.btn-compra {
+  color: var(--brown-2);
+  padding: 10px 0;
+  border: 0;
+  display: block;
+  margin-top: 10px;
+  background-color: var(--accent-yellow-2);
+  width: 230px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px var(--accent-yellow);
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background:var(--accent-yellow);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+.btn_add{
+width: 100px;
+height: 30px;
+border-radius: 20px;
+}
+
+.tipos_add{
+    display: flex;
+    gap: 200px;
+    align-items: center;
+}
+/* Scroll personalizado (Chrome, Edge, Safari) */
+.modal_compra::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal_compra::-webkit-scrollbar-thumb {
+  background-color:var(--accent-yellow-2);
+  border-radius: 10px;
+}
+
+.modal_compra::-webkit-scrollbar-track {
+  background-color: var(--accent-yellow-2);
+}
+
+
+/* Modal Cartão */
+#modal_cartao{
+    
+    margin-left: auto;
+    margin-right:auto ;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    width: 600px;
+    height: 300px;
+    background: var(--card);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    border: 1px solid var(--accent-yellow);
+    box-shadow: var(--shadow);
+    
+}
+
+
+.subtitulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 30px; /* <-- Adicionado */
+  color: var(--brown-2);
+  text-shadow: var(--shadow);
+  
+}
+.subtitulo .tipo_cartao{
+    font-weight:700;
+}
+
+
+.inserir_dados .cartao_tipos .cartao .selecionar {
+    border: 2px solid var(--accent-yellow);
+    
+}
+
+input.selecionar {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-yellow);
+    border-radius: 50%;
+    background-color: var(--bg);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+input.selecionar:checked {
+    background-color: var(--accent-yellow);
+}
+
+
+.inserir_dados{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+    
+}
+
+
+.inserir_dados input{
+    /* background: var(--bg); */
+    border-radius: 30px;
+    padding-left: 30px;
+    border: none;
+    height: 30px;
+    border: 1px solid var(--accent-yellow);
+    box-shadow: var(--shadow);
+    
+}
+
+.inserir_dados .nome{
+    width: 300px; 
+}
+
+.inserir_dados .numero{
+    width: 500px;   
+}
+
+.subdados input{
+    width: 100px;
+    
+}
+.cartao_tipos{
+    display: flex;
+    gap: 40px;
+    padding-left: 20px;
+    color: var(--brown-2);
+}
+.cartao{
+    display: flex;
+    align-items: center;
+    font-weight: 900;
+    
+}
+
+/* ModalPix */
+#modal_pix{
+    display: flex;
+    margin-left: auto;
+    margin-right:auto ;
+     margin-top: 10px;
+    /* padding-bottom: 10px; */ 
+    width: 600px;
+    height: 100px;
+    background: var(--card);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    border: 1px solid var(--accent-yellow);
+    box-shadow: var(--shadow);
+    align-items: center;
+    justify-content: center;
+}
+
+.btn_pix{
+    background: var(--card);
+    width: 500px;
+    border-radius: 30px;
+    height: 30px;
+    border: 1px solid var(--accent-yellow);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+}
+   
