@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const hamburger = document.getElementById('hamburger');
   const sidebar = document.querySelector('.sidebar');
+  
 
   hamburger.addEventListener('click', () => {
     sidebar.classList.toggle('open');
@@ -133,49 +134,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
-document.addEventListener("DOMContentLoaded", async () => {
-const baseURL = window.location.origin + "/";
-  const lojaNome = document.getElementById("lojaNome");
-  const lojaPFP = document.getElementById("lojaPFP");
-  const API_URL = "https://melfy-backend-production.up.railway.app";
-
-
-  var dados = JSON.parse(localStorage.getItem("infoLoja"));
-  console.log("dados",dados[0].nome)
-  lojaNome.textContent = "";
-  lojaNome.textContent = dados[0].nome;
-  lojaPFP.src = dados[0].pfp;
-
-
-const res = await fetch(`${API_URL}/pedidos`, {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("tokenLoja")}`,
-  },
-});
-
-const pedidos = await res.json();
-
-if (Array.isArray(pedidos) && pedidos.length > 0) {
-  localStorage.setItem("pedidos", JSON.stringify(pedidos));
-}
-
-
-
-
-
-
-
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  logoutBtn.addEventListener("click", (event) => {
-    event.preventDefault();
-    alert("Você será deslogado. Até mais!")
-    localStorage.removeItem("tokenLoja");
-    localStorage.removeItem("infoLoja");
-    window.location.href = `${baseURL}`;
-  });
-});
