@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Melfy</title>
-  <link rel="stylesheet" href="../../css/cliente/carrinho.css"/>
+  <link rel="stylesheet" href="../../css/cliente/carrinho.css" />
+  <link rel="stylesheet" href="/PI/modal.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+
 </head>
 
 <body>
@@ -17,6 +24,7 @@
   <main>
     <div class="carrinho">
       <div class="page-title">Seu Carrinho</div>
+
 
       <div class="content">
         <div class="container">
@@ -56,7 +64,7 @@
               <span id="total">R$ 0,00</span>
             </div>
           </div>
-          <button class="btn-compra" onclick="abrirModalCompra()">Finalizar Compra</button>
+          <button class="btn-finalizar_compra" onclick="abrirModalCompra()">Finalizar Compra</button>
         </aside>
       </div>
     </div>
@@ -65,128 +73,144 @@
     <div class="cards-wrapper"></div>
 
     <div class="modal-overlay" id="product-modal">
-        <div class="modal-content">
-          <button class="modal-close" onclick="fecharModal()">×</button>
-      
-          <img src="" alt="" class="modal-img" />
-      
-          <div class="modal-info">
-            <div class="modal-header">
-              <div class="modal-loja">
-                <img src="" alt="Logo da loja" class="modal-logo" />
-                <span class="modal-nome-loja">Dama</span>
-                <span class="modal-avaliacoes">★ 4.8</span>
-              </div>
+      <div class="modal-content">
+        <button class="modal-close" onclick="fecharModal()">×</button>
+
+        <img src="" alt="" class="modal-img" />
+
+        <div class="modal-info">
+          <div class="modal-header">
+            <div class="modal-loja">
+              <img src="" alt="Logo da loja" class="modal-logo" />
+              <span class="modal-nome-loja">Dama</span>
+              <span class="modal-avaliacoes">★ 4.8</span>
             </div>
-      
-            <h2 class="modal-title"></h2>
-            <p class="modal-subtitulo"></p>
-            <p class="modal-description"></p>
-            <p class="modal-peso"></p>
-            <p class="modal-price"></p>
-      
-            <div class="modal-actions">
-              <div class="modal-quantity">
-                <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
-                <span id="qtd-value">1</span>
-                <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
-              </div>
-              <button class="btn-add">Adicionar</button>
+          </div>
+
+          <h2 class="modal-title"></h2>
+          <p class="modal-subtitulo"></p>
+          <p class="modal-description"></p>
+          <p class="modal-peso"></p>
+          <p class="modal-price"></p>
+
+          <div class="modal-actions">
+            <div class="modal-quantity">
+              <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+              <span id="qtd-value">1</span>
+              <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
             </div>
+            <button class="btn-add">Adicionar</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
-        <div class="animacao-conteudo">
-          <i class="fas fa-shopping-bag icone-sacola"></i>
-          <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
-          <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
-        </div>
+    <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
+      <div class="animacao-conteudo">
+        <i class="fas fa-shopping-bag icone-sacola"></i>
+        <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
+        <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
       </div>
+    </div>
   </main>
-
   <div id="modal-compra-buy" class="modal-overlay-buy" style="display:none;">
-    <div class="modal-content-buy">
-      <button class="modal-close-buy" onclick="fecharModalCompra()">×</button>
-      <div class="modal-info-buy">
-        <h2 class="modal-title-buy">Finalizar Compra</h2>
+    <div class="modal_compra">
+      <img class="calda_fofo" src="/assents/img/Geral/Vector 3384.svg" alt="calda">
+      <h1>Como deseja pagar?</h1>
 
-        <div id="lista-produtos-compra" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; border-bottom: 1px solid var(--cor-botao-hover); padding-bottom: 15px;"></div>
+      <!-- BOTÕES DE OPÇÃO -->
+      <div class="container_opcao">
+        <button class="opcao" id="btn_cartao">
+          <h3 class="titulo">Cartão</h3>
+          <i class="fa-solid fa-angle-right"></i>
+        </button>
 
-        <div style="margin-left: 570px; margin-top: -15px; font-family: 'Nunito', sans-serif; font-weight: bold; font-size: 20px; color: var(--cor-nome);">
-          Total: <span id="total-compra">R$ 0,00</span>
-        </div>
-
-        <div>
-          <h3 style="text-align: center;">Forma de Pagamento</h3>
-          <div class="formas-pagamento-buy" style="display: flex; gap: 15px; margin-bottom: 20px;">
-            <label style="cursor:pointer; text-align:center;">
-              <input type="radio" name="pagamento-buy" value="dinheiro" checked style="display:none;" />
-              <img src="../../assents/img/Geral/dinheiro.png" alt="Dinheiro" title="Dinheiro" style="width:40px;"/>
-              <div>Dinheiro</div>
-            </label>
-            <label style="cursor:pointer; text-align:center;">
-              <input type="radio" name="pagamento-buy" value="pix" style="display:none;" />
-              <img src="../../assents/img/Geral/pix.png" alt="Pix" title="Pix" style="width:40px;"/>
-              <div>Pix</div>
-            </label>
-            <label style="cursor:pointer; text-align:center;">
-              <input type="radio" name="pagamento-buy" value="boleto" style="display:none;" />
-              <img src="../../assents/img/Geral/boleto.png" alt="Boleto" title="Boleto" style="width:40px;"/>
-              <div>Boleto</div>
-            </label>
-            <label style="cursor:pointer; text-align:center;">
-              <input type="radio" name="pagamento-buy" value="cartao" style="display:none;" />
-              <img src="../../assents/img/Geral/cartão.png" alt="Cartão" title="Cartão" style="width:40px;"/>
-              <div>Cartão</div>
-            </label>
+        <!-- MODAL CARTÃO -->
+        <div id="modal_cartao" class="modal_tipo">
+          <div class="subtitulo">
+            <h2 class="tipo_cartao">Visa - Crédito</h2>
+            <span class="dados_cartao">****7634</span>
+            <input class="selecionar" type="checkbox">
+          </div>
+          <div class="inserir_dados">
+            <input class="nome" type="text" placeholder="Nome">
+            <input class="numero" type="text" placeholder="Número">
+            <div class="subdados">
+              <input type="date" placeholder="Data">
+              <input type="text" placeholder="CVV">
+            </div>
+            <div class="tipos_add">
+              <div class="cartao_tipos">
+                <div class="cartao">
+                  <span>Débito</span>
+                  <input class="selecionar" type="checkbox">
+                </div>
+                <div class="cartao">
+                  <span class="tipo_cartao">Crédito</span>
+                  <input class="selecionar" type="checkbox">
+                </div>
+              </div>
+              <button class="btn_add">ADICIONAR</button>
+            </div>
           </div>
         </div>
 
-        <div>
-          <h3 style="text-align: center;">Forma de Entrega</h3>
-          <div class="forma-entrega-buy">
-            <label style="margin-right: 20px; cursor:pointer;">
-              <input type="radio" name="entrega-buy" value="retirada" checked onchange="atualizarFreteCompra()" />
-              Retirada
-            </label>
-            <label style="cursor:pointer;">
-              <input type="radio" name="entrega-buy" value="delivery" onchange="atualizarFreteCompra()" />
-              Delivery
-            </label>
+        <button class="opcao" id="btn_pix">
+          <h3 class="titulo">Pix</h3>
+          <i class="fa-solid fa-angle-right"></i>
+        </button>
+
+        <!-- MODAL PIX -->
+        <div id="modal_pix" class="modal_tipo">
+          <button class="btn_pix">
+            Copie e Cole <i class="fa-regular fa-clone"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SEÇÃO DE INFORMAÇÕES -->
+      <div class="info">
+        <div class="subs">
+          <div class="conteudo_pagamento">
+            <div class="titulo_btn">
+              <h4 class="titulo_menor">Calcule o frete</h4>
+              <!-- <button id="btn_calcular" >Calcular</button> -->
+            </div>
+            <input type="text" class="cep" placeholder="CEP">
+            <div class="dados">
+              <span>Valor:</span>
+              <span id="valor-frete">R$ 0,00</span>
+            </div>
           </div>
         </div>
 
-        <div id="frete-info-buy" style="margin-top: 15px; display: none; font-weight: bold; color: var(--cor-footer-text);">
-          Taxa de Entrega: <span id="valor-frete-buy">R$ 0,00</span>
-        </div>
-
-        <br><br>
-        <div class="resumo-final-buy">
-          <div class="linha-resumo-buy">
-            <span>Total dos Produtos</span>
-            <span id="total-produtos-buy">R$ 0,00</span>
-          </div>
-          <div class="linha-resumo-buy">
-            <span>Total do Frete</span>
-            <span id="total-frete-buy">R$ 0,00</span>
-          </div>
-          <div class="linha-resumo-buy total-geral-buy">
-            <strong>Pagamento Total</strong>
-            <strong id="total-geral-buy">R$ 0,00</strong>
+        <div class="subs">
+          <div class="conteudo_pagamento">
+            <div>
+              <span>Subtotal</span>
+              <span id="subtotal-modal">R$ 0,00</span>
+            </div>
+            <div>
+              <span>Frete</span>
+              <span id="taxa-entrega-modal">R$ 0,00</span>
+            </div>
+            <div style="font-weight:bold;">
+              <span>Total</span>
+              <span id="total-modal">R$ 0,00</span>
+            </div>
+            <button class="btn-compra" onclick="finalizarCompra()">Pagar</button>
           </div>
         </div>
-
-        <button class="btn-add-buy" style="margin-top: 30px;" onclick="finalizarCompra()">Confirmar Compra</button>
       </div>
     </div>
   </div>
 
+
   <div id="footer"></div>
-  
+
   <script type="module" src="../../js/cliente/carrinho.js"></script>
   <script type="module" src="../../js/main.js"></script>
 
 </body>
+
 </html>

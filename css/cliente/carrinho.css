@@ -1,3 +1,20 @@
+:root {
+  --bg:#fff9f1;
+  --card:#fff;
+  --card-hover:#ffedb5;
+  --accent-yellow:#FFD868;
+  --accent-yellow-2:#FFC43D;
+  --brown:#6B3F2A;
+  --brown-2:#4a2b1d;
+  --muted:#8a6f5e;
+  --success:#23cf71;
+  --success-2:#38ca7a;
+  --danger:#FF6B6B;
+  --glass:rgba(255,255,255,0.7);
+  --shadow:0 8px 20px rgba(106,72,43,0.12);
+  --radius:14px;
+  --radius-sm:10px;
+}
 .carrinho {
   padding-left: 50px;
   padding-bottom: 70px;
@@ -5,18 +22,19 @@
 
 main {
   padding: 0 30px;
+  /* background-color: var(--card); */
+    font-family: "Nunito", sans-serif;
 }
 
 .page-title {
-  font-family: 'Delius', cursive;
-  font-size: 50px;
-  padding: 50px 0;
-  color: #ffd900;
-  text-shadow:
-    -1px 1px 0 var(--cor-destaque),  
-     1px 1px 0 var(--cor-destaque),
-    -1px 1px 0 var(--cor-destaque),
-     1px 1px 0 var(--cor-destaque);
+
+  font-size: 30px;
+  padding: 20px 0;
+  color: var(--brown-2);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  border-radius: 25px;
+  margin-bottom: 20px;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-align: center;
@@ -32,12 +50,13 @@ main {
 }
 
 .container {
-  background-color: var(--cor-container);
+  background-color: var(--card);
   width: 100%;
   max-width: 800px;
-  padding: 40px;
+  padding: 25px 40px;
   border-radius: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--accent-yellow);
   transition: background-color 0.3s ease;
   flex: 1 1 auto;
 }
@@ -46,12 +65,12 @@ section {
   flex: 1;
   min-width: 300px;
 }
-aside {
+aside  {
   flex: 0 0 320px;
-  background-color: var(--cor-box-resumo);
+  background-color: var(--card);
   border-radius: 20px;
   padding: 30px 25px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  box-shadow: var(--shadow);
   height: fit-content;
   position: sticky;
   top: 100px;
@@ -71,8 +90,8 @@ thead {
 }
 
 tr {
-  background-color: #fff;
-  border-radius: 12px;
+  background-color:var(--card);
+  border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   transition: box-shadow 0.3s ease;
 }
@@ -84,7 +103,7 @@ tr:hover {
 thead th {
   padding: 12px 15px;
   text-transform: uppercase;
-  color: var(--cor-nome);
+  color: var(--brown-2);
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.05em;
@@ -93,7 +112,7 @@ thead th {
 td {
   padding: 15px 0;
   vertical-align: middle;
-  color: var(--cor-link);
+  color: var(--brown-2);
   font-size: 16px;
 }
 
@@ -110,19 +129,19 @@ td {
   padding: 10px;
   object-fit: cover;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-  background-color: #fff;
+  background-color: var(--card);
 }
 
 .nome {
   margin: 0;
   padding-bottom: 5px;
-  color: var(--cor-link);
+  color: var(--brown-2);
   font-weight: 700;
   font-size: 18px;
 }
 
 .qtd {
-  background: var(--cor-ativa);
+  background: var(--accent-yellow);
   display: inline-flex;
   justify-content: space-around;
   min-width: 70px;
@@ -153,7 +172,7 @@ td {
 }
 
 .qtd button:hover {
-  background: var(--cor-ativa2);
+  background: var(--accent-yellow-2);
   color: var(--cor-branca);
 }
 
@@ -182,16 +201,16 @@ td {
 .cabecalho {
   font-size: 20px;
   padding: 18px 24px;
-  border-bottom: 2px solid #f8d82066;
+  border-bottom: 2px solid var(--accent-yellow-2);
   font-weight: 600;
-  color: var(--cor-link);
+  color: var(--brown-2);
   letter-spacing: 0.03em;
 }
 
 .conteudo {
   padding: 25px 28px;
   font-size: 17px;
-  color: var(--cor-link);
+  color: var(--brown-2);
 }
 
 .conteudo div {
@@ -208,18 +227,21 @@ td {
   display: flex;
   justify-content: space-between;
   font-weight: 700;
-  color: var(--cor-laranja);
+  color: var(--accent-yellow-2);
 }
 
 .box-finalizar-compra {
-  background: var(--cor-box-resumo);
+  background: var(--card);
   margin-bottom: 20px;
-  border: 1.5px solid #f8d82099;
+  border: 1.5px solid var(--accent-yellow-2);
   border-radius: 16px;
+  padding: 10px 0px;
   box-shadow: 0 6px 12px rgba(248, 216, 32, 0.25);
 }
 
-.btn-compra {
+.btn-finalizar_compra
+
+{
   color: white;
   padding: 16px 0;
   border: 0;
@@ -235,7 +257,7 @@ td {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.btn-compra:hover {
+.btn-finalizar_compra:hover {
   background: #0f6a39;
   box-shadow: 0 8px 20px rgba(15, 106, 57, 0.7);
 }
@@ -255,7 +277,18 @@ input[type="checkbox"] {
   height: 20px;
   margin-left: 10px;
   cursor: pointer;
-  accent-color: var(--cor-ativa2);
+  appearance: none;
+   -webkit-appearance: none;
+
+   border: 2px solid var(--accent-yellow-2);
+   border-radius: 50%;
+   background-color: var(--bg);
+   cursor: pointer;
+   transition: 0.2s;
+  
+}
+input:checked {
+    background-color: var(--accent-yellow-2);
 }
 
 .linha-loja {
@@ -289,7 +322,7 @@ input[type="checkbox"] {
   background-image: url('../../assents/img/Geral/separador.png');
   background-repeat: repeat-x;
   background-position: center;
-  background-size: auto 40px;
+ 
   opacity: 0.2;
   pointer-events: none;
   z-index: 0;
@@ -309,7 +342,7 @@ input[type="checkbox"] {
 }
 
 .h3Novidades {
-  font-family: "Nunito", sans-serif;
+
   color: var(--cor-link);
   font-size: 28px;
   margin-left: 50px;
@@ -346,7 +379,7 @@ input[type="checkbox"] {
   flex-direction: column;
   gap: 24px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  font-family: 'Nunito', sans-serif;
+ 
   box-sizing: border-box;
 }
 
@@ -433,7 +466,7 @@ input[type="checkbox"] {
   border-radius: 8px;
   resize: none !important;
   font-size: 14px;
-  font-family: inherit;
+
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
@@ -508,7 +541,13 @@ input[type="checkbox"] {
   font-weight: bold;
   margin-top: 10px;
 }
-
+.btn_add{
+  background-color: var(--accent-yellow);
+  border: none;
+}
+.btn_add:hover{
+   background-color: var(--accent-yellow-2);
+}
 .btn-add-buy {
   margin-top: 20px;
   padding: 14px 28px;
