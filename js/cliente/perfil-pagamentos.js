@@ -158,9 +158,9 @@ function formatarValidade(input) {
 }
 
 window.sairConta = function() {
-  localStorage.removeItem('usuarioLogado');
-  localStorage.removeItem('confeiteiraLogada');
-  alert('Usuário deslogado');
+  localStorage.removeItem("tokenCliente");
+  localStorage.removeItem("infoCliente");
+  alert("Você realizou o Logout. Até breve!");
   window.location.href = rotasGerais.home;
 }
 
