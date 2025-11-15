@@ -16,85 +16,93 @@ function renderizarModalEdicao() {
     <dialog id="editModal" class="modal-container">
       <button class="modal-close" aria-label="Fechar modal">×</button>
       <section class="container">
-          <div class="container-box">
-              <div class="form-container-split">
-                  <div class="upload-section">
-                    <label for="foto" class="upload-box">
-                        <i class="fas fa-camera-retro"></i>
-                        <p>Carregar Imagem</p>
-                        <input type="file" id="foto" hidden />
-                        <img id="imagemExibida" src="" alt="" />
-                    </label>
-                  </div>
-                  <div class="info-section">
-                      <form id="formEdicao">
-                          <div class="floating-input">
-                            <input type="text" id="nome" required />
-                            <label>Nome do Produto</label>
-                            <span id="nomeCounter">0 / 21</span>
-                          </div><br>
-                          <div class="floating-input">
-                            <input type="text" id="subtitulo" required />
-                            <label>Subtítulo</label>
-                            <span id="subtituloCounter">0 / 35</span>
-                          </div><br>
-                          <div class="floating-input">
-                            <select id="categoria" required></select>
-                            <label>Categoria</label>
-                          </div><br>
-                          <div class="floating-input">
-                            <textarea id="descricao" required></textarea>
-                            <label>Descrição</label>
-                          </div><br>
-                          <div class="floating-input">
-                            <input type="text" id="prazoInput" required />
-                            <label>Prazo</label>
-                            <span id="prazoCounter">0</span>
-                          </div><br>
-                          <div class="floating-input">
-                            <input type="number" id="precoInput" required />
-                            <label>Preço</label>
-                            <span id="precoCounter">R$ 0,00</span>
-                          </div><br><br>
-                          <div class="buttons">
-                            <button type="submit" class="button-save">Salvar</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
+        <div class="container-box">
+          <div class="form-container-split">
+            <div class="upload-section">
+              <label for="foto" class="upload-box">
+                <i class="fas fa-camera-retro"></i>
+                <p>Carregar Imagem</p>
+                <input type="file" id="foto" hidden />
+                <img id="imagemExibida" src="" alt="" />
+              </label>
+            </div>
+            <div class="info-section">
+              <form id="formEdicao">
+                <div class="floating-input">
+                  <input type="text" id="nome" required />
+                  <label>Nome do Produto</label>
+                  <span id="nomeCounter">0 / 21</span>
+                </div><br>
+                <div class="floating-input">
+                  <select id="categoria" required></select>
+                  <label>Categoria</label>
+                </div><br>
+                <div class="floating-input">
+                  <textarea id="descricao" required></textarea>
+                  <label>Descrição</label>
+                </div><br>
+                <div class="floating-input">
+                  <input type="text" id="prazoInput" required />
+                  <label>Prazo</label>
+                  <span id="prazoCounter">0</span>
+                </div><br>
+                <div class="floating-input">
+                  <input type="number" id="precoInput" required step="0.01" min="0" max="999.99"/>
+                  <label>Preço</label>
+                  <span id="precoCounter">R$ 0,00</span>
+                </div><br><br>
+                <div class="buttons">
+                  <button type="submit" class="button-save">Salvar</button>
+                </div>
+              </form>
+            </div>
           </div>
+        </div>
       </section>
     </dialog>
   `;
+
   document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
-async function carregarCategorias(selecionarNome = null) {
+async function carregarCategorias(selecionarId = null) {
   try {
     const res = await fetch(`${API_URL}/categorias`);
     const data = await res.json();
     const select = document.querySelector("#categoria");
-    select.innerHTML = `<option value="" disabled selected hidden></option>`;
-    data.result.forEach(cat => {
+
+    select.innerHTML = `<option value="" disabled ${!selecionarId ? "selected" : ""}>Selecione a categoria</option>`;
+
+    (data.result || []).forEach(cat => {
       const option = document.createElement("option");
-      option.value = cat.nome;
+      option.value = cat.id_categoria;
       option.textContent = cat.nome;
-      if (selecionarNome && cat.nome === selecionarNome) option.selected = true;
+      if (selecionarId && Number(cat.id_categoria) === Number(selecionarId)) {
+        option.selected = true;
+      }
       select.appendChild(option);
     });
   } catch (err) {
-    console.error("Erro ao carregar categorias", err);
+    console.error("Erro ao carregar categorias:", err);
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderizarModalEdicao();
+
   const cardsWrapper = document.querySelector(".cards-wrapper");
   let produtos = [];
+  const lojaLogada = JSON.parse(localStorage.getItem("infoLoja") || "null");
+  const idLojaLogada = lojaLogada?.[0]?.id_loja;
 
   async function carregarProdutos() {
+    if (!idLojaLogada) {
+      cardsWrapper.innerHTML = "<p>Loja não logada</p>";
+      return;
+    }
+
     try {
-      const token = await obterTokenDaAPI();
+      const token = localStorage.getItem("tokenLoja");
       if (!token) {
         cardsWrapper.innerHTML = "<p>Usuário não autenticado</p>";
         return;
@@ -103,26 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_URL}/produtos`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
+
       const data = await res.json();
-      produtos = data.result || [];
+      produtos = (data.result || []).filter(p => p.id_loja === idLojaLogada);
       renderizarCards();
     } catch {
       cardsWrapper.innerHTML = "<p>Erro ao carregar produtos</p>";
     }
   }
 
-  async function obterTokenDaAPI() {
-    try {
-      const res = await fetch(`${API_URL}/auth/current-user`);
-      const data = await res.json();
-      return data.token || null;
-    } catch {
-      return null;
-    }
-  }
-
   function formatarPreco(valor) {
-    return parseFloat(valor).toFixed(2).replace(".", ",");
+    return parseFloat(valor || 0).toFixed(2).replace(".", ",");
   }
 
   function renderizarCards() {
@@ -131,7 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cardsWrapper.innerHTML = "<p>Nenhum produto encontrado.</p>";
       return;
     }
-    produtos.forEach((produto) => {
+
+    produtos.forEach(produto => {
       const card = document.createElement("div");
       card.classList.add("cardP");
       card.innerHTML = `
@@ -146,26 +146,31 @@ document.addEventListener("DOMContentLoaded", () => {
           <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" class="imagem-produto" />
           <div class="descricao">
             <h3>${produto.nome}</h3>
-            <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
+            <p>${limitarDescricao(produto.descricao || "")}</p>
           </div>
           <div class="footerNovidades">
             <div class="preco">
               <span class="icone-preco">R$</span>
-              <span class="valor">${formatarPreco(produto.valor_uni || produto.preco)}</span>
+              <span class="valor">${formatarPreco(produto.valor || produto.valor_uni || produto.preco)}</span>
             </div>
           </div>
         </div>
       `;
+
       const menuBtn = card.querySelector(".menu-btn");
       const menu = card.querySelector(".menu");
-      menuBtn.addEventListener("click", (e) => {
+
+      menuBtn.addEventListener("click", e => {
         e.stopPropagation();
-        document.querySelectorAll(".menu").forEach((m) => { if (m !== menu) m.style.display = "none"; });
+        document.querySelectorAll(".menu").forEach(m => { if (m !== menu) m.style.display = "none"; });
         menu.style.display = menu.style.display === "block" ? "none" : "block";
       });
+
       document.addEventListener("click", () => { menu.style.display = "none"; });
+
       card.querySelector(".editar-produto").onclick = () => abrirModalEdicao(produto);
       card.querySelector(".excluir-produto").onclick = () => excluirProduto(produto.id_produto);
+
       cardsWrapper.appendChild(card);
     });
   }
@@ -175,17 +180,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const backdrop = document.getElementById("modalBackdrop");
     const imgExibida = document.getElementById("imagemExibida");
 
-    const nomeCategoria = produto?.categorias?.[0] || null;
-    await carregarCategorias(nomeCategoria);
+    let categorias = [];
+    try {
+      const res = await fetch(`${API_URL}/categorias`);
+      const data = await res.json();
+      categorias = data.result || [];
+    } catch (err) {
+      console.error("Erro ao carregar categorias:", err);
+    }
+
+    let categoriaId = null;
+    if (produto) {
+      if (produto.id_categoria) categoriaId = produto.id_categoria;
+      else if (produto.categoria) {
+        const cat = categorias.find(c => c.nome === produto.categoria);
+        if (cat) categoriaId = cat.id_categoria;
+      } else if (produto.categorias?.length) {
+        const cat = categorias.find(c => c.nome === produto.categorias[0]?.nome);
+        if (cat) categoriaId = cat.id_categoria;
+      }
+    }
+
+    const select = document.querySelector("#categoria");
+    select.innerHTML = `<option value="" disabled ${!categoriaId ? "selected" : ""}>Selecione a categoria</option>`;
+    categorias.forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat.id_categoria;
+      option.textContent = cat.nome;
+      if (Number(cat.id_categoria) === Number(categoriaId)) option.selected = true;
+      select.appendChild(option);
+    });
 
     modal.showModal();
     backdrop.hidden = false;
 
     document.querySelector("#nome").value = produto?.nome || "";
-    document.querySelector("#subtitulo").value = produto?.subtitulo || "";
-    document.querySelector("#descricao").value = produto?.descricao || produto?.subtitulo || "";
+    document.querySelector("#descricao").value = produto?.descricao || "";
     document.querySelector("#prazoInput").value = produto?.prazo || "";
-    document.querySelector("#precoInput").value = produto?.valor_uni || produto?.preco || "";
+    document.querySelector("#precoInput").value = produto?.valor || produto?.valor_uni || produto?.preco || "";
     imgExibida.src = produto?.midia?.imagens?.[0]?.path || produto?.foto || "";
     imgExibida.style.display = imgExibida.src ? "block" : "none";
 
@@ -194,73 +226,79 @@ document.addEventListener("DOMContentLoaded", () => {
     let novaImagem = null;
     const fotoInput = document.querySelector("#foto");
     fotoInput.value = "";
-    fotoInput.onchange = (e) => {
+    fotoInput.onchange = e => {
       novaImagem = e.target.files[0];
       const reader = new FileReader();
-      reader.onload = (ev) => { imgExibida.src = ev.target.result; imgExibida.style.display = "block"; };
+      reader.onload = ev => { imgExibida.src = ev.target.result; imgExibida.style.display = "block"; };
       reader.readAsDataURL(novaImagem);
     };
 
     const buttonSave = document.querySelector(".button-save");
-    buttonSave.onclick = async (e) => {
+    buttonSave.onclick = async e => {
       e.preventDefault();
-      const token = await obterTokenDaAPI();
-      if (!token) { alert("Usuário não autenticado"); return; }
+      const token = localStorage.getItem("tokenLoja");
+      if (!token) return alert("Usuário não autenticado");
+
+      const id_categoria = Number(select.value);
+      if (!id_categoria) return alert("Selecione uma categoria válida");
 
       const formData = new FormData();
       formData.append("nome", document.querySelector("#nome").value);
-      formData.append("subtitulo", document.querySelector("#subtitulo").value);
-      formData.append("categoria", document.querySelector("#categoria").value);
+      formData.append("id_categoria", id_categoria);
       formData.append("descricao", document.querySelector("#descricao").value);
       formData.append("prazo", document.querySelector("#prazoInput").value);
-      formData.append("preco", document.querySelector("#precoInput").value);
+
+      let valor = parseFloat(document.querySelector("#precoInput").value) || 0;
+      if (valor > 999.99) valor = 999.99;
+      formData.append("valor", valor.toFixed(2));
+      formData.append("id_loja", idLojaLogada);
+
       if (novaImagem) formData.append("img", novaImagem);
 
       try {
         const resp = await fetch(`${API_URL}/produtos`, {
           method: "POST",
           headers: { "Authorization": `Bearer ${token}` },
-          body: formData,
+          body: formData
         });
-        if (!resp.ok) throw new Error("Erro ao criar produto");
+        if (!resp.ok) throw new Error(await resp.text());
         await carregarProdutos();
         modal.close();
         backdrop.hidden = true;
-      } catch {
-        alert("Erro ao criar produto");
+      } catch (err) {
+        alert("Erro ao criar produto: " + err.message);
       }
     };
 
-    document.querySelector(".modal-close").onclick = () => {
-      modal.close();
-      backdrop.hidden = true;
-    };
+    document.querySelector(".modal-close").onclick = () => { modal.close(); backdrop.hidden = true; };
+    backdrop.onclick = () => { modal.close(); backdrop.hidden = true; };
   }
 
   async function excluirProduto(id_produto) {
-    const token = await obterTokenDaAPI();
-    if (!token) { alert("Usuário não autenticado"); return; }
+    const token = localStorage.getItem("tokenLoja");
+    if (!token) return alert("Usuário não autenticado");
     if (!confirm("Deseja excluir este produto?")) return;
+
     try {
-      const resp = await fetch(`${API_URL}/produtos/`, {
+      const resp = await fetch(`${API_URL}/produtos?id=${id_produto}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ id: id_produto })
+        headers: { "Authorization": `Bearer ${token}` }
       });
-      if (!resp.ok) throw new Error();
+      const text = await resp.text();
+      if (!resp.ok) throw new Error(text || "Erro desconhecido");
       await carregarProdutos();
-    } catch { alert("Erro ao excluir produto"); }
+    } catch (err) {
+      alert("Erro ao excluir produto: " + err.message);
+    }
   }
 
   document.querySelector(".create-product-btn").onclick = () => abrirModalEdicao();
 
   function atualizarTudo() {
     updateCounter("#nome", "#nomeCounter", 21);
-    updateCounter("#subtitulo", "#subtituloCounter", 35);
     updatePrazoCounter();
     updatePrecoCounter();
     document.querySelector("#nome").oninput = () => updateCounter("#nome", "#nomeCounter", 21);
-    document.querySelector("#subtitulo").oninput = () => updateCounter("#subtitulo", "#subtituloCounter", 35);
     document.querySelector("#prazoInput").oninput = updatePrazoCounter;
     document.querySelector("#precoInput").oninput = updatePrecoCounter;
   }
