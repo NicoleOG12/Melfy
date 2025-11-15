@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
   const hamburger = document.getElementById('hamburger');
   const sidebar = document.querySelector('.sidebar');
   
@@ -102,5 +103,20 @@ document.addEventListener('DOMContentLoaded', () => {
       tipsPopup.style.top = `${top}px`;
       tipsPopup.style.visibility = 'visible';
     });
+  });
+  
+
+});
+
+const baseURL = window.location.origin + "/";
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  logoutBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    alert("Você será deslogado. Até mais!")
+    localStorage.removeItem("tokenLoja");
+    localStorage.removeItem("infoLoja");
+    window.location.href = `${baseURL}`;
   });
 });

@@ -1,6 +1,8 @@
-export function abrirModalLogin(tipoUsuario = 'cliente') {
+export function abrirModalLogin(tipoUsuario) {
+  console.log(tipoUsuario)
   let modalOverlay = document.getElementById('loginModalOverlay');
-
+  const baseURL = window.location.origin + "/";
+ 
   if (!modalOverlay) {
     const modalHTML = `
       <div id="loginModalOverlay" class="modal-overlay">
@@ -37,7 +39,7 @@ export function abrirModalLogin(tipoUsuario = 'cliente') {
                 </div>
                 <a href="#" class="recup-senha">Esqueceu sua senha?</a>
                 <div class="container-button">
-                  <button class="btn-login" id="btnLogin">Login</button>
+                  <button class="btn-login" id="btnLogin" data-id="${tipoUsuario}">Login</button>
                 </div>
                 <p class="cadastro">
                   Ainda não possui uma conta? <br>
@@ -54,6 +56,96 @@ export function abrirModalLogin(tipoUsuario = 'cliente') {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     modalOverlay = document.getElementById('loginModalOverlay');
 
+    //lógica pra direcionar o fetch
+     const btnLogin = document.getElementById("btnLogin");
+
+     btnLogin.addEventListener("click", async () => {
+       const tipoUsuario = btnLogin.dataset.id; 
+
+       try {
+         const API_URL = "https://melfy-backend-production.up.railway.app";
+         var url;
+         var nextPage;
+         var token; 
+         var info;
+
+         if (tipoUsuario == "cliente") {
+           url = API_URL + "/clientes/login";           
+           nextPage = window.location.href;
+           token = "tokenCliente";
+           info = "infoCliente";
+         } else if (tipoUsuario == "confeiteira") {
+           url = API_URL + "/lojas/login";
+           nextPage = `${baseURL}pages/confeiteira/home.html`;
+           token = "tokenLoja";
+           info = "infoLoja";
+         } else if(tipoUsuario == "entregador"){
+          url = API_URL + "/entregador/login";          
+           nextPage = `${baseURL}pages/entregador/home.html`;           
+           token = "tokenEntregador";
+           info = "infoEntregador";
+         }else {
+           console.error("Tipo de usuário inválido:", tipoUsuario);
+           
+           return;
+         }
+
+      let email = document.getElementById("emailLogin").value.trim();
+      let senha = document.getElementById("senhaLogin").value.trim();
+         const res = await fetch(url, {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify({ 
+            "email": email,
+            "senha": senha
+            }),
+         });
+
+         const data = await res.json();
+         if(data.error == false){
+            localStorage.setItem(token, data.token);
+            localStorage.setItem(info, data.dados);
+            alert("Login efetuado com sucesso!");
+          window.location.href = nextPage;
+
+         }else if(data.error == true){
+            alert(data.mensagem)
+         }
+         console.log("Resposta:", data);
+       } catch (error) {
+         console.error("Erro no login:", error);
+       }
+     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //imagens do front
     const modal = modalOverlay.querySelector('.login-modal');
     const imagens = modal.querySelectorAll('.image-slider img');
     const dotsContainer = modal.querySelector('.slider-indicadores');
@@ -128,3 +220,6 @@ function fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer) {
   imagens.forEach((img, i) => img.classList.toggle('ativa', i === 0));
   dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === 0));
 }
+
+
+ 

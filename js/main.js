@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const baseURL = window.location.origin + "/";
   const confeiteiraLogada = JSON.parse(localStorage.getItem('confeiteiraLogada'));
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+  const logoutBTN = document.getElementById("logoutBtn");
 
   if (!confeiteiraLogada) {
     const cssFiles = [
