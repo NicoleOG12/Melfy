@@ -1,12 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const pedidos = [
-    { id: 101, minutos: 5, nome: "Clara Mendes", valor: "R$ 48,90", pagamento: "Pix" },
-    { id: 102, minutos: 12, nome: "Lucas Santos", valor: "R$ 32,50", pagamento: "Cartão" },
-    { id: 103, minutos: 20, nome: "Beatriz Lima", valor: "R$ 59,00", pagamento: "Dinheiro" },
-    { id: 101, minutos: 5, nome: "Clara Mendes", valor: "R$ 48,90", pagamento: "Pix" },
-    { id: 102, minutos: 12, nome: "Lucas Santos", valor: "R$ 32,50", pagamento: "Cartão" },
-    { id: 103, minutos: 20, nome: "Beatriz Lima", valor: "R$ 59,00", pagamento: "Dinheiro" }
-  ];
+  const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 
   const colunaAberto = document.getElementById("coluna-aberto");
   const colunaPreparo = document.getElementById("coluna-preparo");
@@ -20,15 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.innerHTML = `
       <div class="card-header">
-        <span><i data-lucide="receipt"></i> Pedido #${pedido.id}</span>
-        <span><i data-lucide="clock-3"></i> ${pedido.minutos} min</span>
+        <span><i data-lucide="receipt"></i> Pedido #${pedido.id_pedido}</span>
+        <span><i data-lucide="clock-3"></i> 1 min </span>
       </div>
 
       <div class="card-info">
-        <p><i data-lucide="user"></i> <strong>${pedido.nome}</strong></p>
+        <p><i data-lucide="user"></i> <strong>${pedido.nome_cliente}</strong></p>
         <div class="valor-pagamento">
-          <p><i data-lucide="wallet"></i> ${pedido.valor}</p>
-          <p><i data-lucide="credit-card"></i> ${pedido.pagamento}</p>
+          <p><i data-lucide="wallet"></i> ${pedido.valor_total}</p>
+          <p><i data-lucide="credit-card"></i> ${pedido.tipo_pagamento}</p>
         </div>
       </div>
 

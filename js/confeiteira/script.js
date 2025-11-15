@@ -132,31 +132,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   lojaNome.textContent = dados[0].nome;
   lojaPFP.src = dados[0].pfp;
 
-  const res = await fetch(`${API_URL}/pedidos`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("tokenLoja")}`,
-    },
-  });
 
-  let data = null;
+const res = await fetch(`${API_URL}/pedidos`, {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("tokenLoja")}`,
+  },
+});
 
-  if (res.ok) {
-    const text = await res.text();
+let data = null;
 
-    if (text.trim() !== "") {
-      data = JSON.parse(text);
-    } else {
-      data = null;
-    }
-  } else {
-    console.error("Erro na API:", res.status);
-    data = null;
+if (res.ok) {
+  const text = await res.text(); 
+  if (text.trim() !== "") {
+    data = JSON.parse(text); // converte pra objeto
   }
+} else {
+  console.error("Erro na API:", res.status);
+}
 
-  if (Array.isArray(pedidos) && pedidos.length > 0) {
-    localStorage.setItem("pedidos", JSON.stringify(pedidos));
-  }
+// Agora salva no localStorage só se houver resultados
+if (data && Array.isArray(data.result) && data.result.length > 0) {
+  localStorage.setItem("pedidos", JSON.stringify(data.result));
+}
+
+console.log(localStorage);
+
+
+
 
   const logoutBtn = document.getElementById("logoutBtn");
 
