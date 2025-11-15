@@ -31,8 +31,8 @@ export function openModal(produto, lojas, rotasCliente) {
   document.querySelector('.modal-title').textContent = produto.nome || '';
   document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
   document.querySelector('.modal-description').textContent = produto.descricao || '';
-  document.querySelector('.modal-peso').textContent =
-    `Peso: ${produto.peso >= 1000 ? produto.peso / 1000 + ' kg' : produto.peso + ' g'}`;
+  //document.querySelector('.modal-peso').textContent =
+   // `Peso: ${produto.peso >= 1000 ? produto.peso / 1000 + ' kg' : produto.peso + ' g'}`;
 
   const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
   document.querySelector('.modal-price').textContent =

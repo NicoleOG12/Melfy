@@ -3,9 +3,16 @@ import { abrirModalLogin } from './modalLogin.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const baseURL = window.location.origin + "/";
-  const confeiteiraLogada = JSON.parse(localStorage.getItem('confeiteiraLogada'));
-  const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+  const confeiteiraLogada = JSON.parse(
+    localStorage.getItem("infoLoja") || "null"
+  );
+
+  const clienteData = JSON.parse(localStorage.getItem("infoCliente") || "null");
+  const usuarioLogado = Array.isArray(clienteData) ? clienteData[0] : null;
+
   const logoutBTN = document.getElementById("logoutBtn");
+
+  console.log(usuarioLogado)
 
   if (!confeiteiraLogada) {
     const cssFiles = [
@@ -104,34 +111,47 @@ document.addEventListener('DOMContentLoaded', () => {
     </header>
   `;
 
-  if (!confeiteiraLogada) {
+  if (!confeiteiraLogada || confeiteiraLogada == "") {
     if (headerContainer) headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
 
-    if (!usuarioLogado && headerContainer) {
-      const dropdownToggle = headerContainer.querySelector('#userDropdownToggle');
-      const dropdownMenu = headerContainer.querySelector('#userDropdownMenu');
+    if (
+      (!usuarioLogado && headerContainer) ||
+      (usuarioLogado == "" && headerContainer)
+    ) {
+      const dropdownToggle = headerContainer.querySelector(
+        "#userDropdownToggle"
+      );
+      const dropdownMenu = headerContainer.querySelector("#userDropdownMenu");
 
       if (dropdownToggle && dropdownMenu) {
-        dropdownToggle.addEventListener('click', (e) => {
+        dropdownToggle.addEventListener("click", (e) => {
           e.stopPropagation();
-          dropdownMenu.classList.toggle('active');
+          dropdownMenu.classList.toggle("active");
         });
 
-        document.addEventListener('click', (e) => {
-          if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-            dropdownMenu.classList.remove('active');
+        document.addEventListener("click", (e) => {
+          if (
+            !dropdownToggle.contains(e.target) &&
+            !dropdownMenu.contains(e.target)
+          ) {
+            dropdownMenu.classList.remove("active");
           }
         });
 
-        const dropdownLinks = dropdownMenu.querySelectorAll('.user-dropdown-item');
-        dropdownLinks.forEach(link => {
-          link.addEventListener('click', e => {
+        const dropdownLinks = dropdownMenu.querySelectorAll(
+          ".user-dropdown-item"
+        );
+        dropdownLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
             e.preventDefault();
-            dropdownMenu.classList.remove('active');
-            let tipoUsuario = '';
-            if (link.textContent.includes('confeiteira')) tipoUsuario = 'confeiteira';
-            else if (link.textContent.includes('cliente')) tipoUsuario = 'cliente';
-            else if (link.textContent.includes('entregador')) tipoUsuario = 'entregador';
+            dropdownMenu.classList.remove("active");
+            let tipoUsuario = "";
+            if (link.textContent.includes("confeiteira"))
+              tipoUsuario = "confeiteira";
+            else if (link.textContent.includes("cliente"))
+              tipoUsuario = "cliente";
+            else if (link.textContent.includes("entregador"))
+              tipoUsuario = "entregador";
             abrirModalLogin(tipoUsuario);
           });
         });
