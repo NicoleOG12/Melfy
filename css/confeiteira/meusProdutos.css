@@ -1,3 +1,30 @@
+.searchC {
+  background: #fff;
+  border-radius: 999px;
+  width: 400px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(107,63,42,0.12);
+  box-shadow: 0 4px 12px rgba(107,63,42,0.08);
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.searchC:focus-within {
+  box-shadow: 0 8px 18px rgba(107,63,42,0.12);
+  transform: translateY(-1px);
+}
+
+.searchC input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--brown-2);
+  font-size: 0.95rem;
+}
+
 .create-product-btn {
   padding: 10px 16px;
   background: linear-gradient(135deg, #ffdd55, #ffc133, #ffb300);

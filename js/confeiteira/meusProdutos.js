@@ -174,12 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cardsWrapper.appendChild(card);
     });
   }
-
+  
   async function abrirModalEdicao(produto = null) {
     const modal = document.getElementById("editModal");
     const backdrop = document.getElementById("modalBackdrop");
     const imgExibida = document.getElementById("imagemExibida");
-
+  
     let categorias = [];
     try {
       const res = await fetch(`${API_URL}/categorias`);
@@ -188,19 +188,14 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Erro ao carregar categorias:", err);
     }
-
+  
     let categoriaId = null;
-    if (produto) {
-      if (produto.id_categoria) categoriaId = produto.id_categoria;
-      else if (produto.categoria) {
-        const cat = categorias.find(c => c.nome === produto.categoria);
-        if (cat) categoriaId = cat.id_categoria;
-      } else if (produto.categorias?.length) {
-        const cat = categorias.find(c => c.nome === produto.categorias[0]?.nome);
-        if (cat) categoriaId = cat.id_categoria;
-      }
+    if (produto?.categorias?.length) {
+      const catNome = produto.categorias[0];
+      const catEncontrada = categorias.find(c => c.nome === catNome);
+      if (catEncontrada) categoriaId = catEncontrada.id_categoria;
     }
-
+  
     const select = document.querySelector("#categoria");
     select.innerHTML = `<option value="" disabled ${!categoriaId ? "selected" : ""}>Selecione a categoria</option>`;
     categorias.forEach(cat => {
@@ -210,19 +205,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Number(cat.id_categoria) === Number(categoriaId)) option.selected = true;
       select.appendChild(option);
     });
-
+  
     modal.showModal();
     backdrop.hidden = false;
-
+  
     document.querySelector("#nome").value = produto?.nome || "";
     document.querySelector("#descricao").value = produto?.descricao || "";
     document.querySelector("#prazoInput").value = produto?.prazo || "";
-    document.querySelector("#precoInput").value = produto?.valor || produto?.valor_uni || produto?.preco || "";
+    document.querySelector("#precoInput").value = produto?.valor || produto?.valor_uni || "";
     imgExibida.src = produto?.midia?.imagens?.[0]?.path || produto?.foto || "";
     imgExibida.style.display = imgExibida.src ? "block" : "none";
-
+  
     atualizarTudo();
-
+  
     let novaImagem = null;
     const fotoInput = document.querySelector("#foto");
     fotoInput.value = "";
@@ -232,29 +227,29 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.onload = ev => { imgExibida.src = ev.target.result; imgExibida.style.display = "block"; };
       reader.readAsDataURL(novaImagem);
     };
-
+  
     const buttonSave = document.querySelector(".button-save");
     buttonSave.onclick = async e => {
       e.preventDefault();
       const token = localStorage.getItem("tokenLoja");
       if (!token) return alert("Usuário não autenticado");
-
-      const id_categoria = Number(select.value);
-      if (!id_categoria) return alert("Selecione uma categoria válida");
-
+  
+      const categoria = select.value;
+      if (!categoria) return alert("Selecione uma categoria válida");
+  
       const formData = new FormData();
       formData.append("nome", document.querySelector("#nome").value);
-      formData.append("id_categoria", id_categoria);
       formData.append("descricao", document.querySelector("#descricao").value);
       formData.append("prazo", document.querySelector("#prazoInput").value);
-
+  
       let valor = parseFloat(document.querySelector("#precoInput").value) || 0;
       if (valor > 999.99) valor = 999.99;
       formData.append("valor", valor.toFixed(2));
+      formData.append("categoria", categoria);
       formData.append("id_loja", idLojaLogada);
-
+  
       if (novaImagem) formData.append("img", novaImagem);
-
+  
       try {
         const resp = await fetch(`${API_URL}/produtos`, {
           method: "POST",
@@ -262,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: formData
         });
         if (!resp.ok) throw new Error(await resp.text());
+  
         await carregarProdutos();
         modal.close();
         backdrop.hidden = true;
@@ -269,10 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Erro ao criar produto: " + err.message);
       }
     };
-
     document.querySelector(".modal-close").onclick = () => { modal.close(); backdrop.hidden = true; };
     backdrop.onclick = () => { modal.close(); backdrop.hidden = true; };
   }
+
 
   async function excluirProduto(id_produto) {
     const token = localStorage.getItem("tokenLoja");
