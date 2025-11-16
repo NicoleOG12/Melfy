@@ -460,3 +460,38 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.onload = carregarSacola();
+
+const btn = document.getElementById("btn_cartao");
+const modal = document.getElementById("modal_cartao");
+
+btn.addEventListener("click", () => {
+  if (modal.style.height === "0px" || modal.style.height === "") {
+    modal.style.height = modal.scrollHeight + "px";
+  } else {
+    modal.style.height = "0px";
+  }
+});
+
+const btnPix = document.getElementById("btn_pix");
+const modalPix = document.getElementById("modal_pix");
+
+btnPix.addEventListener("click", () => {
+  if (modalPix.style.height === "0px" || modalPix.style.height === "") {
+    modalPix.style.height = modalPix.scrollHeight + "px";
+  } else {
+    modalPix.style.height = "0px";
+  }
+});
+
+const modalCompra = document.getElementById("modal-compra-buy");
+const btnFechar = document.getElementById("fechar_modal");
+
+btnFechar.addEventListener("click", () => {
+  modalCompra.style.display = "none";
+});
+
+modalCompra.addEventListener("click", (e) => {
+  if (e.target === modalCompra) {
+    modalCompra.style.display = "none";
+  }
+});

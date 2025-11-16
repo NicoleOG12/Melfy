@@ -92,7 +92,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .card {
-/* tirei esses dois pois estavam dando problemas da tela de pedidos */
+  //tirei esses dois pois estavam dando problemas da tela de pedidos
   //width: 220px;
   //height: 320px; 
   background: var(--card);
