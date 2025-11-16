@@ -51,10 +51,10 @@ export function abrirModalLogin(tipoUsuario) {
                 <div class="container-button">
                   <button class="btn-login" id="btnLogin" data-id="${tipoUsuario}">Login</button>
                 </div>
-                <p class="cadastro">
+                <a href="../../pages/cliente/cadastro-cliente.html" class="cadastro">
                   Ainda não possui uma conta? <br>
                   <strong class="cadastro-strong">Cadastre-se aqui</strong>
-                </p>
+                </a>
               </div>
             </div>
 
