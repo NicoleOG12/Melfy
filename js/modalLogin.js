@@ -22,13 +22,14 @@ export function abrirModalLogin(tipoUsuario) {
               <img src="../assents/img/Login/confeiteiraSlider3.jpg" data-tipo="confeiteira" alt="">
               <img src="../assents/img/Login/confeiteiraSlider4.jpg" data-tipo="confeiteira" alt="">
               
-              <img src="../assents/img/login/cliente1.png" data-tipo="cliente" alt="">
-              <img src="../assents/img/Geral/cliente2.png" data-tipo="cliente" alt="">
-              <img src="../assents/img/Geral/cliente3.png" data-tipo="cliente" alt="">
+              <img src="../assents/img/Login/clienteSlider1.jpg" data-tipo="cliente" alt="">
+              <img src="../assents/img/Login/clienteSlider2.png" data-tipo="cliente" alt="">
+              <img src="../assents/img/Login/clienteSlider3.jpg" data-tipo="cliente" alt="">
+              <img src="../assents/img/Login/clienteSlider4.png" data-tipo="cliente" alt="">
               
-              <img src="../assents/img/Geral/entregador1.png" data-tipo="entregador" alt="">
-              <img src="../assents/img/Geral/entregador2.png" data-tipo="entregador" alt="">
-              <img src="../assents/img/Geral/entregador3.png" data-tipo="entregador" alt="">
+              <img src="../assents/img/Login/entregadorSlider1.png" data-tipo="entregador" alt="">
+              <img src="../assents/img/Login/entregadorSlider2.jpg" data-tipo="entregador" alt="">
+              <img src="../assents/img/Login/entregadorSlider3.png" data-tipo="entregador" alt="">
               <div class="slider-indicadores"></div>
             </div>
 
@@ -150,7 +151,7 @@ export function abrirModalLogin(tipoUsuario) {
       imagensAtivas.forEach((img, i) => img.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       indexAtual++;
-    }, 8000);
+    }, 5000);
 
     const closeBtn = modalOverlay.querySelector('#closeLoginModal');
     closeBtn.addEventListener('click', () => fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer));
@@ -193,7 +194,7 @@ export function abrirModalLogin(tipoUsuario) {
       imagensAtivas.forEach((img, i) => img.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       indexAtual++;
-    }, 8000);
+    }, 5000);
   }
 
   modalOverlay.style.display = 'flex';
