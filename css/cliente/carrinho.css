@@ -29,7 +29,8 @@
   border: 1px solid var(--accent-yellow);
   transition: background-color 0.3s ease;
   flex: 1 1 auto;
-  margin-left: 20px; 
+  margin-left: -20px; 
+  margin-bottom: 20px;
 }
 
 section {
@@ -266,10 +267,10 @@ aside  {
 .h3Novidades {
   color: var(--cor-link);
   font-size: 28px;
-  margin-left: 100px;
-  padding-top: 20px;
+  margin-left: 80px;
   font-weight: 700;
   letter-spacing: 0.03em;
-  margin-bottom: -10px;
+  margin-top: 70px;
+  margin-bottom: 10px;
 }
 
