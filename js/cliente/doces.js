@@ -25,6 +25,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Erro ao carregar API:", erro);
   }
 
+  function embaralhar(lista) {
+    return lista
+      .map(x => ({ x, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(obj => obj.x);
+  }
+
+  produtos.sort((a, b) => new Date(a.datahora) - new Date(b.datahora));
+  const maisAntigos = produtos.slice(0, 45);
+  const restantes = produtos.slice(45);
+  const antigosAleatorios = embaralhar(maisAntigos);
+  restantes.sort((a, b) => new Date(b.datahora) - new Date(a.datahora));
+  const produtosOrdenados = [...antigosAleatorios, ...restantes];
+
   function limitarDescricao(texto, limite = 45) {
     if (!texto) return "";
     const clean = texto.normalize("NFC");
@@ -93,21 +107,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  renderizarProdutos(produtos);
+  renderizarProdutos(produtosOrdenados);
 
   inputPesquisa.addEventListener('keyup', e => {
     if (e.key === 'Enter')
-      filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper, true)
+      filtrarProdutos(produtosOrdenados, inputPesquisa, renderizarProdutos, cardsWrapper, true)
   });
 
   botaoPesquisa.addEventListener('click', () =>
-    filtrarProdutos(produtos, inputPesquisa, renderizarProdutos, cardsWrapper, true)
+    filtrarProdutos(produtosOrdenados, inputPesquisa, renderizarProdutos, cardsWrapper, true)
   );
 
   document.querySelectorAll('.doce').forEach(doce => {
     doce.addEventListener('click', function () {
       const categoria = this.querySelector('p').textContent.trim();
-      const filtrados = produtos.filter(p =>
+      const filtrados = produtosOrdenados.filter(p =>
         p.categorias?.includes(categoria) || p.categoria === categoria
       );
       renderizarProdutos(filtrados);

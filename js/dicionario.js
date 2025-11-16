@@ -698,9 +698,9 @@ export const produtosPadrao = [
   {
     nome: "Morango do Amor de Maracujá",
     subtitulo: "Brigadeiro de Maracujá",
-    categoria: "Morango do Amor",
     descricao: "Morango com Brigadeiro de Maracujá banhado no caramelo",
     peso: 100,
+    categoria: "Morango do Amor",
     preco: 18.00,
     foto: `${DOCES_IMG}/Morango de Maracujá.svg`,
     idLoja: "10",
