@@ -441,8 +441,6 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   z-index: 10;
 }
 
-
-
 .animacao-carrinho {
   position: fixed;
   top: 50%;
@@ -477,13 +475,14 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .img-doce-sacola {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   position: absolute;
   top: 0;
   animation: entrarNaSacola 1.5s ease forwards;
   z-index: 1;
+  border-radius: 20px;
 }
 
 @keyframes entrarNaSacola {

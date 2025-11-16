@@ -13,17 +13,11 @@ export const rotasCliente = {
 };
 
 export const rotasConfeiteira = {
-  adicionarProdutos: `${baseURL}pages/confeiteira/adicionarProdutos.html`,
   cadastro: `${baseURL}pages/confeiteira/cadastro.html`,
   cadastroLoja: `${baseURL}pages/confeiteira/cadastroLoja.html`,
-  editarProdutos: `${baseURL}pages/confeiteira/editarProdutos.html`,
-  login: `${baseURL}pages/confeiteira/login.html`,
   meusProdutos: `${baseURL}pages/confeiteira/meusProdutos.html`,
   painelADM: `${baseURL}pages/confeiteira/dashboard.html`,
   pedidos: `${baseURL}pages/confeiteira/pedidos.html`,
-  perfilEnderecos: `${baseURL}pages/confeiteira/perfil-enderecos.html`,
-  perfilFormasPag: `${baseURL}pages/confeiteira/perfil-formas-pag.html`,
-  perfil: `${baseURL}pages/confeiteira/perfil.html`
 };
 
 export const rotasGerais = {

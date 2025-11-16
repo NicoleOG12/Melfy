@@ -61,7 +61,6 @@ function renderizarCarrinhoCarrinhoAPI(data) {
   tbody.innerHTML = "";
   let subtotal = 0;
 
-  // Agrupar por loja
   const lojasAgrupadas = {};
   data.forEach((produto, idx) => {
     const id_loja = produto.id_loja || 0;
@@ -95,7 +94,6 @@ function renderizarCarrinhoCarrinhoAPI(data) {
       tbody.appendChild(trSep);
     }
 
-    // Produtos da loja
     loja.itens.forEach(({ item, produto, idx }) => {
       const nome = produto.nome;
       const imagem = produto.imagem;
@@ -124,7 +122,7 @@ function renderizarCarrinhoCarrinhoAPI(data) {
         </td>
         <td>R$ ${(valorUnit * item.quantidade).toFixed(2).replace(".", ",")}</td>
         <td>
-          <button class="remover" onclick="removerItem(${item.id})"><i class='bx bx-x'></i></button>
+          <button class="remover" onclick="removerItem(${idx})"><i class='bx bx-x'></i></button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -139,50 +137,121 @@ function renderizarCarrinhoCarrinhoAPI(data) {
 // FUNÇÕES DE QUANTIDADE / REMOVER
 // ============================================================
 async function alterarQuantidadeSacola(index, delta) {
-  const sacola = await fetchSacola();
+  let sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
   if (!sacola[index]) return;
 
-  sacola[index].quantidade += delta;
-  if (sacola[index].quantidade < 1) sacola[index].quantidade = 1;
-  sacola[index].valorTotal = sacola[index].quantidade * sacola[index].valorUnitario;
+  const item = sacola[index];
+  const token = localStorage.getItem("tokenCliente");
 
-  await salvarSacolaBackend(sacola);
-  carregarSacola();
-  atualizarTotal();
+  try {
+    if (delta === 0) return;
+
+    let res;
+
+    if (delta > 0) {
+      res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ qtd: delta }),
+      });
+    } else {
+      res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ qtd: Math.abs(delta) }),
+      });
+    }
+
+    const data = await res.json();
+    if (!res.ok || data.error) throw data;
+
+    if (delta < 0 && item.quantidade + delta <= 0) {
+      sacola.splice(index, 1);
+    } else {
+      item.quantidade += delta;
+    }
+
+    if (sacola[index]) {
+      item.valorTotal = item.quantidade * (item.valorUnitario || item.valor_uni);
+    }
+
+    localStorage.setItem("Sacola", JSON.stringify(sacola));
+    renderizarCarrinhoCarrinhoAPI(sacola);
+    atualizarTotal();
+
+  } catch (err) {
+    alert("Não foi possível atualizar a quantidade no servidor.");
+    console.error(err);
+    await carregarSacola();
+  }
 }
+
 window.alterarQuantidadeSacola = alterarQuantidadeSacola;
 
-async function removerItem(index) {
+window.removerItem = async function (index) {
   if (!confirm("Tem certeza que deseja remover este item da sacola?")) return;
 
-  const sacola = await fetchSacola();
-  sacola.splice(index, 1);
+  let sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
+  const item = sacola[index];
+  if (!item) return;
 
-  await salvarSacolaBackend(sacola);
-  carregarSacola();
-  atualizarTotal();
-}
-window.removerItem = removerItem;
+  const token = localStorage.getItem("tokenCliente");
+  try {
+    const res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ qtd: item.quantidade }), 
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw data;
+
+    sacola.splice(index, 1);
+    localStorage.setItem("Sacola", JSON.stringify(sacola));
+    renderizarCarrinhoCarrinhoAPI(sacola);
+    atualizarTotal();
+  } catch (err) {
+    alert("Não foi possível remover o item do carrinho.");
+    console.error(err);
+    await carregarSacola();
+  }
+};
 
 // ============================================================
 // TOTAL
 // ============================================================
 async function atualizarTotal() {
   const checkboxes = document.querySelectorAll(".check-produto");
-  const sacola = await fetchSacola();
+  const sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
 
   let subtotal = 0;
+
   checkboxes.forEach(cb => {
     if (cb.checked) {
       const item = sacola[parseInt(cb.dataset.index)];
-      if (item) subtotal += item.valorTotal;
+      if (item) {
+        const valorUnit = parseFloat(item.valor_uni || item.valorUnitario || 0);
+        const quantidade = parseInt(item.quantidade || 1);
+        subtotal += valorUnit * quantidade;
+      }
     }
   });
 
-  document.querySelector("#subtotal").textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
-  document.querySelector("#total").textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
+  document.querySelector("#subtotal").textContent =
+    "R$ " + subtotal.toFixed(2).replace(".", ",");
+  document.querySelector("#total").textContent =
+    "R$ " + subtotal.toFixed(2).replace(".", ",");
 }
 window.atualizarTotal = atualizarTotal;
+
 
 function LojaCheckbox(el) {
   const id_loja = el.dataset.id_loja;
@@ -196,9 +265,11 @@ window.LojaCheckbox = LojaCheckbox;
 // MODAL DE COMPRA
 // ============================================================
 function abrirModalCompra() {
-  document.getElementById("modal-compra-buy").style.display = "flex";
-  preencherResumoCompra();
+  const modal = document.getElementById("modal-compra-buy");
+  modal.style.display = "flex";
+  setTimeout(preencherResumoCompra, 50);
 }
+
 function fecharModalCompra() {
   document.getElementById("modal-compra-buy").style.display = "none";
 }
@@ -206,12 +277,17 @@ window.abrirModalCompra = abrirModalCompra;
 window.fecharModalCompra = fecharModalCompra;
 
 async function preencherResumoCompra() {
-  const sacola = await fetchSacola();
-  let subtotal = sacola.reduce((t, i) => t + i.valorTotal, 0);
+  const sacola = await carregarSacola();
+  let subtotal = sacola.reduce((t, i) => {
+    const valorUnitario = parseFloat(i.valor_uni || i.valorUnitario || 0);
+    const quantidade = parseInt(i.quantidade || i.qtd || 1);
+    return t + valorUnitario * quantidade;
+  }, 0);
 
-  document.querySelectorAll("#subtotal-modal").forEach(el => {
-    el.textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
-  });
+  const subtotalModalSpan = document.querySelector("#modal-compra-buy #subtotal-modal");
+  if (subtotalModalSpan) {
+    subtotalModalSpan.textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
+  }
 
   window.modalSubtotalBuy = subtotal;
   atualizarFreteCompra(true);
@@ -296,8 +372,25 @@ async function finalizarCompra() {
     }
 
     alert("Pedido criado com sucesso!");
+
+    for (const item of sacola) {
+      await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ qtd: item.quantidade }),
+      });
+    }
+
     localStorage.removeItem("Sacola");
-    window.location.reload();
+
+    renderizarCarrinhoCarrinhoAPI([]);
+    document.querySelector("#subtotal").textContent = "R$ 0,00";
+    document.querySelector("#total").textContent = "R$ 0,00";
+
+    fecharModalCompra();
   } catch (err) {
     console.error(err);
     alert("Erro inesperado ao finalizar compra.");
@@ -331,10 +424,6 @@ async function buscarLojasAPI() {
 }
 
 // ============================================================
-// RENDERIZAR PRODUTOS ALEATORIOS
-// ============================================================
-
-  // ============================================================
 // FUNÇÕES AUXILIARES
 // ============================================================
 function limitarDescricao(texto, limite = 45) {
@@ -365,11 +454,11 @@ function renderizarProdutosAleatorios(produtos, lojas) {
 
   produtosAleatorios.forEach(produto => {
     const lojaEncontrada = lojas.find(l => l.id_loja == produto.id_loja);
-      const loja = {
-        id: produto.id_loja,
-        nome: produto.loja_nome,
-        pfp: produto.pfp
-      };
+    const loja = {
+      id: produto.id_loja,
+      nome: produto.loja_nome,
+      pfp: produto.pfp
+    };
 
     const card = document.createElement('div');
     card.classList.add('card');
@@ -398,17 +487,17 @@ function renderizarProdutosAleatorios(produtos, lojas) {
     `;
 
     card.querySelector('.logoLoja').addEventListener('click', e => {
-        e.stopPropagation();
-        window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
-      });
-
-      card.addEventListener('click', e => {
-        if (!e.target.closest('.headerNovidade'))
-          openModal(produto, lojas, rotasCliente);
-      });
-
-      cardsWrapper.appendChild(card);
+      e.stopPropagation();
+      window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
     });
+
+    card.addEventListener('click', e => {
+      if (!e.target.closest('.headerNovidade'))
+        openModal(produto, lojas, rotasCliente);
+    });
+
+    cardsWrapper.appendChild(card);
+  });
 }
 
 // ============================================================

@@ -8,9 +8,7 @@ export function openModal(produto, lojas, rotasCliente) {
   const loja = lojas.find(l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto);
 
   document.querySelector('.modal-img').src =
-    produto.midia?.imagens?.[0]?.path ||
-    produto.foto ||
-    '';
+    produto.midia?.imagens?.[0]?.path || produto.foto || '';
   document.querySelector('.modal-img').alt = produto.nome || '';
 
   const modalLogo = document.querySelector('.modal-logo');
@@ -31,8 +29,6 @@ export function openModal(produto, lojas, rotasCliente) {
   document.querySelector('.modal-title').textContent = produto.nome || '';
   document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
   document.querySelector('.modal-description').textContent = produto.descricao || '';
-  //document.querySelector('.modal-peso').textContent =
-   // `Peso: ${produto.peso >= 1000 ? produto.peso / 1000 + ' kg' : produto.peso + ' g'}`;
 
   const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
   document.querySelector('.modal-price').textContent =
@@ -59,15 +55,11 @@ export function autoResize(textarea) {
   textarea.style.height = textarea.scrollHeight + "px";
 }
 
-
-
-
 export async function adicionarNaSacola() {
   const usuarioLogado = JSON.parse(localStorage.getItem("infoCliente")) || null;
-
-  if(usuarioLogado === null){
-      alert("Você precisa estar logado para adicionar produtos à cesta.");
-      return;
+  if (!usuarioLogado) {
+    alert("Você precisa estar logado para adicionar produtos à cesta.");
+    return;
   }
 
   if (!produtoAtual || !produtoAtual.id_produto) {
@@ -76,25 +68,18 @@ export async function adicionarNaSacola() {
   }
 
   const quantidade = parseInt(document.getElementById("qtd-value").textContent);
-
-  const body = {
-    "qtd": quantidade,
-  };
+  const body = { qtd: quantidade };
 
   let respostaJson = null;
-
   try {
-    const resposta = await fetch(
-      `${API_URL}/carrinho?id=${produtoAtual.id_produto}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("tokenCliente")}`,
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const resposta = await fetch(`${API_URL}/carrinho?id=${produtoAtual.id_produto}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("tokenCliente")}`,
+      },
+      body: JSON.stringify(body),
+    });
 
     const text = await resposta.text();
     respostaJson = text ? JSON.parse(text) : null;
@@ -114,25 +99,23 @@ export async function adicionarNaSacola() {
     localStorage.setItem("Sacola", JSON.stringify(respostaJson.carrinho));
   }
 
-  mostrarAnimacaoCarrinho(produtoAtual.categorias?.[0], produtoAtual.nome);
+  const imagemProduto = produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
+  mostrarAnimacaoCarrinho(imagemProduto, produtoAtual.nome);
 
   fecharModal();
-
   document.dispatchEvent(new CustomEvent("sacolaAtualizada"));
   if (typeof atualizarContadorSacola === "function") {
     atualizarContadorSacola();
   }
 }
 
-
-export function mostrarAnimacaoCarrinho(categoria, nomeProduto) {
+export function mostrarAnimacaoCarrinho(imgProduto, nomeProduto) {
   const animacao = document.getElementById('carrinho-animacao');
   const img = document.getElementById('img-doce-animado');
   const mensagem = document.getElementById('mensagem-sacola');
 
-  const nomeCategoria = categoria || localStorage.getItem('categoriaSelecionada') || 'Beijinho';
-  img.src = `../../assents/img/Categorias/${nomeCategoria}.svg`;
-  img.alt = nomeCategoria;
+  img.src = imgProduto;
+  img.alt = nomeProduto;
   mensagem.textContent = `"${nomeProduto}" foi adicionado à sacola com sucesso!`;
 
   img.classList.remove('img-doce-sacola');

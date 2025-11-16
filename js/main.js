@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const logoutBTN = document.getElementById("logoutBtn");
 
-  if (!confeiteiraLogada) {
+  if (!window.location.pathname.includes("/pages/confeiteira/")) {
     const cssFiles = [
       `${baseURL}css/components.css`,
       `${baseURL}css/layout.css`,
@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const headerContainer = document.getElementById('header');
   const footerContainer = document.getElementById('footer');
+
+  const estaEmPaginaConfeiteira = window.location.pathname.includes("/pages/confeiteira/");
+  if (estaEmPaginaConfeiteira) {
+    if (headerContainer) headerContainer.innerHTML = "";
+    return;
+  }
 
   const headerNaoLogado = `
     <header class="melfy-header">
@@ -78,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <nav class="nav-desktop">
             <a href="${baseURL}index.html" class="nav-link">Início</a>
             <a href="${baseURL}pages/cliente/doces.html" class="nav-link">Doces</a>
+            <a href="${baseURL}pages/cliente/pedidos.html" class="nav-link">Meus Pedidos</a>
             <a href="${baseURL}pages/sobre.html" class="nav-link">Sobre</a>
           </nav>
           <div class="header-actions">
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </header>
   `;
 
-  if (!confeiteiraLogada || confeiteiraLogada == "") {
+  if (!estaEmPaginaConfeiteira) {
     if (headerContainer) headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
 
     if ((!usuarioLogado && headerContainer) || (usuarioLogado == "" && headerContainer)) {
@@ -147,44 +154,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const API_URL = "https://melfy-backend-production.up.railway.app";
 
-async function atualizarContadorCarrinho() {
-  try {
-    const token = localStorage.getItem("tokenCliente");
-    if (!token) return;
+      async function atualizarContadorCarrinho() {
+        try {
+          const token = localStorage.getItem("tokenCliente");
+          if (!token) return;
 
-    const res = await fetch(`${API_URL}/carrinho`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+          const res = await fetch(`${API_URL}/carrinho`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
 
-    if (!res.ok) throw new Error("Erro ao carregar carrinho");
+          if (!res.ok) throw new Error("Erro ao carregar carrinho");
 
-    const data = await res.json();
-    const carrinho = data.result || [];
+          const data = await res.json();
+          const carrinho = data.result || [];
 
-    const cartCount = document.getElementById("cartCount");
-    if (!cartCount) return;
+          const cartCount = document.getElementById("cartCount");
+          if (!cartCount) return;
 
-    const totalItens = carrinho.reduce((acc, item) => acc + (item.quantidade || 0), 0);
-    if (totalItens > 0) {
-      cartCount.textContent = totalItens;
-      cartCount.style.display = "inline-block";
-    } else {
-      cartCount.style.display = "none";
-    }
-  } catch (err) {
-    console.error("Não foi possível atualizar o contador do carrinho:", err);
-  }
-}
+          const totalItens = carrinho.reduce((acc, item) => acc + (item.quantidade || 0), 0);
+          if (totalItens > 0) {
+            cartCount.textContent = totalItens;
+            cartCount.style.display = "inline-block";
+          } else {
+            cartCount.style.display = "none";
+          }
+        } catch (err) {
+          console.error("Não foi possível atualizar o contador do carrinho:", err);
+        }
+      }
 
-document.addEventListener("DOMContentLoaded", () => {
-  atualizarContadorCarrinho();
-  window.setInterval(atualizarContadorCarrinho, 5000);
-});
-
+      document.addEventListener("DOMContentLoaded", () => {
+        atualizarContadorCarrinho();
+        window.setInterval(atualizarContadorCarrinho, 5000);
+      });
 
       atualizarContadorCarrinho();
       window.addEventListener('storage', e => {
