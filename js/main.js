@@ -3,15 +3,12 @@ import { abrirModalLogin } from './modalLogin.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const baseURL = window.location.origin + "/";
-  const confeiteiraLogada = JSON.parse(
-    localStorage.getItem("infoLoja") || "null"
-  );
-
+  const API_URL = "https://melfy-backend-production.up.railway.app";
+  const confeiteiraLogada = JSON.parse(localStorage.getItem("infoLoja") || "null");
   const clienteData = JSON.parse(localStorage.getItem("infoCliente") || "null");
   const usuarioLogado = Array.isArray(clienteData) ? clienteData[0] : null;
 
   const logoutBTN = document.getElementById("logoutBtn");
-
 
   if (!confeiteiraLogada) {
     const cssFiles = [
@@ -113,13 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!confeiteiraLogada || confeiteiraLogada == "") {
     if (headerContainer) headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
 
-    if (
-      (!usuarioLogado && headerContainer) ||
-      (usuarioLogado == "" && headerContainer)
-    ) {
-      const dropdownToggle = headerContainer.querySelector(
-        "#userDropdownToggle"
-      );
+    if ((!usuarioLogado && headerContainer) || (usuarioLogado == "" && headerContainer)) {
+      const dropdownToggle = headerContainer.querySelector("#userDropdownToggle");
       const dropdownMenu = headerContainer.querySelector("#userDropdownMenu");
 
       if (dropdownToggle && dropdownMenu) {
@@ -129,28 +121,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener("click", (e) => {
-          if (
-            !dropdownToggle.contains(e.target) &&
-            !dropdownMenu.contains(e.target)
-          ) {
+          if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
             dropdownMenu.classList.remove("active");
           }
         });
 
-        const dropdownLinks = dropdownMenu.querySelectorAll(
-          ".user-dropdown-item"
-        );
+        const dropdownLinks = dropdownMenu.querySelectorAll(".user-dropdown-item");
         dropdownLinks.forEach((link) => {
           link.addEventListener("click", (e) => {
             e.preventDefault();
             dropdownMenu.classList.remove("active");
             let tipoUsuario = "";
-            if (link.textContent.includes("confeiteira"))
-              tipoUsuario = "confeiteira";
-            else if (link.textContent.includes("cliente"))
-              tipoUsuario = "cliente";
-            else if (link.textContent.includes("entregador"))
-              tipoUsuario = "entregador";
+            if (link.textContent.includes("confeiteira")) tipoUsuario = "confeiteira";
+            else if (link.textContent.includes("cliente")) tipoUsuario = "cliente";
+            else if (link.textContent.includes("entregador")) tipoUsuario = "entregador";
             abrirModalLogin(tipoUsuario);
           });
         });
@@ -160,22 +144,51 @@ document.addEventListener('DOMContentLoaded', () => {
     if (usuarioLogado && headerContainer) {
       const nomeElem = headerContainer.querySelector('.nomeuser');
       if (nomeElem) nomeElem.textContent = usuarioLogado.nome || 'Usuário';
-      window.atualizarContadorSacola = function () {
-        const sacola = JSON.parse(localStorage.getItem('Sacola')) || [];
-        const totalItens = sacola.filter(item => item.idUsuario === usuarioLogado.id)
-          .reduce((acc, item) => acc + item.quantidade, 0);
-        const contador = document.getElementById('contador-sacola');
-        if (!contador) return;
-        if (totalItens > 0) {
-          contador.textContent = totalItens;
-          contador.style.display = 'inline-block';
-        } else {
-          contador.style.display = 'none';
-        }
-      };
-      atualizarContadorSacola();
+
+      const API_URL = "https://melfy-backend-production.up.railway.app";
+
+async function atualizarContadorCarrinho() {
+  try {
+    const token = localStorage.getItem("tokenCliente");
+    if (!token) return;
+
+    const res = await fetch(`${API_URL}/carrinho`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Erro ao carregar carrinho");
+
+    const data = await res.json();
+    const carrinho = data.result || [];
+
+    const cartCount = document.getElementById("cartCount");
+    if (!cartCount) return;
+
+    const totalItens = carrinho.reduce((acc, item) => acc + (item.quantidade || 0), 0);
+    if (totalItens > 0) {
+      cartCount.textContent = totalItens;
+      cartCount.style.display = "inline-block";
+    } else {
+      cartCount.style.display = "none";
+    }
+  } catch (err) {
+    console.error("Não foi possível atualizar o contador do carrinho:", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  atualizarContadorCarrinho();
+  window.setInterval(atualizarContadorCarrinho, 5000);
+});
+
+
+      atualizarContadorCarrinho();
       window.addEventListener('storage', e => {
-        if (e.key === 'Sacola') atualizarContadorSacola();
+        if (e.key === 'Sacola') atualizarContadorCarrinho();
       });
     }
   }
@@ -287,8 +300,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
-
-
-
-
-
