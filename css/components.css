@@ -49,7 +49,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   padding: 15px;
   border-radius: 20px;
   border: 1px solid var(--accent-yellow); 
-  background-color: var(--bg);
+  background-color: white;
   color: var(--cor-cinza);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -92,7 +92,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .card {
-  //tirei esses dois pois estavam dando problemas da tela de pedidos
+/* tirei esses dois pois estavam dando problemas da tela de pedidos */
   //width: 220px;
   //height: 320px; 
   background: var(--card);
@@ -437,15 +437,12 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(255, 190, 60, 0.5);
+
   transition: background-color 0.3s ease, color 0.3s ease;
   z-index: 10;
 }
 
-.modal-close:hover {
-  background-color: #ffd658;
-  color: #a37400;
-}
+
 
 .animacao-carrinho {
   position: fixed;

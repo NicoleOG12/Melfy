@@ -17,11 +17,12 @@ export function abrirModalLogin(tipoUsuario) {
         <div class="login-modal">
           <section class="container-modal">
             <div class="image-slider">
-              <img src="../assents/img/Geral/confeiteira1.png" data-tipo="confeiteira" alt="">
-              <img src="../assents/img/Geral/confeiteira2.png" data-tipo="confeiteira" alt="">
-              <img src="../assents/img/Geral/confeiteira3.png" data-tipo="confeiteira" alt="">
+              <img src="../assents/img/Login/confeiteiraSlider1.png" data-tipo="confeiteira" alt="">
+              <img src="../assents/img/Login/confeiteiraSlider2.png" data-tipo="confeiteira" alt="">
+              <img src="../assents/img/Login/confeiteiraSlider3.jpg" data-tipo="confeiteira" alt="">
+              <img src="../assents/img/Login/confeiteiraSlider4.jpg" data-tipo="confeiteira" alt="">
               
-              <img src="../assents/img/Geral/cliente1.png" data-tipo="cliente" alt="">
+              <img src="../assents/img/login/cliente1.png" data-tipo="cliente" alt="">
               <img src="../assents/img/Geral/cliente2.png" data-tipo="cliente" alt="">
               <img src="../assents/img/Geral/cliente3.png" data-tipo="cliente" alt="">
               
@@ -149,7 +150,7 @@ export function abrirModalLogin(tipoUsuario) {
       imagensAtivas.forEach((img, i) => img.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       indexAtual++;
-    }, 3000);
+    }, 8000);
 
     const closeBtn = modalOverlay.querySelector('#closeLoginModal');
     closeBtn.addEventListener('click', () => fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer));
@@ -192,7 +193,7 @@ export function abrirModalLogin(tipoUsuario) {
       imagensAtivas.forEach((img, i) => img.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
       indexAtual++;
-    }, 3000);
+    }, 8000);
   }
 
   modalOverlay.style.display = 'flex';
