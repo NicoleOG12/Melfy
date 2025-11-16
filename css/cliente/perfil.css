@@ -28,25 +28,26 @@
 }
 
 #image-profile {
-  width: 95px;
-  height: 95px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid var(--accent-yellow-3);
+  border: 2px solid var(--accent-yellow-3);
   box-shadow: 0 4px 10px rgba(247, 184, 37, 0.45);
   background: #fff;
 }
 
 #nome-exibir {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--brown);
+  margin-top: -10px;
 }
 
 #email-exibir {
   font-size: 14px;
   color: var(--muted);
-  margin-top: -4px;
+  margin-top: -20px;
 }
 
 .perfil-menu {
@@ -110,7 +111,6 @@
   height: 16px;
   stroke-width: 2;
 }
-
 
 .perfil-content {
   flex: 1;
@@ -230,4 +230,5 @@ button:hover {
 a {
   text-decoration: none;
   color: inherit;
+
 }
