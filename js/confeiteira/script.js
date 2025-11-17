@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 
+  const baseURL = window.location.origin + "/";
 
 
 
@@ -110,6 +111,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
+
+
+  function setFaviconAndTitle(faviconUrl, titleText) {
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = faviconUrl;
+
+    document.title = titleText;
+  }
+
+  setFaviconAndTitle(
+    `${baseURL}assents/favicon/favicon-16x16.png`,
+    `Melfy | Minha Loja`
+  );
 
 });
 

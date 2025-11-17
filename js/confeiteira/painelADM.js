@@ -158,3 +158,5 @@ function gerarResumo() {
 
   document.getElementById("resumoFinal").innerHTML = texto;
 }
+
+

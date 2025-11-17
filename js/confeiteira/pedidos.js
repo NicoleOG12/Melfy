@@ -96,4 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (proximaEtapa === "preparo") criarCard(pedido, colunaPreparo, "preparo");
     if (proximaEtapa === "entrega") criarCard(pedido, colunaEntrega, "entrega");
   }
+
+  
 });
