@@ -1,4 +1,5 @@
 export function abrirModalLogin(tipoUsuario) {
+
   let modalOverlay = document.getElementById('loginModalOverlay');
   const baseURL = window.location.origin + "/";
 
@@ -120,6 +121,7 @@ export function abrirModalLogin(tipoUsuario) {
   const btnLogin = document.getElementById("btnLogin");
   btnLogin.addEventListener("click", async () => {
     const tipoUsuario = btnLogin.dataset.id;
+    console.log(tipoUsuario)
     try {
       const API_URL = "https://melfy-backend-production.up.railway.app";
       let url, nextPage, token, info;
