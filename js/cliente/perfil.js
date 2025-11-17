@@ -5,28 +5,32 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function exibirInformacoes() {
-  const usuarioLogadoJSON = localStorage.getItem("usuarioLogado");
+  console.log(localStorage)
+  const usuarioLogadoJSON = localStorage.getItem("infoCliente");
   const confeiteiraLogadaJSON = localStorage.getItem("confeiteiraLogada");
 
   let usuarioAtual = null;
 
   if (usuarioLogadoJSON) {
-    usuarioAtual = JSON.parse(usuarioLogadoJSON);
+    usuarioAtual = JSON.parse(usuarioLogadoJSON)[0];
   } else if (confeiteiraLogadaJSON) {
     usuarioAtual = JSON.parse(confeiteiraLogadaJSON);
   } else {
     return;
   }
 
+  console.log(usuarioAtual)
+
+
   document.getElementById('nome-exibir').innerText = usuarioAtual.nome;
   document.getElementById('email-exibir').innerText = usuarioAtual.email;
 
-  document.getElementById("nome-input").value = usuarioAtual.nome || "";
-  document.getElementById("sobrenome-input").value = usuarioAtual.sobrenome || "";
+  document.getElementById("nome-input").value = usuarioAtual.nome.split(" ")[0] || "";
+  document.getElementById("sobrenome-input").value = usuarioAtual.nome.trim().split(" ").slice(1).join(" ") || "";
   document.getElementById("email-input").value = usuarioAtual.email || "";
-  document.getElementById("celular-input").value = usuarioAtual.celular || "";
+  document.getElementById("celular-input").value = usuarioAtual.telefone || "";
   document.getElementById("cpf-input").value = usuarioAtual.cpf || "";
-  document.getElementById("dataNascimento-input").value = usuarioAtual.dataNascimento || "";
+  document.getElementById("dataNascimento-input").value = dataISO(usuarioAtual.data_nasc) || "";
 }
 
 function salvarDados() {
@@ -106,4 +110,16 @@ window.abrirModal = function() {
 
 window.fecharModal = function() {
   document.getElementById('modal').style.display = 'none';
+}
+
+
+function dataISO(dataISO) {
+  if (!dataISO) return "";
+  const data = new Date(dataISO);
+
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const ano = data.getFullYear();
+
+  return `${dia}/${mes}/${ano}`;
 }

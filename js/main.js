@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="user-avatar">
                 <i class="fas fa-user"></i>
               </div>
-              <span class="user-name">${usuarioLogado?.nome || 'Usuário'}</span>
+              <span class="user-name">${usuarioLogado?.nome.split(" ")[0] || 'Usuário'}</span>
             </a>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
               <i class="fas fa-bars"></i>
@@ -305,4 +305,28 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(document.body, { childList: true, subtree: true });
     }
   }
+
+
+function setFaviconAndTitle(faviconUrl, titleText) {
+
+  let link = document.querySelector("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+  link.href = faviconUrl;
+
+  document.title = titleText;
+}
+
+setFaviconAndTitle(
+  `${baseURL}assents/favicon/favicon-16x16.png`,
+  `Melfy | Adoce sua vida`
+);
+
+
+setFavicon();
+
+
 });
