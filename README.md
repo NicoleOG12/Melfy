@@ -52,7 +52,6 @@
   <li>🐝<a href="https://github.com/EmillyBudriBognar" target="_blank" rel="noopener noreferrer">Emilly Budri Bognar </a></li>
   <li>🐝<a href="https://github.com/iris-oli" target="_blank" rel="noopener noreferrer">Íris Oliveira Santos</a></li>
   <li>🐝<a href="https://github.com/IsahApoli" target="_blank" rel="noopener noreferrer">Isabella Apolinario dos Santos</a></li>
-  <li>🐝<a href="https://github.com/JannaMP" target="_blank" rel="noopener noreferrer">Janaina Mota Pinto</a></li>
   <li>🐝<a href="https://github.com/Laura677" target="_blank" rel="noopener noreferrer">Laura Cristini da Silva</a></li>
   <li>🐝<a href="https://github.com/linsjulia" target="_blank" rel="noopener noreferrer">Júlia Lins Pereira da Silva</a></li>
   <li>🐝<a href="https://github.com/NicoleOG12" target="_blank" rel="noopener noreferrer">Nicole Oliveira Gonçalves</a></li>
