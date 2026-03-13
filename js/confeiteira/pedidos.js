@@ -1,11 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+  const API_URL = "https://melfy-backend-production.up.railway.app";
+  const pedidos =
+    JSON.parse(localStorage.getItem("pedidos")) ||
+    fetch(`${API_URL}/pedidos`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      Authorizarion: `Bearer ${JSON.stringify(localStorage.getItem(tokenLoja))}`,
+    });
+
+  console.log(pedidos);
 
   const colunaAberto = document.getElementById("coluna-aberto");
   const colunaPreparo = document.getElementById("coluna-preparo");
   const colunaEntrega = document.getElementById("coluna-entrega");
 
-  pedidos.forEach(p => criarCard(p, colunaAberto));
+  pedidos.forEach((p) => criarCard(p, colunaAberto));
 
   function criarCard(pedido, destino, etapa = "aberto") {
     const card = document.createElement("div");
@@ -55,7 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       `;
 
-      botoes.querySelector(".btn-accept").onclick = () => moverCard(card, pedido, "preparo");
+      botoes.querySelector(".btn-accept").onclick = () =>
+        moverCard(card, pedido, "preparo");
       botoes.querySelector(".btn-decline").onclick = () => card.remove();
     }
 
@@ -73,7 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       `;
 
-      botoes.querySelector(".btn-liberar").onclick = () => moverCard(card, pedido, "entrega");
+      botoes.querySelector(".btn-liberar").onclick = () =>
+        moverCard(card, pedido, "entrega");
       botoes.querySelector(".btn-cancel").onclick = () => card.remove();
     }
 
@@ -96,6 +109,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (proximaEtapa === "preparo") criarCard(pedido, colunaPreparo, "preparo");
     if (proximaEtapa === "entrega") criarCard(pedido, colunaEntrega, "entrega");
   }
-
-  
 });
