@@ -1,13 +1,13 @@
-import { rotasCliente } from '../rotas.js';
-import { openModal, adicionarNaSacola } from '../modal.js';
-import { filtrarProdutos } from '../pesquisa.js';
+import { rotasCliente } from "../rotas.js";
+import { openModal, adicionarNaSacola } from "../modal.js";
+import { filtrarProdutos } from "../pesquisa.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const API_URL = "https://melfy-backend-production.up.railway.app";
 
-  const cardsWrapper = document.querySelector('.cards-wrapper');
-  const inputPesquisa = document.getElementById('search-input');
-  const botaoPesquisa = document.getElementById('search-button');
+  const cardsWrapper = document.querySelector(".cards-wrapper");
+  const inputPesquisa = document.getElementById("search-input");
+  const botaoPesquisa = document.getElementById("search-button");
 
   let produtos = [];
   let lojas = [];
@@ -20,16 +20,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     const resLojas = await fetch(`${API_URL}/lojas/fetchAll`);
     const dataLojas = await resLojas.json();
     lojas = dataLojas.result || [];
-
   } catch (erro) {
     console.error("Erro ao carregar API:", erro);
   }
 
   function embaralhar(lista) {
     return lista
-      .map(x => ({ x, sort: Math.random() }))
+      .map((x) => ({ x, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
-      .map(obj => obj.x);
+      .map((obj) => obj.x);
   }
 
   produtos.sort((a, b) => new Date(a.datahora) - new Date(b.datahora));
@@ -50,29 +49,29 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function formatarPreco(valor) {
-    return parseFloat(valor).toFixed(2).replace('.', ',');
+    return parseFloat(valor).toFixed(2).replace(".", ",");
   }
 
   function renderizarProdutos(listaProdutos) {
-    cardsWrapper.innerHTML = '';
+    cardsWrapper.innerHTML = "";
     if (listaProdutos.length === 0) {
-      cardsWrapper.innerHTML = '<p>Nenhum produto encontrado.</p>';
+      cardsWrapper.innerHTML = "<p>Nenhum produto encontrado.</p>";
       return;
     }
 
-    [...listaProdutos].reverse().forEach(produto => {
+    [...listaProdutos].reverse().forEach((produto) => {
       const loja = {
         id: produto.id_loja,
         nome: produto.loja_nome,
-        pfp: produto.pfp
+        pfp: produto.pfp,
       };
 
-      const card = document.createElement('div');
-      card.classList.add('card');
+      const card = document.createElement("div");
+      card.classList.add("card");
 
       card.innerHTML = `
         <div class="headerNovidade">
-          <img src="${loja?.pfp || ''}" alt="Logo da Loja" class="logoLoja" />
+          <img src="${loja?.pfp || ""}" alt="Logo da Loja" class="logoLoja" id="logoLoja${loja.id}"/>
         </div>
         <div class="border-card">
           <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
@@ -93,13 +92,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         </div>
       `;
 
-      card.querySelector('.logoLoja').addEventListener('click', e => {
-        e.stopPropagation();
-        window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
-      });
+      card
+        .querySelector("#logoLoja" + loja.id)
+        .addEventListener("click", (e) => {
+          e.stopPropagation();
+          window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
+          console.log(loja);
+        });
 
-      card.addEventListener('click', e => {
-        if (!e.target.closest('.headerNovidade'))
+      card.addEventListener("click", (e) => {
+        if (!e.target.closest(".headerNovidade"))
           openModal(produto, lojas, rotasCliente);
       });
 
@@ -109,35 +111,49 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   renderizarProdutos(produtosOrdenados);
 
-  inputPesquisa.addEventListener('keyup', e => {
-    if (e.key === 'Enter')
-      filtrarProdutos(produtosOrdenados, inputPesquisa, renderizarProdutos, cardsWrapper, true)
+  inputPesquisa.addEventListener("keyup", (e) => {
+    if (e.key === "Enter")
+      filtrarProdutos(
+        produtosOrdenados,
+        inputPesquisa,
+        renderizarProdutos,
+        cardsWrapper,
+        true,
+      );
   });
 
-  botaoPesquisa.addEventListener('click', () =>
-    filtrarProdutos(produtosOrdenados, inputPesquisa, renderizarProdutos, cardsWrapper, true)
+  botaoPesquisa.addEventListener("click", () =>
+    filtrarProdutos(
+      produtosOrdenados,
+      inputPesquisa,
+      renderizarProdutos,
+      cardsWrapper,
+      true,
+    ),
   );
 
-  document.querySelectorAll('.doce').forEach(doce => {
-    doce.addEventListener('click', function () {
-      const categoria = this.querySelector('p').textContent.trim();
-      const filtrados = produtosOrdenados.filter(p =>
-        p.categorias?.includes(categoria) || p.categoria === categoria
+  document.querySelectorAll(".doce").forEach((doce) => {
+    doce.addEventListener("click", function () {
+      const categoria = this.querySelector("p").textContent.trim();
+      const filtrados = produtosOrdenados.filter(
+        (p) => p.categorias?.includes(categoria) || p.categoria === categoria,
       );
       renderizarProdutos(filtrados);
-      cardsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      cardsWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  document.querySelector('.btn-add').addEventListener('click', adicionarNaSacola);
+  document
+    .querySelector(".btn-add")
+    .addEventListener("click", adicionarNaSacola);
 
-  const container = document.getElementById('lojas-container');
-  const slider = document.querySelector('.lojas-scroll');
+  const container = document.getElementById("lojas-container");
+  const slider = document.querySelector(".lojas-scroll");
   container.innerHTML = "";
 
-  [...lojas].reverse().forEach(loja => {
-    const card = document.createElement('div');
-    card.classList.add('loja-card');
+  [...lojas].reverse().forEach((loja) => {
+    const card = document.createElement("div");
+    card.classList.add("loja-card");
 
     card.innerHTML = `
       <img src="${loja.pfp || loja.fotoPerfil}" 
@@ -151,33 +167,35 @@ document.addEventListener("DOMContentLoaded", async function () {
       </div>
     `;
 
-    card.querySelector('.btn-loja').addEventListener('click', () => {
+    card.querySelector(".btn-loja").addEventListener("click", () => {
       window.location.href = `${rotasCliente.loja}?id=${loja.idLoja || loja.id_loja}`;
     });
 
     container.appendChild(card);
   });
 
-  let isDown = false, startX, scrollLeft;
+  let isDown = false,
+    startX,
+    scrollLeft;
 
-  slider.addEventListener('mousedown', e => {
+  slider.addEventListener("mousedown", (e) => {
     isDown = true;
-    slider.classList.add('active');
+    slider.classList.add("active");
     startX = e.pageX - slider.offsetLeft;
     scrollLeft = slider.scrollLeft;
   });
 
-  slider.addEventListener('mouseleave', () => {
+  slider.addEventListener("mouseleave", () => {
     isDown = false;
-    slider.classList.remove('active');
+    slider.classList.remove("active");
   });
 
-  slider.addEventListener('mouseup', () => {
+  slider.addEventListener("mouseup", () => {
     isDown = false;
-    slider.classList.remove('active');
+    slider.classList.remove("active");
   });
 
-  slider.addEventListener('mousemove', e => {
+  slider.addEventListener("mousemove", (e) => {
     if (!isDown) return;
     e.preventDefault();
     const x = e.pageX - slider.offsetLeft;
@@ -185,41 +203,44 @@ document.addEventListener("DOMContentLoaded", async function () {
     slider.scrollLeft = scrollLeft - walk;
   });
 
-  slider.addEventListener('touchstart', e => {
+  slider.addEventListener("touchstart", (e) => {
     isDown = true;
     startX = e.touches[0].pageX - slider.offsetLeft;
     scrollLeft = slider.scrollLeft;
   });
 
-  slider.addEventListener('touchend', () => {
+  slider.addEventListener("touchend", () => {
     isDown = false;
   });
 
-  slider.addEventListener('touchmove', e => {
+  slider.addEventListener("touchmove", (e) => {
     if (!isDown) return;
     const x = e.touches[0].pageX - slider.offsetLeft;
     const walk = (x - startX) * 2;
     slider.scrollLeft = scrollLeft - walk;
   });
 
-  document.querySelectorAll(".categoria-click-event-listener").forEach(cat => {
-    cat.addEventListener("click", async () => {
-      const id = cat.dataset.id;
+  document
+    .querySelectorAll(".categoria-click-event-listener")
+    .forEach((cat) => {
+      cat.addEventListener("click", async () => {
+        const id = cat.dataset.id;
 
-      try {
-        const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
-        if (resp.status === 204) {
-          renderizarProdutos([]);
-          return;
+        try {
+          const resp = await fetch(`${API_URL}/produtos?categoria=${id}`);
+          if (resp.status === 204) {
+            renderizarProdutos([]);
+            return;
+          }
+
+          const dataCat = await resp.json();
+          const produtosCat = Array.isArray(dataCat.result)
+            ? dataCat.result
+            : [];
+          renderizarProdutos(produtosCat);
+        } catch (error) {
+          console.error("Erro ao buscar produtos:", error);
         }
-
-        const dataCat = await resp.json();
-        const produtosCat = Array.isArray(dataCat.result) ? dataCat.result : [];
-        renderizarProdutos(produtosCat);
-
-      } catch (error) {
-        console.error("Erro ao buscar produtos:", error);
-      }
+      });
     });
-  });
 });
