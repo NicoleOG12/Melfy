@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melfy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Delius&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/cadastro.css">
+</head>
+
+<body>
+  <div class="full-width-container">
+
+    <div class="left-panel" id="leftPanel">
+      <a href="../../index.html" class="back-btn-absolute">
+        <i class="fa-solid fa-angle-left"></i> Voltar
+      </a>
+
+      <div class="hero-content">
+        <h1 id="title">Seja um Cliente Feliz!</h1>
+        <p id="subtitle">Crie sua conta e encomende os melhores doces da sua região.</p>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="form-wrapper">
+
+        <div class="logo-placeholder">
+          <img src="../../assents/img/Geral/Melfy-versão final.svg" style="height:70px">
+        </div>
+
+        <div class="account-type" id="typeContainer">
+          <div class="type-card active" data-type="cliente">
+            <i class="fa-solid fa-user"></i> Cliente
+          </div>
+
+          <div class="type-card" data-type="confeiteira">
+            <i class="fa-solid fa-cake-candles"></i> Confeiteira
+          </div>
+
+          <div class="type-card" data-type="entregador">
+            <i class="fa-solid fa-motorcycle"></i> Entregador
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <form id="mainForm" onsubmit="event.preventDefault()">
+
+          <div class="step active">
+            <h2>1. Dados de Acesso</h2>
+
+            <div class="input">
+              <label>Nome Completo</label>
+              <input type="text" required placeholder="Digite seu nome" class="form-input" id="nome">
+            </div>
+
+            <div class="input">
+              <label>Email</label>
+              <input type="email" required placeholder="exemplo@email.com" class="form-input" id="email">
+            </div>
+
+            <div class="input">
+              <label>Senha</label>
+              <input type="password" required placeholder="Sua senha" class="form-input" id="senha">
+              <i class="fa-regular fa-eye"></i>
+            </div>
+
+            <div class="input">
+              <label>Confirmar Senha</label>
+              <input type="password" required placeholder="Confirme sua senha" class="form-input" id="senhaCon">
+              <i class="fa-regular fa-eye"></i>
+            </div>
+
+            <div class="buttons">
+              <span></span>
+              <button type="button" class="next">
+                Próximo <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="step">
+            <h2>2. Informações Específicas</h2>
+
+            <div id="extraFields"></div>
+
+            <div class="buttons">
+              <button type="button" class="prev">
+                <i class="fa-solid fa-arrow-left"></i> Voltar
+              </button>
+
+              <button type="submit" class="next">
+                Finalizar Cadastro
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/cadastro.js"></script>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>

@@ -87,15 +87,15 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 45%; /* controla o quanto da imagem é escurecida */
+  height: 45%; 
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
-  pointer-events: none; /* pra não atrapalhar cliques */
-  z-index: 2; /* fica acima das imagens */
+  pointer-events: none;
+  z-index: 2; 
 }
 
 .slider-indicadores {
   position: absolute;
-  bottom: 30px; /* distância do fundo */
+  bottom: 30px; 
   left: 50%;
   transform: translateX(-50%);
   display: flex;

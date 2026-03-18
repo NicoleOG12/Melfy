@@ -23,7 +23,7 @@ export const rotasConfeiteira = {
 export const rotasGerais = {
   home: `${baseURL}index.html`,
   login: `${baseURL}pages/login.html`,
-  cadastro: `${baseURL}pages/cadastrar.html`,
+  cadastro: `${baseURL}pages/cadastro.html`,
   esqueceuSenha: `${baseURL}pages/esqueceuSenha.html`,
   sobre: `${baseURL}pages/sobre.html`
 };
