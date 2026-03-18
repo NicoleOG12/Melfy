@@ -252,7 +252,7 @@ body {
 .input i.fa-eye-slash {
   position: absolute;
   right: 12px;
-  top: 50%;
+  top: 60%;
   transform: translateY(-50%);
   cursor: pointer;
   color: #8a4b36;
