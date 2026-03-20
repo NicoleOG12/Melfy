@@ -218,6 +218,20 @@ input:focus{
     0 0 0 8px rgba(255, 153, 51, 0.25);
 }
 
+.btn-login .btn-loading-icon {
+  font-size: 18px !important; 
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;           
+}
+
+.btn-login .btn-loading-text {
+  font-size: 18px;            
+  vertical-align: middle;
+}
+
 @media (max-width: 540px) {
   .btn-login {
     width: calc(100% - 40px);

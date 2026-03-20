@@ -179,7 +179,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("editModal");
     const backdrop = document.getElementById("modalBackdrop");
     const imgExibida = document.getElementById("imagemExibida");
-  
+    const buttonSave = document.querySelector(".button-save");
+    buttonSave.disabled = false;
+    buttonSave.innerHTML = "Salvar";
+
     let categorias = [];
     try {
       const res = await fetch(`${API_URL}/categorias`);
@@ -188,14 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Erro ao carregar categorias:", err);
     }
-  
+
     let categoriaId = null;
     if (produto?.categorias?.length) {
       const catNome = produto.categorias[0];
       const catEncontrada = categorias.find(c => c.nome === catNome);
       if (catEncontrada) categoriaId = catEncontrada.id_categoria;
     }
-  
+
     const select = document.querySelector("#categoria");
     select.innerHTML = `<option value="" disabled ${!categoriaId ? "selected" : ""}>Selecione a categoria</option>`;
     categorias.forEach(cat => {
@@ -205,19 +208,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (Number(cat.id_categoria) === Number(categoriaId)) option.selected = true;
       select.appendChild(option);
     });
-  
+
     modal.showModal();
     backdrop.hidden = false;
-  
+
     document.querySelector("#nome").value = produto?.nome || "";
     document.querySelector("#descricao").value = produto?.descricao || "";
     document.querySelector("#prazoInput").value = produto?.prazo || "";
     document.querySelector("#precoInput").value = produto?.valor || produto?.valor_uni || "";
     imgExibida.src = produto?.midia?.imagens?.[0]?.path || produto?.foto || "";
     imgExibida.style.display = imgExibida.src ? "block" : "none";
-  
+
     atualizarTudo();
-  
+
     let novaImagem = null;
     const fotoInput = document.querySelector("#foto");
     fotoInput.value = "";
@@ -227,29 +230,36 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.onload = ev => { imgExibida.src = ev.target.result; imgExibida.style.display = "block"; };
       reader.readAsDataURL(novaImagem);
     };
-  
-    const buttonSave = document.querySelector(".button-save");
+
     buttonSave.onclick = async e => {
       e.preventDefault();
+      if (buttonSave.disabled) return;
+
+      buttonSave.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin btn-loading-icon"></i>
+        <span class="btn-loading-text">Salvando...</span>
+      `;
+      buttonSave.disabled = true;
+
       const token = localStorage.getItem("tokenLoja");
       if (!token) return alert("Usuário não autenticado");
-  
+
       const categoria = select.value;
       if (!categoria) return alert("Selecione uma categoria válida");
-  
+
       const formData = new FormData();
       formData.append("nome", document.querySelector("#nome").value);
       formData.append("descricao", document.querySelector("#descricao").value);
       formData.append("prazo", document.querySelector("#prazoInput").value);
-  
+
       let valor = parseFloat(document.querySelector("#precoInput").value) || 0;
       if (valor > 999.99) valor = 999.99;
       formData.append("valor", valor.toFixed(2));
       formData.append("categoria", categoria);
       formData.append("id_loja", idLojaLogada);
-  
+
       if (novaImagem) formData.append("img", novaImagem);
-  
+
       try {
         const resp = await fetch(`${API_URL}/produtos`, {
           method: "POST",
@@ -257,18 +267,20 @@ document.addEventListener("DOMContentLoaded", () => {
           body: formData
         });
         if (!resp.ok) throw new Error(await resp.text());
-  
+
         await carregarProdutos();
         modal.close();
         backdrop.hidden = true;
       } catch (err) {
         alert("Erro ao criar produto: " + err.message);
+        buttonSave.innerHTML = "Salvar";
+        buttonSave.disabled = false;
       }
     };
+
     document.querySelector(".modal-close").onclick = () => { modal.close(); backdrop.hidden = true; };
     backdrop.onclick = () => { modal.close(); backdrop.hidden = true; };
   }
-
 
   async function excluirProduto(id_produto) {
     const token = localStorage.getItem("tokenLoja");

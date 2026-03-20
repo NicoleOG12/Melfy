@@ -443,6 +443,19 @@ form {
   transform: translateY(-2px);
 }
 
+.button-save .btn-loading-icon {
+  font-size: 16px !important;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  vertical-align: middle;
+}
+
+.button-save .btn-loading-text {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
 .modal-close {
   position: absolute;
   top: 12px;

@@ -94,6 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", async function (e) {
       e.preventDefault()
 
+      const submitBtn = form.querySelector("button[type='submit']")
+      if (!submitBtn) return
+
+      if (submitBtn.disabled) return
+      submitBtn.disabled = true
+
+      const originalText = submitBtn.textContent
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Carregando...`
+
       const nome = document.getElementById("nome")?.value.trim() || ""
       const email = document.getElementById("email")?.value.trim() || ""
       const senha = document.getElementById("senha")?.value.trim() || ""
@@ -102,18 +111,26 @@ document.addEventListener("DOMContentLoaded", () => {
       const cpf = document.getElementById("cpf")?.value.trim() || ""
       const data_nasc = document.getElementById("dt_nasc")?.value.trim() || ""
 
+      function resetButton() {
+        submitBtn.disabled = false
+        submitBtn.textContent = originalText
+      }
+
       if (!nome || !email || !senha || !senhaCon) {
         alert("Preencha nome, email e senha!")
+        resetButton()
         return
       }
 
       if (senha !== senhaCon) {
         alert("As senhas não coincidem!")
+        resetButton()
         return
       }
 
       if (!telefone || !cpf || !data_nasc) {
         alert("Preencha todos os campos!")
+        resetButton()
         return
       }
 
@@ -129,11 +146,15 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         await cadastrar(dados)
         const logado = await logarComRetry(email, senha)
-        if (!logado) return
+        if (!logado) {
+          resetButton()
+          return
+        }
         alert(`Cadastro realizado com sucesso! Bem-vindo(a) ao Melfy`)
         window.location.href = "../../pages/cliente/doces.html"
       } catch (err) {
         alert(err.message)
+        resetButton()
       }
     })
   }

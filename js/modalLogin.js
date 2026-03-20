@@ -1,5 +1,4 @@
 export function abrirModalLogin(tipoUsuario) {
-
   let modalOverlay = document.getElementById('loginModalOverlay');
   const baseURL = window.location.origin + "/";
 
@@ -30,7 +29,7 @@ export function abrirModalLogin(tipoUsuario) {
               <img src="../assents/img/Login/entregador3.png" data-tipo="entregador" alt="">
               <div class="slider-indicadores"></div>
             </div>
-            
+
             <div class="login">
               <h1 class="titulo-login">Faça o seu login!</h1>
               <div class="input-group">
@@ -47,7 +46,9 @@ export function abrirModalLogin(tipoUsuario) {
                 </div>
                 <a href="#" class="recup-senha">Esqueceu sua senha?</a>
                 <div class="container-button">
-                  <button class="btn-login" id="btnLogin" data-id="${tipoUsuario}">Login</button>
+                  <button class="btn-login" id="btnLogin" data-id="${tipoUsuario}">
+                    Login
+                  </button>
                 </div>
                 <a href="../../pages/cadastro.html" class="cadastro">
                   Ainda não possui uma conta? <br>
@@ -55,6 +56,7 @@ export function abrirModalLogin(tipoUsuario) {
                 </a>
               </div>
             </div>
+
             <button class="modal-close" id="closeLoginModal" aria-label="Fechar modal">×</button>
           </section>
         </div>
@@ -93,35 +95,52 @@ export function abrirModalLogin(tipoUsuario) {
         img.classList.remove('ativa');
       }
     });
-    dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length));
+    dotsContainer.querySelectorAll('.dot').forEach((dot, i) =>
+      dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length)
+    );
     indexAtual++;
   }, 5000);
 
-  const closeBtn = modalOverlay.querySelector('#closeLoginModal');
-  closeBtn.addEventListener('click', () => fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer));
+  function fecharModal() {
+    modalOverlay.style.display = 'none';
+    clearInterval(sliderInterval);
+    imagens.forEach((img, i) => {
+      img.style.display = (i === 0 ? 'block' : 'none');
+      img.classList.toggle('ativa', i === 0);
+    });
+    dotsContainer.querySelectorAll('.dot').forEach((dot, i) =>
+      dot.classList.toggle('ativa', i === 0)
+    );
+  }
 
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer);
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === "Escape") fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer);
-  });
+  modalOverlay.querySelector('#closeLoginModal').addEventListener('click', fecharModal);
+  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) fecharModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === "Escape") fecharModal(); });
 
   const togglePass = modal.querySelector('#togglePassword');
   const senhaInput = modal.querySelector('#senhaLogin');
   togglePass.addEventListener('click', () => {
     const type = senhaInput.type === 'password' ? 'text' : 'password';
     senhaInput.type = type;
-    togglePass.innerHTML = type === 'password'
-      ? '<i class="fa-regular fa-eye"></i>'
-      : '<i class="fa-regular fa-eye-slash"></i>';
+    togglePass.innerHTML =
+      type === 'password'
+        ? '<i class="fa-regular fa-eye"></i>'
+        : '<i class="fa-regular fa-eye-slash"></i>';
   });
 
   const btnLogin = document.getElementById("btnLogin");
   btnLogin.addEventListener("click", async () => {
+    if (btnLogin.disabled) return;
+
+    const originalText = btnLogin.textContent;
+    btnLogin.disabled = true;
+    btnLogin.innerHTML = `
+      <i class="fa-solid fa-spinner fa-spin btn-loading-icon"></i>
+      <span class="btn-loading-text">Carregando...</span>
+    `;
+
     const tipoUsuario = btnLogin.dataset.id;
-    console.log(tipoUsuario)
+
     try {
       const API_URL = "https://melfy-backend-production.up.railway.app";
       let url, nextPage, token, info;
@@ -164,21 +183,15 @@ export function abrirModalLogin(tipoUsuario) {
         window.location.href = nextPage;
       } else {
         alert(data.mensagem);
+        btnLogin.disabled = false;
+        btnLogin.textContent = originalText;
       }
     } catch (error) {
       console.error("Erro no login:", error);
+      btnLogin.disabled = false;
+      btnLogin.textContent = originalText;
     }
   });
 
   modalOverlay.style.display = 'flex';
-}
-
-function fecharModal(modalOverlay, sliderInterval, imagens, dotsContainer) {
-  modalOverlay.style.display = 'none';
-  clearInterval(sliderInterval);
-  imagens.forEach((img, i) => {
-    img.style.display = (i === 0 ? 'block' : 'none');
-    img.classList.toggle('ativa', i === 0);
-  });
-  dotsContainer.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('ativa', i === 0));
 }
