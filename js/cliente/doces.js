@@ -97,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         .addEventListener("click", (e) => {
           e.stopPropagation();
           window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
-          console.log(loja);
         });
 
       card.addEventListener("click", (e) => {
@@ -132,14 +131,22 @@ document.addEventListener("DOMContentLoaded", async function () {
     ),
   );
 
-  document.querySelectorAll(".doce").forEach((doce) => {
-    doce.addEventListener("click", function () {
-      const categoria = this.querySelector("p").textContent.trim();
-      const filtrados = produtosOrdenados.filter(
-        (p) => p.categorias?.includes(categoria) || p.categoria === categoria,
+  document.querySelectorAll(".categoria, .doce").forEach((item) => {
+    item.addEventListener("click", () => {
+      const categoria = item.querySelector("p").textContent.trim();
+
+      filtrarProdutos(
+        produtosOrdenados,
+        { value: categoria },
+        renderizarProdutos,
+        cardsWrapper,
+        true
       );
-      renderizarProdutos(filtrados);
-      cardsWrapper.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      cardsWrapper.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     });
   });
 
@@ -242,5 +249,5 @@ document.addEventListener("DOMContentLoaded", async function () {
           console.error("Erro ao buscar produtos:", error);
         }
       });
-    });
+  });
 });

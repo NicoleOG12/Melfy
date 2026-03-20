@@ -20,33 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     });
   });
-
-
-
-
-
-// lógica para buscar produtos por categoria
-const resp = await fetch(`${API_URL}/categorias`);
-
-const categorias = await resp.json();
-console.log(categorias)
-categoriasDiv.innerHTML = "";
-
-categorias.result.forEach(categoria => {
-  categoriasDiv.innerHTML += `
-       <div class="categoria categoria-click-event-listener" data-id="${categoria.id_categoria}">
-              <div class="hex-externo">
-                <div class="hex-interno">
-                  <div class="hex-img">
-                    <img src="${categoria.icone}" alt="${categoria.nome}">
-                  </div>
-                </div>
-              </div>
-              <p>${categoria.nome}</p>
-       </div>`;
-});
-
-
 });
 
 
