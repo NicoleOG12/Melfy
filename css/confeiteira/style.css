@@ -340,6 +340,7 @@ body{
   opacity: 1;
 }
 
+
 .tips-overlay {
   position: fixed;
   top: 0;
@@ -359,15 +360,14 @@ body{
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow);
   padding: 15px 10px;
-  display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: -80px;
   max-width: 400px;
+  width: 90%;
   z-index: 99999;
   border: 1px solid #ffc53d7a;
-  margin-top: -130px;
-  margin-left: 20px;
+  bottom: 80px;
+  right: 20px;
 }
 
 .tips-left {
