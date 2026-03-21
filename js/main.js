@@ -1,4 +1,3 @@
-import { carregarTodosOsDados } from './dicionario.js';
 import { abrirModalLogin } from './modalLogin.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,8 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.head.appendChild(link);
     });
   }
-
-  carregarTodosOsDados();
 
   const headerContainer = document.getElementById('header');
   const footerContainer = document.getElementById('footer');
