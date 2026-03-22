@@ -61,7 +61,6 @@ function renderizarModalEdicao() {
       </section>
     </dialog>
   `;
-
   document.body.insertAdjacentHTML("beforeend", modalHTML);
 }
 
@@ -174,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cardsWrapper.appendChild(card);
     });
   }
-  
+
   async function abrirModalEdicao(produto = null) {
     const modal = document.getElementById("editModal");
     const backdrop = document.getElementById("modalBackdrop");
@@ -248,31 +247,40 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!categoria) return alert("Selecione uma categoria válida");
 
       const formData = new FormData();
-      formData.append("nome", document.querySelector("#nome").value);
-      formData.append("descricao", document.querySelector("#descricao").value);
-      formData.append("prazo", document.querySelector("#prazoInput").value);
+
+      if (!produto || document.querySelector("#nome").value !== produto.nome) 
+        formData.append("nome", document.querySelector("#nome").value);
+      if (!produto || document.querySelector("#descricao").value !== produto.descricao) 
+        formData.append("descricao", document.querySelector("#descricao").value);
+      if (!produto || document.querySelector("#prazoInput").value !== produto.prazo) 
+        formData.append("prazo", document.querySelector("#prazoInput").value);
 
       let valor = parseFloat(document.querySelector("#precoInput").value) || 0;
-      if (valor > 999.99) valor = 999.99;
-      formData.append("valor", valor.toFixed(2));
+      if (!produto || valor !== (produto.valor || produto.valor_uni || produto.preco)) 
+        formData.append("valor", valor.toFixed(2));
+
       formData.append("categoria", categoria);
       formData.append("id_loja", idLojaLogada);
 
       if (novaImagem) formData.append("img", novaImagem);
 
       try {
-        const resp = await fetch(`${API_URL}/produtos`, {
-          method: "POST",
+        const url = produto ? `${API_URL}/produtos/${produto.id_produto}` : `${API_URL}/produtos`;
+        const method = produto ? "PUT" : "POST";
+
+        const resp = await fetch(url, {
+          method,
           headers: { "Authorization": `Bearer ${token}` },
           body: formData
         });
+
         if (!resp.ok) throw new Error(await resp.text());
 
         await carregarProdutos();
         modal.close();
         backdrop.hidden = true;
       } catch (err) {
-        alert("Erro ao criar produto: " + err.message);
+        alert("Erro ao salvar produto: " + err.message);
         buttonSave.innerHTML = "Salvar";
         buttonSave.disabled = false;
       }

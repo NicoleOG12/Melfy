@@ -16,17 +16,17 @@ export function abrirModalLogin(tipoUsuario) {
         <div class="login-modal">
           <section class="container-modal">
             <div class="image-slider">
-              <img src="../assents/img/Login/confeiteira1.png" data-tipo="confeiteira" alt="">
-              <img src="../assents/img/Login/confeiteira2.png" data-tipo="confeiteira" alt="">
-              <img src="../assents/img/Login/confeiteira3.png" data-tipo="confeiteira" alt="">
+              <img src="/assents/img/Login/confeiteira1.png" data-tipo="confeiteira" alt="">
+              <img src="/assents/img/Login/confeiteira2.png" data-tipo="confeiteira" alt="">
+              <img src="/assents/img/Login/confeiteira3.png" data-tipo="confeiteira" alt="">
               
-              <img src="../assents/img/Login/cliente1.png" data-tipo="cliente" alt="">
-              <img src="../assents/img/Login/cliente2.png" data-tipo="cliente" alt="">
-              <img src="../assents/img/Login/cliente3.png" data-tipo="cliente" alt="">
+              <img src="/assents/img/Login/cliente1.png" data-tipo="cliente" alt="">
+              <img src="/assents/img/Login/cliente2.png" data-tipo="cliente" alt="">
+              <img src="/assents/img/Login/cliente3.png" data-tipo="cliente" alt="">
               
-              <img src="../assents/img/Login/entregador1.png" data-tipo="entregador" alt="">
-              <img src="../assents/img/Login/entregador2.png" data-tipo="entregador" alt="">
-              <img src="../assents/img/Login/entregador3.png" data-tipo="entregador" alt="">
+              <img src="/assents/img/Login/entregador1.png" data-tipo="entregador" alt="">
+              <img src="/assents/img/Login/entregador2.png" data-tipo="entregador" alt="">
+              <img src="/assents/img/Login/entregador3.png" data-tipo="entregador" alt="">
               <div class="slider-indicadores"></div>
             </div>
 
@@ -35,11 +35,11 @@ export function abrirModalLogin(tipoUsuario) {
               <div class="input-group">
                 <div class="input-container">
                   <i class="fa-solid fa-envelope icon"></i>
-                  <input type="email" placeholder="E-mail" id="emailLogin" name="email" />
+                  <input type="email" placeholder="E-mail" id="emailLogin" name="email" autocomplete="off" />
                 </div>
                 <div class="input-container">
                   <i class="fa-solid fa-lock icon"></i>
-                  <input type="password" placeholder="Senha" id="senhaLogin" class="input-pass" name="senha" />
+                  <input type="password" placeholder="Senha" id="senhaLogin" class="input-pass" name="senha" autocomplete="off" />
                   <button type="button" class="visible-pass" id="togglePassword" aria-label="Mostrar senha">
                     <i class="fa-regular fa-eye"></i>
                   </button>
@@ -67,6 +67,11 @@ export function abrirModalLogin(tipoUsuario) {
   }
 
   const modal = modalOverlay.querySelector('.login-modal');
+  const emailInput = modal.querySelector("#emailLogin");
+  const senhaInput = modal.querySelector("#senhaLogin");
+  if (emailInput) emailInput.value = "";
+  if (senhaInput) senhaInput.value = "";
+
   const imagens = modal.querySelectorAll('.image-slider img');
   const dotsContainer = modal.querySelector('.slider-indicadores');
   const imagensAtivas = Array.from(imagens).filter(img => img.dataset.tipo === tipoUsuario);
@@ -118,7 +123,6 @@ export function abrirModalLogin(tipoUsuario) {
   document.addEventListener('keydown', (e) => { if (e.key === "Escape") fecharModal(); });
 
   const togglePass = modal.querySelector('#togglePassword');
-  const senhaInput = modal.querySelector('#senhaLogin');
   togglePass.addEventListener('click', () => {
     const type = senhaInput.type === 'password' ? 'text' : 'password';
     senhaInput.type = type;
@@ -128,7 +132,7 @@ export function abrirModalLogin(tipoUsuario) {
         : '<i class="fa-regular fa-eye-slash"></i>';
   });
 
-  const btnLogin = document.getElementById("btnLogin");
+  const btnLogin = modal.querySelector("#btnLogin");
   btnLogin.addEventListener("click", async () => {
     if (btnLogin.disabled) return;
 
@@ -165,8 +169,8 @@ export function abrirModalLogin(tipoUsuario) {
         return;
       }
 
-      const email = document.getElementById("emailLogin").value.trim();
-      const senha = document.getElementById("senhaLogin").value.trim();
+      const email = emailInput.value.trim();
+      const senha = senhaInput.value.trim();
 
       const res = await fetch(url, {
         method: "POST",

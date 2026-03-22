@@ -4,25 +4,16 @@ export const rotasCliente = {
   carrinho: `${baseURL}pages/cliente/carrinho.html`,
   doces: `${baseURL}pages/cliente/doces.html`,
   loja: `${baseURL}pages/cliente/loja.html`,
-  lojas: `${baseURL}pages/cliente/lojas.html`,
   pedidos: `${baseURL}pages/cliente/pedidos.html`,
-  perfilEnderecos: `${baseURL}pages/cliente/perfil-enderecos.html`,
-  perfilFormasPag: `${baseURL}pages/cliente/perfil-formas-pag.html`,
   perfil: `${baseURL}pages/cliente/perfil.html`,
-  produtos: `${baseURL}pages/cliente/produtos.html`
 };
 
 export const rotasConfeiteira = {
-  cadastro: `${baseURL}pages/confeiteira/cadastro.html`,
-  cadastroLoja: `${baseURL}pages/confeiteira/cadastroLoja.html`,
-  meusProdutos: `${baseURL}pages/confeiteira/meusProdutos.html`,
-  painelADM: `${baseURL}pages/confeiteira/dashboard.html`,
-  pedidos: `${baseURL}pages/confeiteira/pedidos.html`,
+  home: `${baseURL}pages/confeiteira/home.html`,
 };
 
 export const rotasGerais = {
   home: `${baseURL}index.html`,
-  login: `${baseURL}pages/login.html`,
   cadastro: `${baseURL}pages/cadastro.html`,
   esqueceuSenha: `${baseURL}pages/esqueceuSenha.html`,
   sobre: `${baseURL}pages/sobre.html`
