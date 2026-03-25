@@ -149,8 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const nomeElem = headerContainer.querySelector('.nomeuser');
       if (nomeElem) nomeElem.textContent = usuarioLogado.nome || 'Usuário';
 
-      const API_URL = "https://melfy-backend-production.up.railway.app";
-
       async function atualizarContadorCarrinho() {
         try {
           const token = localStorage.getItem("tokenCliente");
@@ -184,12 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        atualizarContadorCarrinho();
-        window.setInterval(atualizarContadorCarrinho, 5000);
-      });
-
+      // Atualiza ao carregar, a cada 5s e ao alterar o localStorage
       atualizarContadorCarrinho();
+      setInterval(atualizarContadorCarrinho, 5000);
       window.addEventListener('storage', e => {
         if (e.key === 'Sacola') atualizarContadorCarrinho();
       });
@@ -302,28 +297,22 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(document.body, { childList: true, subtree: true });
     }
   }
-
-
-function setFaviconAndTitle(faviconUrl, titleText) {
-
-  let link = document.querySelector("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
+  
+  function setFaviconAndTitle(faviconUrl, titleText) {
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = faviconUrl;
+  
+    document.title = titleText;
   }
-  link.href = faviconUrl;
-
-  document.title = titleText;
-}
-
-setFaviconAndTitle(
-  `${baseURL}assents/favicon/favicon-16x16.png`,
-  `Melfy | Adoce sua vida`
-);
-
-
-setFavicon();
-
+  
+  setFaviconAndTitle(
+    `${baseURL}assents/favicon/favicon-16x16.png`,
+    `Melfy | Adoce sua vida`
+  );
 
 });

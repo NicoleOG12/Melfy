@@ -122,15 +122,15 @@ export async function adicionarNaSacola() {
     localStorage.setItem("Sacola", JSON.stringify(respostaJson.carrinho));
   }
 
-  const imagemProduto =
-    produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
+  const imagemProduto = produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
   mostrarAnimacaoCarrinho(imagemProduto, produtoAtual.nome);
 
   fecharModal();
-  document.dispatchEvent(new CustomEvent("sacolaAtualizada"));
-  if (typeof atualizarContadorSacola === "function") {
-    atualizarContadorSacola();
+
+  if (typeof window.atualizarContadorCarrinho === "function") {
+    window.atualizarContadorCarrinho();
   }
+  document.dispatchEvent(new CustomEvent("sacolaAtualizada"));
 }
 
 export function mostrarAnimacaoCarrinho(imgProduto, nomeProduto) {
