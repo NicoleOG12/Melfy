@@ -85,3 +85,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnAdd = document.querySelector('.btn-add');
   if (btnAdd) btnAdd.addEventListener('click', adicionarNaSacola);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('blur-active');
+
+  const btnVoltar = document.getElementById('voltar-btn');
+  btnVoltar.addEventListener('click', () => {
+    window.history.back();
+  });
+});
