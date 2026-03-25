@@ -1,11 +1,14 @@
 const API_URL = "https://melfy-backend-production.up.railway.app";
 let produtoAtual = null;
+let precoUnitario = 0;
 
 export function openModal(produto, lojas, rotasCliente) {
   produtoAtual = produto;
 
   const idLojaProduto = parseInt(produto.id_loja);
-  const loja = lojas.find(l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto);
+  const loja = lojas.find(
+    l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto
+  );
 
   document.querySelector('.modal-img').src =
     produto.midia?.imagens?.[0]?.path || produto.foto || '';
@@ -16,7 +19,8 @@ export function openModal(produto, lojas, rotasCliente) {
 
   modalLogo.src = loja?.pfp || loja?.fotoPerfil || '';
   modalLogo.alt = loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja';
-  modalNomeLoja.textContent = loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja Desconhecida';
+  modalNomeLoja.textContent =
+    loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja Desconhecida';
 
   modalLogo.onclick = modalNomeLoja.onclick = function () {
     const idLoja = loja?.id_loja || loja?.idLoja;
@@ -31,11 +35,26 @@ export function openModal(produto, lojas, rotasCliente) {
   document.querySelector('.modal-description').textContent = produto.descricao || '';
 
   const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
+  precoUnitario = preco;
+
   document.querySelector('.modal-price').textContent =
     `R$ ${preco.toFixed(2).replace('.', ',')}`;
 
   document.getElementById('qtd-value').textContent = 1;
+
+  atualizarTotal();
+
   document.getElementById('product-modal').style.display = 'flex';
+}
+
+function atualizarTotal() {
+  const quantidade = parseInt(document.getElementById('qtd-value').textContent);
+  const total = quantidade * precoUnitario;
+
+  const totalElement = document.getElementById('total-price');
+  if (totalElement) {
+    totalElement.textContent = total.toFixed(2).replace('.', ',');
+  }
 }
 
 export function fecharModal() {
@@ -45,9 +64,13 @@ export function fecharModal() {
 export function alterarQuantidade(valor) {
   const qtdSpan = document.getElementById('qtd-value');
   let quantidade = parseInt(qtdSpan.textContent);
+
   quantidade += valor;
   if (quantidade < 1) quantidade = 1;
+
   qtdSpan.textContent = quantidade;
+
+  atualizarTotal();
 }
 
 export function autoResize(textarea) {
@@ -99,7 +122,8 @@ export async function adicionarNaSacola() {
     localStorage.setItem("Sacola", JSON.stringify(respostaJson.carrinho));
   }
 
-  const imagemProduto = produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
+  const imagemProduto =
+    produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
   mostrarAnimacaoCarrinho(imagemProduto, produtoAtual.nome);
 
   fecharModal();
