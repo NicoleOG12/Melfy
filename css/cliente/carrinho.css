@@ -248,20 +248,21 @@ aside  {
   padding: 16px 0;
   border: 0;
   display: block;
-  background-color: #1b9e52;
+  background-color: #573224;
   width: 100%;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 700;
   border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(27, 158, 82, 0.5);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.301);
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn-finalizar_compra:hover {
-  background: #0f6a39;
-  box-shadow: 0 8px 20px rgba(15, 106, 57, 0.7);
+  background: linear-gradient(135deg, #FFB400, #FFD600);
+  color: var(--cor-link);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.212);
 }
 
 .h3Novidades {

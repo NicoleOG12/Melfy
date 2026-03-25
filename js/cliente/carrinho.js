@@ -322,6 +322,33 @@ function atualizarFreteCompra(inicial = false) {
   if (inicial) calcularFrete();
 }
 
+// Função para aplicar máscara de CEP
+function aplicarMascaraCEP(input) {
+  input.addEventListener("input", () => {
+    let valor = input.value.replace(/\D/g, ""); // remove tudo que não é número
+    if (valor.length > 5) {
+      valor = valor.replace(/^(\d{5})(\d)/, "$1-$2"); // adiciona o hífen após 5 dígitos
+    }
+    input.value = valor;
+  });
+}
+
+// Aplica a máscara em todos os inputs com classe "cep"
+document.querySelectorAll(".cep").forEach(aplicarMascaraCEP);
+
+// Validação extra ao enviar o formulário
+const form = document.querySelector("form"); // seu formulário
+if (form) {
+  form.addEventListener("submit", (e) => {
+    const cepInput = document.querySelector(".cep");
+    if (!cepInput.value || cepInput.value.length !== 9) {
+      e.preventDefault();
+      alert("Por favor, preencha um CEP válido (XXXXX-XX).");
+      cepInput.focus();
+    }
+  });
+}
+
 // ============================================================
 // FINALIZAR COMPRA
 // ============================================================
@@ -526,12 +553,6 @@ btn.addEventListener("click", () => {
 
 const btnPix = document.getElementById("btn_pix");
 const modalPix = document.getElementById("modal_pix");
-
-btnPix.addEventListener("click", () => {
-  modalPix.style.height = (modalPix.style.height === "0px" || modalPix.style.height === "") 
-    ? modalPix.scrollHeight + "px" 
-    : "0px";
-});
 
 const modalCompra = document.getElementById("modal-compra-buy");
 const btnFechar = document.getElementById("fechar_modal");

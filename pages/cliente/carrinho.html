@@ -158,14 +158,9 @@
 
           <button class="opcaoP" id="btn_pix">
             <h3 class="titulo">Pix</h3>
-            <i class="fa-solid fa-angle-right"></i>
+            <input class="selecionar" type="checkbox">
           </button>
 
-          <div id="modal_pix" class="modal_tipo">
-            <button class="btn_pix">
-              Copie e Cole <i class="fa-regular fa-clone"></i>
-            </button>
-          </div>
         </div>
 
         <div class="info">
@@ -174,7 +169,7 @@
               <div class="titulo_btn">
                 <h4 class="titulo_menor">Calcule o frete</h4>
               </div>
-              <input type="text" class="cep" placeholder="CEP">
+              <input type="text" class="cep" placeholder="CEP" maxlength="9">
               <div class="dados">
                 <span>Valor:</span>
                 <span id="valor-frete">R$ 0,00</span>

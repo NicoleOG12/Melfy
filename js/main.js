@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Atualiza ao carregar, a cada 5s e ao alterar o localStorage
       atualizarContadorCarrinho();
       setInterval(atualizarContadorCarrinho, 5000);
       window.addEventListener('storage', e => {
