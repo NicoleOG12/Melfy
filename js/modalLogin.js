@@ -170,7 +170,7 @@ export function abrirModalLogin(tipoUsuario) {
         token = "tokenLoja";
         info = "infoLoja";
       } else if (tipoUsuario === "entregador") {
-        url = "http://localhost:8080/auth/signin";
+        url = "https://melfy-api-production.up.railway.app/auth/signin";
         nextPage = `https://melfy-entregador.vercel.app/`;
         token = "tokenDelivery";
         info = "infoDelivery";
