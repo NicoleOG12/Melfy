@@ -1,48 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Campos extras
   const content = {
-    cliente: {
-      fields: `
-        <div class="input">
-          <label>Telefone</label>
-          <input type="text" id="telefone" class="form-input">
-        </div>
-        <div class="input">
-          <label>CPF</label>
-          <input type="text" id="cpf" class="form-input">
-        </div>
-        <div class="input">
-          <label>Data de Nascimento</label>
-          <input type="date" id="dt_nasc" class="form-input">
-        </div>
-      `
+    cliente: { 
+      title: "Seja um Cliente Feliz!",
+      subtitle: "Crie sua conta e encomende os melhores doces da sua região.",
+      bgImage: "url('../../assents/img/Login/cliente1.png')"
+    },
+    confeiteira: { 
+      title: "Seja nossa Parceira!",
+      subtitle: "Cadastre-se para vender seus doces e expandir seu negócio.",
+      bgImage: "url('../../assents/img/Login/confeiteira1.png')"
+    },
+    entregador: { 
+      title: "Faça Parte da Frota!",
+      subtitle: "Cadastre-se para realizar entregas e aumentar sua renda.",
+      bgImage: "url('../../assents/img/Login/entregador2.png')"
     }
   }
 
-  const extraFields = document.getElementById("extraFields")
-  if (extraFields) {
-    extraFields.innerHTML = content.cliente.fields
-  }
+  let currentType = "cliente"
+  const typeCards = document.querySelectorAll(".type-card")
+  
+  typeCards.forEach(card => {
+    card.addEventListener("click", () => {
+      typeCards.forEach(c => c.classList.remove("active"))
+      card.classList.add("active")
+      currentType = card.dataset.type
 
-  // Máscaras
-  aplicarMascaras()
-  function aplicarMascaras() {
-    document.getElementById("cpf")?.addEventListener("input", (e) => {
-      let value = e.target.value.replace(/\D/g, "")
-      value = value.replace(/(\d{3})(\d)/, "$1.$2")
-      value = value.replace(/(\d{3})(\d)/, "$1.$2")
-      value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
-      e.target.value = value
-    })
+      const titleEl = document.getElementById("title")
+      const subtitleEl = document.getElementById("subtitle")
+      const leftPanel = document.getElementById("leftPanel")
 
-    document.getElementById("telefone")?.addEventListener("input", (e) => {
-      let value = e.target.value.replace(/\D/g, "")
-      value = value.replace(/^(\d{2})(\d)/g, "($1) $2")
-      value = value.replace(/(\d{5})(\d{4})$/, "$1-$2")
-      e.target.value = value
+      if (titleEl) titleEl.textContent = content[currentType].title
+      if (subtitleEl) subtitleEl.textContent = content[currentType].subtitle
+      if (leftPanel) leftPanel.style.backgroundImage = content[currentType].bgImage
     })
-  }
+  })
+
+
 
   document.querySelectorAll(".fa-eye").forEach(icon => {
     icon.addEventListener("click", () => {
@@ -57,37 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  let currentStep = 0
-  const steps = document.querySelectorAll(".step")
-  const progress = document.getElementById("progress")
 
-  function showStep(index) {
-    steps.forEach((step, i) => {
-      step.classList.toggle("active", i === index)
-    })
-    if (progress) {
-      progress.style.width = ((index + 1) / steps.length) * 100 + "%"
-    }
-  }
-  showStep(0)
-
-  document.querySelectorAll(".next[type='button']").forEach(btn => {
-    btn.onclick = () => {
-      if (currentStep < steps.length - 1) {
-        currentStep++
-        showStep(currentStep)
-      }
-    }
-  })
-
-  document.querySelectorAll(".prev").forEach(btn => {
-    btn.onclick = () => {
-      if (currentStep > 0) {
-        currentStep--
-        showStep(currentStep)
-      }
-    }
-  })
 
   const form = document.getElementById("mainForm")
   if (form) {
@@ -107,10 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("email")?.value.trim() || ""
       const senha = document.getElementById("senha")?.value.trim() || ""
       const senhaCon = document.getElementById("senhaCon")?.value.trim() || ""
-      const telefone = document.getElementById("telefone")?.value.trim() || ""
-      const cpf = document.getElementById("cpf")?.value.trim() || ""
-      const data_nasc = document.getElementById("dt_nasc")?.value.trim() || ""
-
       function resetButton() {
         submitBtn.disabled = false
         submitBtn.textContent = originalText
@@ -128,30 +89,30 @@ document.addEventListener("DOMContentLoaded", () => {
         return
       }
 
-      if (!telefone || !cpf || !data_nasc) {
-        alert("Preencha todos os campos!")
-        resetButton()
-        return
-      }
-
       const dados = {
         nome,
-        telefone: telefone.replace(/\D/g, ""),
         email,
-        cpf: cpf.replace(/\D/g, ""),
-        data_nasc,
-        senha
+        senha,
+        telefone: "11999999999",
+        cpf: "00000000000",
+        data_nasc: "2000-01-01"
       }
 
       try {
-        await cadastrar(dados)
-        const logado = await logarComRetry(email, senha)
+        await cadastrar(dados, currentType)
+        const logado = await logarComRetry(email, senha, currentType)
         if (!logado) {
           resetButton()
           return
         }
         alert(`Cadastro realizado com sucesso! Bem-vindo(a) ao Melfy`)
-        window.location.href = "../../pages/cliente/doces.html"
+        if (currentType === "cliente") {
+          window.location.href = "../../pages/cliente/doces.html"
+        } else if (currentType === "confeiteira") {
+          window.location.href = "../../pages/confeiteira/home.html" // Atualizar 
+        } else {
+          window.location.href = "../../pages/entregador/home.html" // Atualizar 
+        }
       } catch (err) {
         alert(err.message)
         resetButton()
@@ -159,9 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  async function cadastrar(dados) {
+  async function cadastrar(dados, tipo) {
+    let endpoint = "clientes"
+    if (tipo === "confeiteira") endpoint = "confeiteiras"
+    if (tipo === "entregador") endpoint = "entregadores"
+
     const res = await fetch(
-      "https://melfy-backend-production.up.railway.app/clientes",
+      `https://melfy-backend-production.up.railway.app/${endpoint}`,
       { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dados) }
     )
     const retorno = await res.json()
@@ -169,26 +134,32 @@ document.addEventListener("DOMContentLoaded", () => {
     return retorno
   }
 
-  async function logar(email, senha) {
+  async function logar(email, senha, tipo) {
+    let endpoint = "clientes"
+    if (tipo === "confeiteira") endpoint = "confeiteiras"
+    if (tipo === "entregador") endpoint = "entregadores"
+
     const res = await fetch(
-      "https://melfy-backend-production.up.railway.app/clientes/login",
+      `https://melfy-backend-production.up.railway.app/${endpoint}/login`,
       { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, senha }) }
     )
     const data = await res.json()
     if (data.error === false) {
       const token = data.token || data.accessToken
       if (!token || !data.dados) return false
-      localStorage.setItem("tokenCliente", token)
-      localStorage.setItem("infoCliente", JSON.stringify(data.dados))
+      
+      const capitalizedType = tipo.charAt(0).toUpperCase() + tipo.slice(1)
+      localStorage.setItem("token" + capitalizedType, token)
+      localStorage.setItem("info" + capitalizedType, JSON.stringify(data.dados))
       return true
     }
     return false
   }
 
-  async function logarComRetry(email, senha) {
+  async function logarComRetry(email, senha, tipo) {
     const tentativas = 5
     for (let i = 0; i < tentativas; i++) {
-      const sucesso = await logar(email, senha)
+      const sucesso = await logar(email, senha, tipo)
       if (sucesso) return true
       await new Promise(resolve => setTimeout(resolve, 700))
     }

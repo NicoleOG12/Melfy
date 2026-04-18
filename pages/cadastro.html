@@ -44,63 +44,41 @@
           </div>
         </div>
 
-        <div class="progress">
-          <div class="progress-bar" id="progress"></div>
-        </div>
-
-        <form id="mainForm" onsubmit="event.preventDefault()">
+        <form id="mainForm" onsubmit="event.preventDefault()" autocomplete="off">
 
           <div class="step active">
-            <h2>1. Dados de Acesso</h2>
+            <h2>Crie sua conta</h2>
 
             <div class="input">
               <label>Nome Completo</label>
-              <input type="text" required placeholder="Digite seu nome" class="form-input" id="nome">
+              <input type="text" required placeholder="Digite seu nome" class="form-input" id="nome" autocomplete="new-password">
             </div>
 
             <div class="input">
               <label>Email</label>
-              <input type="email" required placeholder="exemplo@email.com" class="form-input" id="email">
+              <input type="email" required placeholder="exemplo@email.com" class="form-input" id="email" autocomplete="new-password">
             </div>
 
             <div class="input">
               <label>Senha</label>
-              <input type="password" required placeholder="Sua senha" class="form-input" id="senha">
+              <input type="password" required placeholder="Sua senha" class="form-input" id="senha" autocomplete="new-password">
               <i class="fa-regular fa-eye"></i>
             </div>
 
             <div class="input">
               <label>Confirmar Senha</label>
-              <input type="password" required placeholder="Confirme sua senha" class="form-input" id="senhaCon">
+              <input type="password" required placeholder="Confirme sua senha" class="form-input" id="senhaCon" autocomplete="new-password">
               <i class="fa-regular fa-eye"></i>
             </div>
 
             <div class="buttons">
               <span></span>
-              <button type="button" class="next">
-                Próximo <i class="fa-solid fa-arrow-right"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="step">
-            <h2>2. Informações Específicas</h2>
-
-            <div id="extraFields"></div>
-
-            <div class="buttons">
-              <button type="button" class="prev">
-                <i class="fa-solid fa-arrow-left"></i> Voltar
-              </button>
-
               <button type="submit" class="next">
                 Finalizar Cadastro
               </button>
             </div>
           </div>
-
         </form>
-
       </div>
     </div>
   </div>

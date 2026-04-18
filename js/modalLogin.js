@@ -35,11 +35,11 @@ export function abrirModalLogin(tipoUsuario) {
               <div class="input-group">
                 <div class="input-container">
                   <i class="fa-solid fa-envelope icon"></i>
-                  <input type="email" placeholder="E-mail" id="emailLogin" name="email" autocomplete="off" />
+                  <input type="email" placeholder="E-mail" id="emailLogin" name="email" autocomplete="username" />
                 </div>
                 <div class="input-container">
                   <i class="fa-solid fa-lock icon"></i>
-                  <input type="password" placeholder="Senha" id="senhaLogin" class="input-pass" name="senha" autocomplete="off" />
+                  <input type="password" placeholder="Senha" id="senhaLogin" class="input-pass" name="senha" autocomplete="current-password" />
                   <button type="button" class="visible-pass" id="togglePassword" aria-label="Mostrar senha">
                     <i class="fa-regular fa-eye"></i>
                   </button>
@@ -69,8 +69,13 @@ export function abrirModalLogin(tipoUsuario) {
   const modal = modalOverlay.querySelector('.login-modal');
   const emailInput = modal.querySelector("#emailLogin");
   const senhaInput = modal.querySelector("#senhaLogin");
-  if (emailInput) emailInput.value = "";
-  if (senhaInput) senhaInput.value = "";
+  if (emailInput) { emailInput.value = ""; }
+  if (senhaInput) { senhaInput.value = ""; }
+  
+  setTimeout(() => {
+    if (emailInput && !emailInput.matches(':focus')) emailInput.value = "";
+    if (senhaInput && !senhaInput.matches(':focus')) senhaInput.value = "";
+  }, 50);
 
   const imagens = modal.querySelectorAll('.image-slider img');
   const dotsContainer = modal.querySelector('.slider-indicadores');
