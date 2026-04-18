@@ -49,11 +49,9 @@
 <h2>🍯 Time Melfy</h2>
 <p>Feito com carinho por um time de abelhinhas dedicadas:<br></p>
 <ul>
+  <li>🐝<a href="https://github.com/beatrizpratessantos" target="_blank" rel="noopener noreferrer">Beatriz Prates Santos</a></li>
   <li>🐝<a href="https://github.com/EmillyBudriBognar" target="_blank" rel="noopener noreferrer">Emilly Budri Bognar </a></li>
   <li>🐝<a href="https://github.com/iris-oli" target="_blank" rel="noopener noreferrer">Íris Oliveira Santos</a></li>
-  <li>🐝<a href="https://github.com/IsahApoli" target="_blank" rel="noopener noreferrer">Isabella Apolinario dos Santos</a></li>
-  <li>🐝<a href="https://github.com/Laura677" target="_blank" rel="noopener noreferrer">Laura Cristini da Silva</a></li>
-  <li>🐝<a href="https://github.com/linsjulia" target="_blank" rel="noopener noreferrer">Júlia Lins Pereira da Silva</a></li>
   <li>🐝<a href="https://github.com/NicoleOG12" target="_blank" rel="noopener noreferrer">Nicole Oliveira Gonçalves</a></li>
   <li>🐝<a href="https://github.com/stela-sm" target="_blank" rel="noopener noreferrer">Stela dos Santos Montenegro </a></li>
 </ul>
