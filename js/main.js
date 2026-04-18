@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="footer-grid">
             <div class="footer-brand">
               <div class="footer-logo">
-                <img src="${baseURL}assents/img/Geral/Melfy-versão final.svg" alt="Logo" class="footer-logo-image" />
+                <img src="${baseURL}assents/img/Logo/Melfy-versão final.svg" alt="Logo" class="footer-logo-image" />
               </div>
               <p class="footer-description">
                 Conectamos você aos melhores confeiteiros da sua região. Descubra sabores únicos e experiências doces inesquecíveis.
