@@ -28,8 +28,8 @@ function exibirInformacoes() {
   document.getElementById("nome-input").value = usuarioAtual.nome.split(" ")[0] || "";
   document.getElementById("sobrenome-input").value = usuarioAtual.nome.trim().split(" ").slice(1).join(" ") || "";
   document.getElementById("email-input").value = usuarioAtual.email || "";
-  document.getElementById("celular-input").value = usuarioAtual.telefone || "";
-  document.getElementById("cpf-input").value = usuarioAtual.cpf || "";
+  document.getElementById("celular-input").value = formatarCelular(usuarioAtual.telefone || "");
+  document.getElementById("cpf-input").value = formatarCPF(usuarioAtual.cpf || "");
   document.getElementById("dataNascimento-input").value = dataISO(usuarioAtual.data_nasc) || "";
 }
 
@@ -75,7 +75,7 @@ function salvarDados() {
 
 window.habilitarEdicao = function() {
   const botao = document.getElementById('botao-editar');
-  const campos = ["nome-input","sobrenome-input","email-input","celular-input","cpf-input","dataNascimento-input"];
+  const campos = ["nome-input","sobrenome-input","email-input","celular-input"];
 
   if (botao.textContent === "Editar") {
     botao.textContent = "Salvar";
@@ -122,4 +122,173 @@ function dataISO(dataISO) {
   const ano = data.getFullYear();
 
   return `${dia}/${mes}/${ano}`;
+}
+
+function formatarCelular(v) {
+  if (!v) return "";
+  v = v.replace(/\D/g, "");
+  v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+  v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+  return v;
+}
+
+function formatarCPF(v) {
+  if (!v) return "";
+  v = v.replace(/\D/g, "");
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d)/, "$1.$2");
+  v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return v;
+}
+
+function formatarCEP(v) {
+  if (!v) return "";
+  v = v.replace(/\D/g, "");
+  if (v.length > 5) v = v.replace(/^(\d{5})(\d)/, "$1-$2");
+  return v;
+}
+
+function formatarCartao(v) {
+  if (!v) return "";
+  v = v.replace(/\D/g, "");
+  return v.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+function formatarValidade(v) {
+  if (!v) return "";
+  v = v.replace(/\D/g, "");
+  if(v.length > 2) v = v.replace(/^(\d{2})(\d)/, "$1/$2");
+  return v.substring(0, 5);
+}
+
+window.mostrarSecao = function(secao) {
+  document.getElementById('secao-dados').style.display = (secao === 'dados') ? 'block' : 'none';
+  document.getElementById('secao-enderecos').style.display = (secao === 'enderecos') ? 'block' : 'none';
+  
+  const secaoPagamentos = document.getElementById('secao-pagamentos');
+  if (secaoPagamentos) {
+    secaoPagamentos.style.display = (secao === 'pagamentos') ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.perfil-menu .menu-item').forEach(el => {
+    el.classList.remove('active-menu');
+  });
+
+  const activeMenu = document.getElementById(`menu-${secao}`);
+  if (activeMenu) {
+    activeMenu.classList.add('active-menu');
+  }
+}
+
+window.habilitarEdicaoEndereco = function() {
+  const botao = document.getElementById('botao-editar-endereco');
+  const campos = ["cep-input","rua-input","numero-input","complemento-input","bairro-input","cidade-input"];
+
+  if (botao.textContent === "Editar Endereço") {
+    botao.textContent = "Salvar Endereço";
+    botao.style.backgroundColor = "green";
+    campos.forEach(id => {
+      const campo = document.getElementById(id);
+      if(campo) {
+        campo.disabled = false;
+        campo.classList.add("editando");
+      }
+    });
+  } else {
+    botao.textContent = "Editar Endereço";
+    botao.style.backgroundColor = "";
+    campos.forEach(id => {
+      const campo = document.getElementById(id);
+      if(campo) {
+        campo.disabled = true;
+        campo.classList.remove("editando");
+      }
+    });
+    alert("Endereço salvo com sucesso!");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const celularInput = document.getElementById("celular-input");
+  if(celularInput) celularInput.addEventListener("input", e => e.target.value = formatarCelular(e.target.value));
+
+  const cpfInput = document.getElementById("cpf-input");
+  if(cpfInput) cpfInput.addEventListener("input", e => e.target.value = formatarCPF(e.target.value));
+
+  const numCartao = document.getElementById("numero-cartao-modal");
+  if(numCartao) numCartao.addEventListener("input", e => e.target.value = formatarCartao(e.target.value).substring(0, 19));
+
+  const valCartao = document.getElementById("validade-cartao-modal");
+  if(valCartao) valCartao.addEventListener("input", e => e.target.value = formatarValidade(e.target.value));
+
+  const cvvCartao = document.getElementById("cvv-cartao-modal");
+  if(cvvCartao) cvvCartao.addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "");
+      e.target.value = v.substring(0, 4);
+  });
+
+  const cepInput = document.getElementById('cep-input');
+  if(cepInput) {
+    cepInput.addEventListener('blur', function() {
+      let cep = this.value.replace(/\D/g, '');
+      if (cep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              document.getElementById('rua-input').value = data.logradouro || '';
+              document.getElementById('bairro-input').value = data.bairro || '';
+              document.getElementById('cidade-input').value = `${data.localidade} / ${data.uf}` || '';
+              document.getElementById('numero-input').focus();
+            }
+          })
+          .catch(err => console.error("Erro ao buscar CEP", err));
+      }
+    });
+
+    cepInput.addEventListener('input', function(e) {
+      e.target.value = formatarCEP(e.target.value).substring(0, 9);
+    });
+  }
+});
+
+window.abrirModalPagamento = function() {
+  document.getElementById("modal-pagamento").style.display = "flex";
+  document.getElementById("numero-cartao-modal").value = "";
+  document.getElementById("validade-cartao-modal").value = "";
+  document.getElementById("cvv-cartao-modal").value = "";
+  document.getElementById("titular-cartao-modal").value = "";
+  document.getElementById("chave-pix-modal").value = "";
+}
+
+window.fecharModalPagamento = function(salvar) {
+  document.getElementById("modal-pagamento").style.display = "none";
+  if (salvar === true) {
+    alert("Forma de pagamento salva com sucesso!");
+
+    document.getElementById("empty-pagamentos").style.display = "none";
+  }
+}
+
+window.selecionarTipoPagamento = function(elemento, tipo) {
+  document.querySelectorAll('.pay-option').forEach(el => el.classList.remove('active'));
+  elemento.classList.add('active');
+
+  const subOpcoesVoucher = document.getElementById("sub-opcoes-voucher");
+  const subOpcoesVale = document.getElementById("sub-opcoes-vale");
+
+  if(subOpcoesVoucher) subOpcoesVoucher.style.display = "none";
+  if(subOpcoesVale) subOpcoesVale.style.display = "none";
+
+  if (tipo === "voucher") {
+    if(subOpcoesVoucher) subOpcoesVoucher.style.display = "block";
+  } else if (tipo === "vale") {
+    if(subOpcoesVale) subOpcoesVale.style.display = "block";
+  }
+}
+
+window.selecionarSubBadge = function(elemento) {
+  const container = elemento.parentElement;
+  container.querySelectorAll('.pay-sub-badge').forEach(el => el.classList.remove('active'));
+  elemento.classList.add('active');
 }

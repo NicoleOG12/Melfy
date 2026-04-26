@@ -250,7 +250,6 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(83, 21, 21, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -459,7 +458,6 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   background: linear-gradient(135deg, #FFB400, #FFD600);
   box-shadow: 0 8px 20px var(--shadow);
 }
-
 
 .animacao-carrinho {
   position: fixed;

@@ -77,14 +77,14 @@
   stroke-width: 2;
 }
 
-.menu-item:hover {
+.menu-item:hover, .menu-item.active-menu {
   background: var(--accent-yellow-3);
   color: white;
   border-color: #eab72c;
   box-shadow: 0 0 8px rgba(247, 184, 37, 0.55); 
 }
 
-.menu-item:hover i {
+.menu-item:hover i, .menu-item.active-menu i {
   color: white;
 }
 
