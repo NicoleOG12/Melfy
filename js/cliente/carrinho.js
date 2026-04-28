@@ -186,7 +186,7 @@ async function alterarQuantidadeSacola(index, delta) {
     atualizarTotal();
 
   } catch (err) {
-    alert("Não foi possível atualizar a quantidade no servidor.");
+    alertError("Não foi possível atualizar a quantidade no servidor.");
     console.error(err);
     await carregarSacola();
   }
@@ -219,7 +219,7 @@ window.removerItem = async function (index) {
     renderizarCarrinhoCarrinhoAPI(sacola);
     atualizarTotal();
   } catch (err) {
-    alert("Não foi possível remover o item do carrinho.");
+    alertError("Não foi possível remover o item do carrinho.");
     console.error(err);
     await carregarSacola();
   }
@@ -343,26 +343,20 @@ if (form) {
     const cepInput = document.querySelector(".cep");
     if (!cepInput.value || cepInput.value.length !== 9) {
       e.preventDefault();
-      alert("Por favor, preencha um CEP válido (XXXXX-XX).");
-      cepInput.focus();
-    }
-  });
-}
-
-// ============================================================
+      alertWarning("Por favor, preencha um CEP válido (XXXXX-XX).");
 // FINALIZAR COMPRA
 // ============================================================
 async function finalizarCompra() {
   try {
     const token = localStorage.getItem("tokenCliente");
     if (!token) {
-      alert("Você precisa estar logado para finalizar a compra.");
+      alertWarning("Você precisa estar logado para finalizar a compra.");
       return;
     }
 
     let sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
     if (!sacola.length) {
-      alert("Sua sacola está vazia.");
+      alertWarning("Sua sacola está vazia.");
       return;
     }
 
@@ -394,11 +388,11 @@ async function finalizarCompra() {
     const data = await res.json();
     if (!res.ok || data.error) {
       console.error("Erro:", data);
-      alert("Erro ao finalizar compra.");
+      alertError("Erro ao finalizar compra.");
       return;
     }
 
-    alert("Pedido criado com sucesso!");
+    alertSuccess("Pedido criado com sucesso!");
 
     for (const item of sacola) {
       await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
@@ -420,7 +414,7 @@ async function finalizarCompra() {
     fecharModalCompra();
   } catch (err) {
     console.error(err);
-    alert("Erro inesperado ao finalizar compra.");
+    alertError("Erro inesperado ao finalizar compra.");
   }
 }
 window.finalizarCompra = finalizarCompra;

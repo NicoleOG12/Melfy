@@ -239,13 +239,13 @@ async function adicionarAoCarrinho(idProduto) {
     console.log(data);
 
     if (res.ok) {
-      alert(data.message || "Produto adicionado ao carrinho!");
+      alertSuccess(data.message || "Produto adicionado ao carrinho!");
     } else {
-      alert("Para adicionar produtos ao carrinho, faça login primeiro.");
+      alertWarning("Para adicionar produtos ao carrinho, faça login primeiro.");
     }
   } catch (erro) {
     console.error("Erro em adicionarAoCarrinho:", erro);
-    alert("Faça login para adicionar produtos ao carrinho.");
+    alertWarning("Faça login para adicionar produtos ao carrinho.");
   }
 }
 

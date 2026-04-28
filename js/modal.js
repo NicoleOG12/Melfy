@@ -81,12 +81,12 @@ export function autoResize(textarea) {
 export async function adicionarNaSacola() {
   const usuarioLogado = JSON.parse(localStorage.getItem("infoCliente")) || null;
   if (!usuarioLogado) {
-    alert("Você precisa estar logado para adicionar produtos à cesta.");
+    alertWarning("Você precisa estar logado para adicionar produtos à cesta.");
     return;
   }
 
   if (!produtoAtual || !produtoAtual.id_produto) {
-    alert("Produto não encontrado ou sem ID válido.");
+    alertError("Produto não encontrado ou sem ID válido.");
     return;
   }
 
@@ -109,12 +109,12 @@ export async function adicionarNaSacola() {
 
     if (!resposta.ok) {
       console.error("Erro API:", respostaJson);
-      alert("Erro ao adicionar o produto ao carrinho.");
+      alertError("Erro ao adicionar o produto ao carrinho.");
       return;
     }
   } catch (err) {
     console.error("Falha ao conectar API:", err);
-    alert("Não foi possível adicionar ao carrinho agora.");
+    alertError("Não foi possível adicionar ao carrinho agora.");
     return;
   }
 

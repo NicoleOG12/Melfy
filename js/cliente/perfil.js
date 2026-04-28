@@ -70,7 +70,7 @@ function salvarDados() {
     localStorage.setItem("confeiteiraLogada", JSON.stringify(usuarioAtualizado));
   }
 
-  alert("Dados atualizados com sucesso!");
+  alertSuccess("Dados atualizados com sucesso!");
 }
 
 window.habilitarEdicao = function() {
@@ -97,10 +97,10 @@ window.habilitarEdicao = function() {
   }
 }
 
-window.sairConta = function() {
+window.sairConta = async function() {
   localStorage.removeItem("tokenCliente");
   localStorage.removeItem("infoCliente");
-  alert("Você realizou o Logout. Até breve!");
+  await alertSuccess("Logout realizado com sucesso. Até breve!");
   window.location.href = rotasGerais.home;
 }
 
@@ -204,7 +204,7 @@ window.habilitarEdicaoEndereco = function() {
         campo.classList.remove("editando");
       }
     });
-    alert("Endereço salvo com sucesso!");
+    alertSuccess("Endereço salvo com sucesso!");
   }
 }
 
@@ -264,7 +264,7 @@ window.abrirModalPagamento = function() {
 window.fecharModalPagamento = function(salvar) {
   document.getElementById("modal-pagamento").style.display = "none";
   if (salvar === true) {
-    alert("Forma de pagamento salva com sucesso!");
+    alertSuccess("Forma de pagamento salva com sucesso!");
 
     document.getElementById("empty-pagamentos").style.display = "none";
   }

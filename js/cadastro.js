@@ -78,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (!nome || !email || !senha || !senhaCon) {
-        alert("Preencha nome, email e senha!")
+        alertError("Preencha nome, email e senha!")
         resetButton()
         return
       }
 
       if (senha !== senhaCon) {
-        alert("As senhas não coincidem!")
+        alertError("As senhas não coincidem!")
         resetButton()
         return
       }
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
           resetButton()
           return
         }
-        alert(`Cadastro realizado com sucesso! Bem-vindo(a) ao Melfy`)
+        await alertSuccess(`Cadastro realizado com sucesso! Bem-vindo(a), ${nome.split(" ")[0] || nome}!`)
         if (currentType === "cliente") {
           window.location.href = "../../pages/cliente/doces.html"
         } else if (currentType === "confeiteira") {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
           window.location.href = "../../pages/entregador/home.html" // Atualizar 
         }
       } catch (err) {
-        alert(err.message)
+        alertError(err.message || "Erro ao cadastrar")
         resetButton()
       }
     })
