@@ -4,6 +4,15 @@
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
+      .swal2-container {
+        z-index: 100001 !important;
+      }
+      .swal2-popup {
+        z-index: 100002 !important;
+      }
+      .swal2-backdrop-show {
+        z-index: 100000 !important;
+      }
       .swal2-melfy-popup {
         border-radius: 24px;
         background: linear-gradient(180deg, #fff9f1 0%, #fff1d0 100%);
@@ -42,6 +51,7 @@
       title: options.title || '',
       html: `<div class="swal2-melfy-content">${(message || '').toString()}</div>`,
       icon: options.icon || 'info',
+      zIndex: options.zIndex || 99999,
       showCancelButton: options.showCancelButton || false,
       confirmButtonText: options.confirmButtonText || 'OK',
       cancelButtonText: options.cancelButtonText || 'Cancelar',

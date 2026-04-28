@@ -5,10 +5,16 @@ let precoUnitario = 0;
 export function openModal(produto, lojas, rotasCliente) {
   produtoAtual = produto;
 
-  const idLojaProduto = parseInt(produto.id_loja);
-  const loja = lojas.find(
+  const idLojaProduto = parseInt(produto.id_loja ?? produto.idLoja);
+  const lojaEncontrada = lojas.find(
     l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto
   );
+  const loja = lojaEncontrada || {
+    id_loja: idLojaProduto,
+    idLoja: idLojaProduto,
+    nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || 'Loja Desconhecida',
+    pfp: produto.pfp || produto.logoLoja || produto.logo_loja || produto.fotoPerfil || ''
+  };
 
   document.querySelector('.modal-img').src =
     produto.midia?.imagens?.[0]?.path || produto.foto || '';

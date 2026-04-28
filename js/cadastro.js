@@ -89,12 +89,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return
       }
 
+      function gerarCpfAleatorio() {
+        const numeros = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+        const calcularDigito = (pesoInicial, arr) => {
+          const soma = arr.reduce((total, valor, i) => total + valor * (pesoInicial - i), 0);
+          const resto = soma % 11;
+          return resto < 2 ? 0 : 11 - resto;
+        };
+
+        const digito1 = calcularDigito(10, numeros);
+        const digito2 = calcularDigito(11, [...numeros, digito1]);
+        return [...numeros, digito1, digito2].join('');
+      }
+
       const dados = {
         nome,
         email,
         senha,
         telefone: "11999999999",
-        cpf: "00000000000",
+        cpf: gerarCpfAleatorio(),
         data_nasc: "2000-01-01"
       }
 

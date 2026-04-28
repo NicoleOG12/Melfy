@@ -344,6 +344,11 @@ if (form) {
     if (!cepInput.value || cepInput.value.length !== 9) {
       e.preventDefault();
       alertWarning("Por favor, preencha um CEP válido (XXXXX-XX).");
+      return;
+    }
+  });
+}
+
 // FINALIZAR COMPRA
 // ============================================================
 async function finalizarCompra() {
@@ -474,11 +479,13 @@ function renderizarProdutosAleatorios(produtos, lojas) {
     .slice(0, 5);
 
   produtosAleatorios.forEach(produto => {
-    const lojaEncontrada = lojas.find(l => l.id_loja == produto.id_loja);
-    const loja = {
-      id: produto.id_loja,
-      nome: produto.loja_nome,
-      pfp: produto.pfp
+    const lojaEncontrada = lojas.find(
+      l => String(l.id_loja) === String(produto.id_loja) || String(l.idLoja) === String(produto.id_loja)
+    );
+    const loja = lojaEncontrada || {
+      id: produto.id_loja || produto.idLoja,
+      nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || 'Loja',
+      pfp: produto.pfp || produto.logoLoja || produto.logo_loja || ''
     };
 
     const card = document.createElement('div');

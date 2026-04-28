@@ -67,7 +67,7 @@
     <h3 class="h3Novidades">Peça também</h3>
     <div class="cards-wrapper"></div>
 
-    <div class="modal-overlay" id="product-modal">
+    <section class="modal-overlay" id="product-modal">
       <div class="modal-content">
         <button class="modal-close" onclick="fecharModal()">×</button>
 
@@ -87,6 +87,7 @@
           <p class="modal-description"></p>
           <p class="modal-peso"></p>
           <p class="modal-price"></p>
+          <p class="modal-total">Total: R$ <span id="total-price"></span></p>
 
           <div class="modal-actions">
             <div class="modal-quantity">
@@ -98,7 +99,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
       <div class="animacao-conteudo">
