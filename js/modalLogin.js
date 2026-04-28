@@ -138,6 +138,13 @@ export function abrirModalLogin(tipoUsuario) {
   });
 
   const btnLogin = modal.querySelector("#btnLogin");
+
+  function obterNomeUsuario(dados) {
+    if (!dados) return 'amigo';
+    const usuario = Array.isArray(dados) ? dados[0] : dados;
+    return usuario?.nome || usuario?.nome_loja || usuario?.nomeLoja || usuario?.razaoSocial || 'amigo';
+  }
+
   btnLogin.addEventListener("click", async () => {
     if (btnLogin.disabled) return;
 
@@ -167,7 +174,7 @@ export function abrirModalLogin(tipoUsuario) {
       } else if (tipoUsuario === "entregador") {
         localStorage.setItem("tokenEntregador", "tokenSimulado");
         localStorage.setItem("infoEntregador", JSON.stringify({ nome: "Entregador Simulado" }));
-        alert("Login efetuado com sucesso!");
+        await alertSuccess("Bem-vindo de volta, Entregador Simulado!");
         window.location.href = "https://melfy-entregador.vercel.app/";
         return;
       } else {
@@ -186,26 +193,32 @@ export function abrirModalLogin(tipoUsuario) {
       const data = await res.json();
 
       if (data.error === false) {
+        const nomeUsuario = obterNomeUsuario(data.dados);
+        const mensagemSucesso = tipoUsuario === "cliente"
+          ? `Bem-vindo de volta, ${nomeUsuario}!`
+          : `Seja bem-vindo(a), ${nomeUsuario}!`;
+
         if (tipoUsuario === "confeiteira") {
           const params = new URLSearchParams();
           params.set("token", data.token);
           params.set("info", encodeURIComponent(JSON.stringify(data.dados)));
-          
-          alert("Login efetuado com sucesso!");
+
+          await alertSuccess(mensagemSucesso);
           window.location.href = nextPage + "#" + params.toString();
         } else {
           localStorage.setItem(token, data.token);
           localStorage.setItem(info, JSON.stringify(data.dados));
-          alert("Login efetuado com sucesso!");
+          await alertSuccess(mensagemSucesso);
           window.location.href = nextPage;
         }
       } else {
-        alert(data.mensagem);
+        await alertError(data.mensagem || 'Não foi possível efetuar login.');
         btnLogin.disabled = false;
         btnLogin.textContent = originalText;
       }
     } catch (error) {
       console.error("Erro no login:", error);
+      await alertError("Falha ao conectar. Tente novamente.");
       btnLogin.disabled = false;
       btnLogin.textContent = originalText;
     }
