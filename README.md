@@ -19,7 +19,7 @@
   <li>HTML5 🍪</li>
   <li>CSS3 🍫</li>
   <li>JavaScript 🍭</li>
-  <li>JSON 🍬 (para armazenar e gerenciar os dados)</li>
+  <li>JSON 🍬 (para gerenciar os dados)</li>
 </ul>
 
 <hr>
