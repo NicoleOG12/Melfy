@@ -134,7 +134,7 @@
                 </div>
             </div>
 
-            <div class="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="products-grid">
+            <div class="hidden md:flex cards-wrapper-home" id="products-grid">
                 <!-- Os produtos serão inseridos aqui via JavaScript -->
             </div>
 
@@ -247,11 +247,51 @@
         </div>
     </section>
 
+    <!-- Modal do Produto (idêntico ao da seção de doces) -->
+    <section class="modal-overlay" id="product-modal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="fecharModal()">×</button>
+        <img src="" alt="" class="modal-img" />
+        <div class="modal-info">
+          <div class="modal-header">
+            <div class="modal-loja">
+              <img src="" alt="Logo da loja" class="modal-logo" />
+              <span class="modal-nome-loja"></span>
+              <span class="modal-avaliacoes">★ 4.8</span>
+            </div>
+          </div>
+          <h2 class="modal-title"></h2>
+          <p class="modal-subtitulo"></p>
+          <p class="modal-description"></p>
+          <p class="modal-peso"></p>
+          <p class="modal-price"></p>
+          <p class="modal-total">Total: R$ <span id="total-price"></span></p>
+          <div class="modal-actions">
+            <div class="modal-quantity">
+              <button onclick="alterarQuantidade(-1)" class="qtd-btn">-</button>
+              <span id="qtd-value">1</span>
+              <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
+            </div>
+            <button class="btn-add">Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animação do carrinho -->
+    <div id="carrinho-animacao" class="animacao-carrinho" style="display: none;">
+      <div class="animacao-conteudo">
+        <i class="fas fa-shopping-bag icone-sacola"></i>
+        <img id="img-doce-animado" class="img-doce-sacola" src="" alt="Doce" />
+        <p class="mensagem-sacola" id="mensagem-sacola">Produto adicionado à sacola!</p>
+      </div>
+    </div>
+
     <div id="footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/sweetalert.js"></script>
-    <script src="js/home.js"></script>
+    <script type="module" src="js/home.js"></script>
     <script type="module" src="./js/main.js"></script>
 </body>
 </html>

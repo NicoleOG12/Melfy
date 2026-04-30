@@ -1,33 +1,4 @@
-.product-card:hover .product-image {
-    transform: scale(1.05) rotate(1deg);
-}
-
-.heart-beat {
-    animation: heartBeat 1.5s ease-in-out infinite;
-}
-
-@keyframes heartBeat {
-    0% {
-        transform: scale(1);
-    }
-
-    14% {
-        transform: scale(1.1);
-    }
-
-    28% {
-        transform: scale(1);
-    }
-
-    42% {
-        transform: scale(1.1);
-    }
-
-    70% {
-        transform: scale(1);
-    }
-}
-
+/* ===== Carrossel Mobile ===== */
 .carousel-container {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -44,39 +15,28 @@
 .carousel-track {
     display: flex;
     gap: 1rem;
-    padding-bottom: 1rem;
+    padding: 0 1rem 1rem;
 }
 
 .carousel-slide {
     flex: 0 0 auto;
-    width: 85%;
+    width: 220px;
     scroll-snap-align: start;
 }
 
-.product-card {
+/* ===== Grid de Produtos na Home (idêntico ao cards-wrapper da seção de doces) ===== */
+.cards-wrapper-home {
     display: flex;
-    flex-direction: column;
-    height: 380px;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    flex-wrap: wrap;
+    gap: 50px 10px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 40px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-.product-card .card-image {
-    height: 180px;
-    overflow: hidden;
-}
-
-.product-card .card-content {
-    flex: 1;
-}
-
-.product-card .card-button {
-    margin-top: auto;
-}
-
+/* ===== Clamp de texto ===== */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
