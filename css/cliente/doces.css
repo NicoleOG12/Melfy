@@ -277,23 +277,52 @@ h3 {
 }
   
 .arrow.left {
-    left: 10px;
+  left: 10px;
 }
   
 .arrow.right {
-    right: 10px;
+  right: 10px;
 }
   
 .arrow:hover {
-    color: var(--cor-preco-icone);
+  color: var(--cor-preco-icone);
 }
-  
-.h3Novidades {
-    font-family: "Delius", cursive;
-    color: var(--cor-link);
-    font-size: 26px;
-    padding-left: 60px;
-    padding-top: 20px;
+
+.btn-ver-todos {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  margin-top: 10px;
+  margin-left: 60px;
+  gap: 6px;
+  background: rgba(255, 216, 104, 0.12);
+  color: var(--brown);
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 196, 61, 0.25);
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(4px);
+}
+
+.btn-ver-todos i {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s ease;
+}
+
+.btn-ver-todos:hover {
+  background: linear-gradient(90deg, var(--accent-yellow), var(--accent-yellow-2));
+  color: var(--brown-2);
+  box-shadow: 0 4px 12px rgba(255, 196, 61, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-ver-todos:hover i {
+  transform: translateX(3px);
 }
 
 @media (max-width: 768px) {

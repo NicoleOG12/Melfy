@@ -1,6 +1,5 @@
 import { rotasCliente } from "../rotas.js";
 import { openModal, adicionarNaSacola } from "../modal.js";
-import { filtrarProdutos } from "../pesquisa.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const API_URL = "https://melfy-backend-production.up.railway.app";
@@ -50,6 +49,28 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function formatarPreco(valor) {
     return parseFloat(valor).toFixed(2).replace(".", ",");
+  }
+
+  function normalizar(texto) {
+    return (texto || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function filtrarProdutos(lista, termoInput) {
+    const termo = normalizar(termoInput).trim();
+    if (!termo) return lista;
+
+    const palavras = termo.split(" ");
+
+    return lista.filter((produto) => {
+      const texto = normalizar(
+        (produto.nome || "") + " " + (produto.descricao || "")
+      );
+
+      return palavras.every((p) => texto.includes(p));
+    });
   }
 
   function renderizarProdutos(listaProdutos) {
@@ -108,45 +129,41 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  function scrollSuaveComOffset(element, offset = 120) {
+    const y =
+      element.getBoundingClientRect().top +
+      window.pageYOffset -
+      offset;
+
+    window.scrollTo({
+      top: y,
+      behavior: "smooth",
+    });
+  }
+
+  function executarBusca() {
+    const resultado = filtrarProdutos(
+      produtosOrdenados,
+      inputPesquisa.value
+    );
+    renderizarProdutos(resultado);
+    scrollSuaveComOffset(cardsWrapper);
+  }
+
   renderizarProdutos(produtosOrdenados);
 
   inputPesquisa.addEventListener("keyup", (e) => {
-    if (e.key === "Enter")
-      filtrarProdutos(
-        produtosOrdenados,
-        inputPesquisa,
-        renderizarProdutos,
-        cardsWrapper,
-        true,
-      );
+    if (e.key === "Enter") executarBusca();
   });
 
-  botaoPesquisa.addEventListener("click", () =>
-    filtrarProdutos(
-      produtosOrdenados,
-      inputPesquisa,
-      renderizarProdutos,
-      cardsWrapper,
-      true,
-    ),
-  );
+  botaoPesquisa.addEventListener("click", executarBusca);
 
   document.querySelectorAll(".categoria, .doce").forEach((item) => {
     item.addEventListener("click", () => {
       const categoria = item.querySelector("p").textContent.trim();
-
-      filtrarProdutos(
-        produtosOrdenados,
-        { value: categoria },
-        renderizarProdutos,
-        cardsWrapper,
-        true
-      );
-
-      cardsWrapper.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      const resultado = filtrarProdutos(produtosOrdenados, categoria);
+      renderizarProdutos(resultado);
+      scrollSuaveComOffset(cardsWrapper);
     });
   });
 
@@ -166,7 +183,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       <img src="${loja.pfp || loja.fotoPerfil}" 
            alt="${loja.nomeLoja || loja.loja_nome || loja.nome}" 
            class="logo-loja">
-
       <div class="info-loja">
         <h3>${loja.nomeLoja || loja.loja_nome || loja.nome}</h3>
         <p>${loja.descricao || "Confeitaria artesanal"}</p>
@@ -245,9 +261,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             ? dataCat.result
             : [];
           renderizarProdutos(produtosCat);
+          scrollSuaveComOffset(cardsWrapper);
         } catch (error) {
           console.error("Erro ao buscar produtos:", error);
         }
       });
+    });
+
+  const botaoVerTodos = document.getElementById("ver-todos");
+  botaoVerTodos.addEventListener("click", () => {
+    renderizarProdutos(produtosOrdenados);
+    scrollSuaveComOffset(cardsWrapper);
   });
 });
+
+lucide.createIcons();
