@@ -15,7 +15,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   --card-hover:#ffedb5;
   --accent-yellow:#FFD868;
   --accent-yellow-2:#FFC43D;
-  --accent-yellow-3:#f7b825;
+  --accent-yellow-3:#e8af2c;
   --brown:#6B3F2A;
   --brown-2:#4a2b1d;
   --brown-3:#8b5035a1;
@@ -83,7 +83,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 .cards-wrapper {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 50px 10px;
+  gap: 50px 30px;
   justify-content: center; 
   justify-items: center; 
   padding: 40px 100px;
@@ -92,8 +92,8 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .card {
-  width: 220px;
-  height: 320px; 
+  width: 250px;
+  height: 350px; 
   background: var(--card);
   border-radius: 12px;
   padding: 8px;
@@ -114,7 +114,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 
 .border-card {
   width: 100%;
-  height: 320px;
+  height: 350px;
   border: 2px solid var(--accent-yellow);
   border-radius: 16px;
   padding: 8px 0 0;
@@ -217,21 +217,35 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .btn-carrinho {
-  width: 100%;
-  background: linear-gradient(90deg, var(--accent-yellow), var(--accent-yellow-2));
+  background: linear-gradient(180deg, var(--accent-yellow), var(--accent-yellow-2));
+  color: var(--brown);
+  width: 225px;
+  max-width: 500px;
+  height: 35px;
+  margin: 6px auto 0;
+  margin-bottom: 15px;
   border: none;
-  padding: 8px 0;
-  border-radius: 0 0 var(--radius) var(--radius);
-  cursor: pointer;
+  border-radius: 12px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: "Nunito", sans-serif;
-  font-weight: 800;
-  color: var(--brown);
-  font-size: 16px;
-  transition: background var(--transition), box-shadow var(--transition), transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  transition: all .4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  box-shadow:
+    0 1px var(--accent-yellow-3),
+    0 2px var(--accent-yellow-3),
+    0 3px var(--accent-yellow-3),
+    0 4px var(--accent-yellow-3),
+    0 5px var(--accent-yellow-3),
+    0 6px var(--accent-yellow-3),
+    0 7px var(--accent-yellow-3),
+    0 10px var(--accent-yellow-3),
+    0 8px 8px rgba(0,0,0,0.25);
 }
 
 .btn-carrinho i {
@@ -239,9 +253,12 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 }
 
 .btn-carrinho:hover {
-  background: linear-gradient(145deg, #ffeab4, #ffdf91);
-  box-shadow: 0 0 12px rgba(255, 200, 100, 0.4);
-  transform: scale(1.02);
+  transform: translateY(6px);
+  box-shadow:
+    0 1px var(--accent-yellow-3),
+    0 2px var(--accent-yellow-3),
+    0 3px var(--accent-yellow-3),
+    0 3px 6px rgba(0,0,0,0.25);
 }
 
 .modal-overlay {
@@ -363,14 +380,14 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 .modal-price {
   color: #b36800;
   font-weight: 900;
-  font-size: 26px;
+  font-size: 22px;
   margin-top: -16px;
   text-shadow: 0 0 8px #ffbe3e88;
 }
 
 .modal-total {
   font-weight: 900;
-  font-size: 26px;
+  font-size: 24px;
   color: #8b4d00;
   margin-top: -35px;
   text-shadow: 0 0 6px #ffd27a66;
@@ -385,6 +402,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   margin-top: 10px;
   flex-wrap: wrap;
 }
+
 .modal-quantity {
   display: flex;
   align-items: center;
@@ -411,24 +429,49 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   color: #ffbf00;
 }
 
-.btn-add {
-  background: linear-gradient(90deg, var(--accent-yellow), var(--accent-yellow-2));
-  color: #5a3e00;
-  font-family: "Nunito", sans-serif;
+.btn-add{
+  background: linear-gradient(180deg, var(--accent-yellow), var(--accent-yellow-2));
+  color: var(--brown);
+  width: 220px;
+  max-width: 500px;
+  height: 45px;
+  margin: 6px auto 0;
+  margin-bottom: 15px;
   border: none;
   border-radius: 15px;
-  padding: 12px 28px;
-  font-weight: 700;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: var(--shadow);
-  margin-left: 40px;
-  user-select: none;
+  position: relative;
+  transition: all .4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  box-shadow:
+    0 1px var(--accent-yellow-3),
+    0 2px var(--accent-yellow-3),
+    0 3px var(--accent-yellow-3),
+    0 4px var(--accent-yellow-3),
+    0 5px var(--accent-yellow-3),
+    0 6px var(--accent-yellow-3),
+    0 7px var(--accent-yellow-3),
+    0 10px var(--accent-yellow-3),
+    0 8px 8px rgba(0,0,0,0.25);
+}
+
+.btn-add i {
+  font-size: 18px;
 }
 
 .btn-add:hover {
-  background-color: #ffda70;
-  box-shadow: 0 8px 18px #ffd66e;
+  transform: translateY(6px);
+  box-shadow:
+    0 1px var(--accent-yellow-3),
+    0 2px var(--accent-yellow-3),
+    0 3px var(--accent-yellow-3),
+    0 3px 6px rgba(0,0,0,0.25);
 }
 
 .modal-close {
@@ -527,3 +570,230 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   max-width: 200px;
 }
 
+@media (max-width: 768px) {
+  .search-bar {
+    padding-top: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    max-width: 450px;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .iconsearch {
+    margin-left: -45px;
+    padding: 10px 15px;
+  }
+
+  .cards-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(154px, 1fr));
+    gap: 30px 10px;
+    padding: 20px 5%;
+  }
+
+  .card {
+    width: 154px;
+    height: 224px;
+    padding: 5.6px;
+    margin: 0 auto;
+  }
+
+  .border-card {
+    height: 224px;
+    border-width: 1.4px;
+    border-radius: 11px;
+    padding: 5.6px 0 0;
+  }
+
+  .logoLoja {
+    width: 42px;
+    height: 42px;
+    top: -26.6px;
+  }
+
+  .imagem-produto {
+    height: 140px;
+    margin: -12.6px auto 0;
+    border-radius: 8.4px 8.4px 0 0;
+  }
+
+  .descricao {
+    padding: 4.2px 0;
+    margin-left: 11.2px;
+  }
+
+  .descricao h3 {
+    font-size: 10.5px;
+    margin: -9px 0 1.4px;
+  }
+
+  .descricao p {
+    font-size: 8.4px;
+  }
+
+  .footerNovidades {
+    gap: 5.6px;
+    padding: 4.2px 11.2px;
+    margin-top: -17.5px;
+    margin-bottom: -17.5px;
+  }
+
+  .icone-preco {
+    font-size: 11.2px;
+  }
+
+  .valor {
+    font-size: 11.2px;
+  }
+
+  .btn-carrinho {
+    padding: 5.6px 0;
+    font-size: 10px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    width: 132px;
+    max-width: 140px;
+    height: 18px;
+    border-radius: 6px;
+    box-shadow:
+      0 1px var(--accent-yellow-3),
+      0 2px var(--accent-yellow-3),
+      0 3px var(--accent-yellow-3),
+      0 4px var(--accent-yellow-3),
+      0 5px var(--accent-yellow-3),
+      0 6px var(--accent-yellow-3),
+      0 7px var(--accent-yellow-3),
+      0 8px 8px rgba(0,0,0,0.25);
+  }
+
+  .btn-carrinho i {
+    font-size: 12.6px;
+  }
+
+  .modal-overlay {
+    align-items: center;
+  }
+
+  .modal-content {
+    flex-direction: column;
+    width: 95%;
+    min-height: 480px;
+    height: auto;
+    max-height: 95vh;
+    padding: 20px;
+    gap: 15px;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    width: 100%;
+    order: 1;
+  }
+
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .modal-info {
+    display: contents;
+  }
+
+  .modal-header {
+    width: 100%;
+    order: 1; 
+  }
+
+  .modal-img {
+    width: 100%;
+    height: 220px;
+    order: 2;
+    border-radius: 15px;
+  }
+
+  .modal-text {
+    order: 3; 
+  }
+
+  .modal-title {
+    font-size: 22px;
+    order: 1;
+    margin-top: 0;
+  }
+
+  .modal-subtitulo {
+    order: 2;
+  }
+
+  .modal-description {
+    font-size: 14px;
+    margin-top: 10px;
+    order: 3;
+  }
+
+  .modal-peso {
+    order: 4;
+    margin-top: 8px;
+  }
+
+  .modal-price {
+    order: 5;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .modal-total {
+    order: 6;
+    font-size: 18px;
+    margin-top: 5px;
+  }
+
+  .modal-quantity {
+    padding: 5px 10px;
+    scale: 0.9;
+    order: 8;
+  }
+
+  .modal-actions {
+    width: 100%;
+    order: 9;
+    margin-top: 0;
+  }
+
+  .modal-bottom-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    order: 4;
+  }
+
+  .modal-price, .modal-total {
+    font-size: 18px;
+  }
+
+  .btn-add {
+    width: 100%;
+    margin-left: 0;
+    padding: 15px;
+    font-size: 20px;
+  }
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+}

@@ -28,7 +28,7 @@
 .cards-wrapper-home {
     display: flex;
     flex-wrap: wrap;
-    gap: 50px 10px;
+    gap: 50px 40px;
     justify-content: center;
     align-items: flex-start;
     padding: 20px 40px;

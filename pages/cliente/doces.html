@@ -13,32 +13,6 @@
   <div id="header"></div>
 
   <main>
-    <!-- <section class="hero">
-      <div class="hero-content">
-        <h1>
-          Doçuras feitas com <span>amor</span>,<br />
-          entregues perto de você.
-        </h1>
-    
-        <div class="search-bar">
-          <input type="text" placeholder="Digite o que procura..." />
-          <button class="search-btn">
-            <i data-lucide="search"></i>
-          </button>
-        </div>
-    
-        <div class="hero-circles">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    
-      <div class="hero-image">
-        <img src="#" alt="" />
-      </div>
-    </section> -->
-
     <section class="search-bar">
       <input type="text" id="search-input" placeholder="Digite o que procura..." />
       <div class="iconsearch" id="search-button">
@@ -443,6 +417,7 @@
   
       
       <section class="lojas-proximas">
+        <h3>Lojas Próximas</h3>
         <div class="lojas-scroll" id="lojas-container"></div>
       </section>
 
@@ -476,7 +451,10 @@
                 <span id="qtd-value">1</span>
                 <button onclick="alterarQuantidade(1)" class="qtd-btn">+</button>
               </div>
-              <button class="btn-add">Adicionar</button>
+              <button class="btn-add">
+                <span>Adicionar ao carrinho</span>
+                <i class="fas fa-shopping-bag"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -498,6 +476,7 @@
   <script type="module" src="../../js/cliente/doces.js"></script>
   <script src="../../js/cliente/carrossel.js" defer></script>
   <script type="module" src="../../js/main.js"></script>
+  <script src="../../js/responsivo.js"></script>
   
 </body>
 </html>
