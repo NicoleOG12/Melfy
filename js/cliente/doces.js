@@ -275,4 +275,3 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 });
 
-lucide.createIcons();

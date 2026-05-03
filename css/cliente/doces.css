@@ -302,15 +302,15 @@ h3 {
   font-weight: 700;
   border: 1px solid rgba(255, 196, 61, 0.25);
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 12px 16px;
   border-radius: 999px;
   transition: all 0.25s ease;
   backdrop-filter: blur(4px);
 }
 
 .btn-ver-todos i {
-  width: 16px;
-  height: 16px;
+  align-items: center;
+  font-size: 17px;
   transition: transform 0.25s ease;
 }
 
@@ -421,5 +421,16 @@ h3 {
   .btn-loja {
     opacity: 1;
     pointer-events: auto;
+  }
+  .btn-ver-todos {
+    margin-left: 20px;
+    font-size: 10px;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+  }
+  .btn-ver-todos i {
+    margin-top: 2px;
+    font-size: 14px;
+    transition: transform 0.25s ease;
   }
 }
