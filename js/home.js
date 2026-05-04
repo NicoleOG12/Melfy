@@ -82,15 +82,15 @@ async function fetchProdutos(params = "") {
     };
 
     const card = document.createElement("div");
-    card.classList.add("card");
+    card.classList.add("card-home");
 
     card.innerHTML = `
       <div class="headerNovidade">
         <img src="${loja?.pfp || ""}" alt="Logo da Loja" class="logoLoja" id="logoLoja-home-${produto.id_produto}-${container}"/>
       </div>
-      <div class="border-card">
+      <div class="border-card-home">
         <img src="${produto.midia?.imagens?.[0]?.path || produto.foto || ""}" alt="${produto.nome}" class="imagem-produto" />
-        <div class="descricao">
+        <div class="descricao-home">
           <h3>${produto.nome}</h3>
           <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
         </div>
