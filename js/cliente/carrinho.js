@@ -57,6 +57,22 @@ function renderizarCarrinhoCarrinhoAPI(data) {
   const tbody = document.querySelector("#tabela-carrinho");
   const subtotalSpan = document.querySelector("#subtotal");
   const totalSpan = document.querySelector("#total");
+  const checkboxesExistem = document.querySelectorAll(".check-produto").length > 0;
+  const selecionados = new Set();
+
+  if (checkboxesExistem) {
+    document.querySelectorAll(".check-produto").forEach(cb => {
+      if (cb.checked) {
+        selecionados.add(cb.dataset.index);
+      }
+    });
+  }
+  
+  document.querySelectorAll(".check-produto").forEach(cb => {
+    if (cb.checked) {
+      selecionados.add(cb.dataset.index);
+    }
+  });
 
   tbody.innerHTML = "";
   let subtotal = 0;
@@ -105,7 +121,7 @@ function renderizarCarrinhoCarrinhoAPI(data) {
       tr.innerHTML = `
         <td>
           <div class="produto" style="display:flex; align-items:center; gap:8px;">
-            <input type="checkbox" class="check-produto" data-index="${idx}" data-id_loja="${loja.id_loja}" checked onchange="atualizarTotal()">
+            <input type="checkbox" class="check-produto" data-index="${idx}" data-id_loja="${loja.id_loja}" ${!checkboxesExistem || selecionados.has(String(idx)) ? "checked" : ""} onchange="atualizarTotal()">
             <img src="${imagem}" alt="${nome}" class="foto-produto">
             <div class="info">
               <h3>${nome}</h3>
@@ -276,13 +292,24 @@ function fecharModalCompra() {
 window.abrirModalCompra = abrirModalCompra;
 window.fecharModalCompra = fecharModalCompra;
 
-async function preencherResumoCompra() {
-  const sacola = await carregarSacola();
-  let subtotal = sacola.reduce((t, i) => {
-    const valorUnitario = parseFloat(i.valor_uni || i.valorUnitario || 0);
-    const quantidade = parseInt(i.quantidade || i.qtd || 1);
-    return t + valorUnitario * quantidade;
-  }, 0);
+function preencherResumoCompra() {
+  const sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
+  const checkboxes = document.querySelectorAll(".check-produto");
+
+  let subtotal = 0;
+
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      const index = parseInt(cb.dataset.index);
+      const item = sacola[index];
+
+      if (item) {
+        const valorUnitario = parseFloat(item.valor_uni || item.valorUnitario || 0);
+        const quantidade = parseInt(item.quantidade || item.qtd || 1);
+        subtotal += valorUnitario * quantidade;
+      }
+    }
+  });
 
   const subtotalModalSpan = document.querySelector("#modal-compra-buy #subtotal-modal");
   if (subtotalModalSpan) {
