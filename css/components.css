@@ -570,7 +570,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   max-width: 200px;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1366px) {
   .cards-wrapper {
     grid-template-columns: repeat(4, 1fr);
   }
