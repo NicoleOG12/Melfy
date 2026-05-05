@@ -1,32 +1,73 @@
-import { abrirModalLogin } from './modalLogin.js';
-
-document.addEventListener('DOMContentLoaded', () => {
+import { abrirModalLogin } from "./modalLogin.js";
+import { connectNotifications } from "./notificacoes.js";
+document.addEventListener("DOMContentLoaded", () => {
   const baseURL = window.location.origin + "/";
-  const API_URL = "https://melfy-backend-production.up.railway.app";
-  const confeiteiraLogada = JSON.parse(localStorage.getItem("infoLoja") || "null");
+  const API_URL = "http://localhost:38791";
+  const confeiteiraLogada = JSON.parse(
+    localStorage.getItem("infoLoja") || "null",
+  );
   const clienteData = JSON.parse(localStorage.getItem("infoCliente") || "null");
-  const usuarioLogado = Array.isArray(clienteData) ? clienteData[0] : null;
+  const usuarioLogado = clienteData || null;
+  console.log("Usuário logado:", clienteData);
 
   const logoutBTN = document.getElementById("logoutBtn");
+
+  //inicio da conexão com socket para notificações
+
+  function getStoredToken() {
+    return (
+      localStorage.getItem("tokenCliente") ||
+      localStorage.getItem("tokenLoja") ||
+      localStorage.getItem("tokenEntregador") ||
+      null
+    );
+  }
+
+  async function initSocketConnection() {
+    const token = getStoredToken();
+    if (!token) return;
+
+    console.log(token);
+
+    try {
+      await connectNotifications({
+        url: "http://localhost:38791",
+        token,
+        onConnect: () => console.info("Socket.IO conectado"),
+        onDisconnect: () => console.warn("Socket.IO desconectado"),
+        onNotification: (data) => {
+          alert(`Notificação: ${data.message}`);
+        },
+      });
+    } catch (err) {
+      console.error("Falha ao iniciar Socket.IO:", err);
+    }
+  }
+
+  initSocketConnection();
+
+  //fim da conexão com socket para notificações
 
   if (!window.location.pathname.includes("/pages/confeiteira/")) {
     const cssFiles = [
       `${baseURL}css/components.css`,
       `${baseURL}css/layout.css`,
-      `${baseURL}css/base.css`
+      `${baseURL}css/base.css`,
     ];
-    cssFiles.forEach(href => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
+    cssFiles.forEach((href) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
       link.href = href;
       document.head.appendChild(link);
     });
   }
 
-  const headerContainer = document.getElementById('header');
-  const footerContainer = document.getElementById('footer');
+  const headerContainer = document.getElementById("header");
+  const footerContainer = document.getElementById("footer");
 
-  const estaEmPaginaConfeiteira = window.location.pathname.includes("/pages/confeiteira/");
+  const estaEmPaginaConfeiteira = window.location.pathname.includes(
+    "/pages/confeiteira/",
+  );
   if (estaEmPaginaConfeiteira) {
     if (headerContainer) headerContainer.innerHTML = "";
     return;
@@ -93,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="user-avatar">
                 <i class="fas fa-user"></i>
               </div>
-              <span class="user-name">${usuarioLogado?.nome.split(" ")[0] || 'Usuário'}</span>
+              <span class="user-name">${usuarioLogado?.nome.split(" ")[0] || "Usuário"}</span>
             </a>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
               <i class="fas fa-bars"></i>
@@ -112,10 +153,18 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 
   if (!estaEmPaginaConfeiteira) {
-    if (headerContainer) headerContainer.innerHTML = usuarioLogado ? headerLogado : headerNaoLogado;
+    if (headerContainer)
+      headerContainer.innerHTML = usuarioLogado
+        ? headerLogado
+        : headerNaoLogado;
 
-    if ((!usuarioLogado && headerContainer) || (usuarioLogado == "" && headerContainer)) {
-      const dropdownToggle = headerContainer.querySelector("#userDropdownToggle");
+    if (
+      (!usuarioLogado && headerContainer) ||
+      (usuarioLogado == "" && headerContainer)
+    ) {
+      const dropdownToggle = headerContainer.querySelector(
+        "#userDropdownToggle",
+      );
       const dropdownMenu = headerContainer.querySelector("#userDropdownMenu");
 
       if (dropdownToggle && dropdownMenu) {
@@ -125,20 +174,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener("click", (e) => {
-          if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          if (
+            !dropdownToggle.contains(e.target) &&
+            !dropdownMenu.contains(e.target)
+          ) {
             dropdownMenu.classList.remove("active");
           }
         });
 
-        const dropdownLinks = dropdownMenu.querySelectorAll(".user-dropdown-item");
+        const dropdownLinks = dropdownMenu.querySelectorAll(
+          ".user-dropdown-item",
+        );
         dropdownLinks.forEach((link) => {
           link.addEventListener("click", (e) => {
             e.preventDefault();
             dropdownMenu.classList.remove("active");
             let tipoUsuario = "";
-            if (link.textContent.includes("confeiteira")) tipoUsuario = "confeiteira";
-            else if (link.textContent.includes("cliente")) tipoUsuario = "cliente";
-            else if (link.textContent.includes("entregador")) tipoUsuario = "entregador";
+            if (link.textContent.includes("confeiteira"))
+              tipoUsuario = "confeiteira";
+            else if (link.textContent.includes("cliente"))
+              tipoUsuario = "cliente";
+            else if (link.textContent.includes("entregador"))
+              tipoUsuario = "entregador";
             abrirModalLogin(tipoUsuario);
           });
         });
@@ -146,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (usuarioLogado && headerContainer) {
-      const nomeElem = headerContainer.querySelector('.nomeuser');
-      if (nomeElem) nomeElem.textContent = usuarioLogado.nome || 'Usuário';
+      const nomeElem = headerContainer.querySelector(".nomeuser");
+      if (nomeElem) nomeElem.textContent = usuarioLogado.nome || "Usuário";
 
       async function atualizarContadorCarrinho() {
         try {
@@ -170,7 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
           const cartCount = document.getElementById("cartCount");
           if (!cartCount) return;
 
-          const totalItens = carrinho.reduce((acc, item) => acc + (item.quantidade || 0), 0);
+          const totalItens = carrinho.reduce(
+            (acc, item) => acc + (item.quantidade || 0),
+            0,
+          );
           if (totalItens > 0) {
             cartCount.textContent = totalItens;
             cartCount.style.display = "inline-block";
@@ -178,14 +238,17 @@ document.addEventListener('DOMContentLoaded', () => {
             cartCount.style.display = "none";
           }
         } catch (err) {
-          console.error("Não foi possível atualizar o contador do carrinho:", err);
+          console.error(
+            "Não foi possível atualizar o contador do carrinho:",
+            err,
+          );
         }
       }
 
       atualizarContadorCarrinho();
       setInterval(atualizarContadorCarrinho, 5000);
-      window.addEventListener('storage', e => {
-        if (e.key === 'Sacola') atualizarContadorCarrinho();
+      window.addEventListener("storage", (e) => {
+        if (e.key === "Sacola") atualizarContadorCarrinho();
       });
     }
   }
@@ -246,32 +309,35 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
-  const linkPerfil = document.getElementById('link-perfil');
+  const linkPerfil = document.getElementById("link-perfil");
   if (linkPerfil) {
-    linkPerfil.addEventListener('click', e => {
+    linkPerfil.addEventListener("click", (e) => {
       e.preventDefault();
       if (confeiteiraLogada) {
         window.location.href = `${baseURL}pages/cliente/perfil.html`;
       } else {
-        window.location.href = usuarioLogado ? `${baseURL}pages/cliente/perfil.html` : `${baseURL}pages/login.html`;
+        window.location.href = usuarioLogado
+          ? `${baseURL}pages/cliente/perfil.html`
+          : `${baseURL}pages/login.html`;
       }
     });
   }
 
   if (headerContainer) {
-    const linksNav = headerContainer.querySelectorAll('nav a');
-    linksNav.forEach(link => {
-      const linkHref = link.getAttribute('href');
-      const currentPage = window.location.pathname.split('/').pop();
-      if (linkHref && linkHref.endsWith(currentPage)) link.classList.add('ativo');
+    const linksNav = headerContainer.querySelectorAll("nav a");
+    linksNav.forEach((link) => {
+      const linkHref = link.getAttribute("href");
+      const currentPage = window.location.pathname.split("/").pop();
+      if (linkHref && linkHref.endsWith(currentPage))
+        link.classList.add("ativo");
     });
   }
 
   if (confeiteiraLogada) {
     const trySetName = () => {
-      const el = document.querySelector('.user-info .user-name');
+      const el = document.querySelector(".user-info .user-name");
       if (el) {
-        el.textContent = confeiteiraLogada.nome || 'Confeiteira';
+        el.textContent = confeiteiraLogada.nome || "Confeiteira";
         return true;
       }
       return false;
@@ -296,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(document.body, { childList: true, subtree: true });
     }
   }
-  
+
   function setFaviconAndTitle(faviconUrl, titleText) {
     let link = document.querySelector("link[rel~='icon']");
     if (!link) {
@@ -305,13 +371,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.head.appendChild(link);
     }
     link.href = faviconUrl;
-  
+
     document.title = titleText;
   }
-  
+
   setFaviconAndTitle(
     `${baseURL}assents/favicon/favicon-16x16.png`,
-    `Melfy | Adoce sua vida`
+    `Melfy | Adoce sua vida`,
   );
-
 });

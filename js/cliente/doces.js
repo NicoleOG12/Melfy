@@ -2,7 +2,20 @@ import { rotasCliente } from "../rotas.js";
 import { openModal, adicionarNaSacola } from "../modal.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const API_URL = "https://melfy-backend-production.up.railway.app";
+  function verificarParametroPagamento() {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get("payment");
+
+    if (status === "error") {
+      alert("Seu pagamento não foi concluído");
+    } else if (status === "success" || status === "sucess") {
+      alert("Your payment is being processed");
+    }
+  }
+
+  const API_URL = "http://localhost:38791";
+
+  verificarParametroPagamento();
 
   const cardsWrapper = document.querySelector(".cards-wrapper");
   const inputPesquisa = document.getElementById("search-input");
@@ -66,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     return lista.filter((produto) => {
       const texto = normalizar(
-        (produto.nome || "") + " " + (produto.descricao || "")
+        (produto.nome || "") + " " + (produto.descricao || ""),
       );
 
       return palavras.every((p) => texto.includes(p));
@@ -83,8 +96,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     [...listaProdutos].reverse().forEach((produto) => {
       const loja = {
         id: produto.id_loja,
-        nome: produto.loja_nome,
-        pfp: produto.pfp,
+        nome: produto.nome_loja,
+        pfp: produto.pfp_loja,
       };
 
       const card = document.createElement("div");
@@ -95,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <img src="${loja?.pfp || ""}" alt="Logo da Loja" class="logoLoja" id="logoLoja${loja.id}"/>
         </div>
         <div class="border-card">
-          <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
+          <img src="${produto.imagens[0] || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
           <div class="descricao">
             <h3>${produto.nome}</h3>
             <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
@@ -106,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <span class="valor">${formatarPreco(produto.valor_uni || produto.preco)}</span>
             </div>
           </div>
-          <button class="btn-carrinho add-carrinho-btn" data-id=${produto.id_produto}>
+          <button class="btn-carrinho add-carrinho-btn" data-id=${produto._id}>
             <span>Adicionar ao carrinho</span>
             <i class="fas fa-shopping-bag"></i>
           </button>
@@ -122,7 +135,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       card.addEventListener("click", (e) => {
         if (!e.target.closest(".headerNovidade"))
-          openModal(produto, lojas, rotasCliente);
+          console.log("Abrindo modal para produto:", produto);
+        openModal(produto, lojas, rotasCliente);
       });
 
       cardsWrapper.appendChild(card);
@@ -130,10 +144,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function scrollSuaveComOffset(element, offset = 120) {
-    const y =
-      element.getBoundingClientRect().top +
-      window.pageYOffset -
-      offset;
+    const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
 
     window.scrollTo({
       top: y,
@@ -142,10 +153,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function executarBusca() {
-    const resultado = filtrarProdutos(
-      produtosOrdenados,
-      inputPesquisa.value
-    );
+    const resultado = filtrarProdutos(produtosOrdenados, inputPesquisa.value);
     renderizarProdutos(resultado);
     scrollSuaveComOffset(cardsWrapper);
   }
@@ -274,4 +282,3 @@ document.addEventListener("DOMContentLoaded", async function () {
     scrollSuaveComOffset(cardsWrapper);
   });
 });
-

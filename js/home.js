@@ -1,6 +1,6 @@
 import { openModal, adicionarNaSacola } from "./modal.js";
 
-const API_URL = "https://melfy-backend-production.up.railway.app";
+const API_URL = "http://localhost:38791";
 const baseURL = window.location.origin + "/";
 
 const rotasCliente = {
@@ -73,23 +73,23 @@ async function fetchProdutos(params = "") {
     // LIMITAR A 4 PRODUTOS
     const produtosLimitados = data.result.slice(0, 4);
 
-  // Função para criar um card de produto idêntico ao da seção de doces
-  function criarCardProduto(produto, container) {
-    const loja = {
-      id: produto.id_loja,
-      nome: produto.loja_nome,
-      pfp: produto.pfp,
-    };
+    // Função para criar um card de produto idêntico ao da seção de doces
+    function criarCardProduto(produto, container) {
+      const loja = {
+        id: produto.id_loja,
+        nome: produto.nome_loja,
+        pfp: produto.pfp_loja,
+      };
 
-    const card = document.createElement("div");
-    card.classList.add("card");
+      const card = document.createElement("div");
+      card.classList.add("card");
 
-    card.innerHTML = `
+      card.innerHTML = `
       <div class="headerNovidade">
-        <img src="${loja?.pfp || ""}" alt="Logo da Loja" class="logoLoja" id="logoLoja-home-${produto.id_produto}-${container}"/>
+        <img src="${loja?.pfp || ""}" alt="Logo da Loja" class="logoLoja" id="logoLoja-home-${produto._id}-${container}"/>
       </div>
       <div class="border-card">
-        <img src="${produto.midia?.imagens?.[0]?.path || produto.foto || ""}" alt="${produto.nome}" class="imagem-produto" />
+        <img src="${produto.imagens[0]}" alt="${produto.nome}" class="imagem-produto" />
         <div class="descricao">
           <h3>${produto.nome}</h3>
           <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
@@ -100,58 +100,64 @@ async function fetchProdutos(params = "") {
             <span class="valor">${formatarPreco(produto.valor_uni || produto.preco || 0)}</span>
           </div>
         </div>
-        <button class="btn-carrinho add-carrinho-btn" data-id="${produto.id_produto}">
+        <button class="btn-carrinho add-carrinho-btn" data-id="${produto._id}">
           <span>Adicionar ao carrinho</span>
           <i class="fas fa-shopping-bag"></i>
         </button>
       </div>
     `;
 
-    // Clicar na logo da loja redireciona para a página da loja
-    const logoEl = card.querySelector(`#logoLoja-home-${produto.id_produto}-${container}`);
-    if (logoEl) {
-      logoEl.addEventListener("click", (e) => {
-        e.stopPropagation();
-        window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
+      // Clicar na logo da loja redireciona para a página da loja
+      // const logoEl = card.querySelector(
+      //   `#logoLoja-home-${produto.id_produto}-${container}`,
+      // );
+      // if (logoEl) {
+      //   logoEl.addEventListener("click", (e) => {
+      //     e.stopPropagation();
+      //     window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
+      //   });
+      // }
+
+      // Clicar no card abre o modal (igual à seção de doces)
+      card.addEventListener("click", (e) => {
+        if (
+          !e.target.closest(".headerNovidade") &&
+          !e.target.closest(".btn-carrinho")
+        ) {
+          console.log("Abrindo modal para produto:", produto);
+          openModal(produto, lojas, rotasCliente);
+        }
       });
+
+      // Botão adicionar ao carrinho
+      const btnCarrinho = card.querySelector(".add-carrinho-btn");
+      if (btnCarrinho) {
+        btnCarrinho.addEventListener("click", (e) => {
+          e.stopPropagation();
+          adicionarAoCarrinhoHome(produto.id_produto);
+        });
+      }
+
+      return card;
     }
 
-    // Clicar no card abre o modal (igual à seção de doces)
-    card.addEventListener("click", (e) => {
-      if (!e.target.closest(".headerNovidade") && !e.target.closest(".btn-carrinho")) {
-        openModal(produto, lojas, rotasCliente);
-      }
+    // Renderizar produtos no carrossel (mobile)
+    produtosLimitados.forEach((produto) => {
+      const slide = document.createElement("div");
+      slide.classList.add("carousel-slide");
+      slide.appendChild(criarCardProduto(produto, "carousel"));
+      carouselTrack.appendChild(slide);
     });
 
-    // Botão adicionar ao carrinho
-    const btnCarrinho = card.querySelector(".add-carrinho-btn");
-    if (btnCarrinho) {
-      btnCarrinho.addEventListener("click", (e) => {
-        e.stopPropagation();
-        adicionarAoCarrinhoHome(produto.id_produto);
-      });
-    }
-
-    return card;
-  }
-
-  // Renderizar produtos no carrossel (mobile)
-  produtosLimitados.forEach((produto) => {
-    const slide = document.createElement("div");
-    slide.classList.add("carousel-slide");
-    slide.appendChild(criarCardProduto(produto, "carousel"));
-    carouselTrack.appendChild(slide);
-  });
-
-  // Renderizar produtos na grid (desktop)
-  produtosLimitados.forEach((produto) => {
-    productsGrid.appendChild(criarCardProduto(produto, "grid"));
-  });
+    // Renderizar produtos na grid (desktop)
+    produtosLimitados.forEach((produto) => {
+      productsGrid.appendChild(criarCardProduto(produto, "grid"));
+    });
 
     console.log(
       "Produtos carregados com sucesso!",
       produtosLimitados.length,
-      "itens exibidos."
+      "itens exibidos.",
     );
   } catch (erro) {
     console.error("Erro no fetchProdutos:", erro);
@@ -170,15 +176,12 @@ async function fetchProdutos(params = "") {
 
 async function fetchConfeitarias() {
   try {
-    const res = await fetch(
-      `${API_URL}/lojas/fetchAll`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await fetch(`${API_URL}/lojas/fetchAll`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!res.ok) {
       throw new Error("Erro ao buscar confeitarias: " + res.status);
@@ -211,8 +214,8 @@ async function fetchConfeitarias() {
               <div class="flex items-center mt-1">
                 <i class="fas fa-star text-mellow-yellow-400 mr-1"></i>
                 <span>4.${Math.floor(Math.random() * 9)} (${
-        Math.floor(Math.random() * 100) + 50
-      } avaliações)</span>
+                  Math.floor(Math.random() * 100) + 50
+                } avaliações)</span>
               </div>
             </div>
           </div>
@@ -239,7 +242,7 @@ async function fetchConfeitarias() {
 
     console.log(
       "Confeitarias carregadas com sucesso!",
-      confeitariasLimitadas.length
+      confeitariasLimitadas.length,
     );
   } catch (erro) {
     console.error("Erro no fetchConfeitarias:", erro);
@@ -254,17 +257,14 @@ async function adicionarAoCarrinhoHome(idProduto) {
   console.log("Adicionando produto ao carrinho:", idProduto);
 
   try {
-    const res = await fetch(
-      `${API_URL}/carrinho?id=${idProduto}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("tokenCliente"),
-        },
-        body: JSON.stringify({ qtd: 1 }),
-      }
-    );
+    const res = await fetch(`${API_URL}/carrinho?id=${idProduto}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("tokenCliente"),
+      },
+      body: JSON.stringify({ qtd: 1 }),
+    });
 
     const data = await res.json();
     console.log(data);

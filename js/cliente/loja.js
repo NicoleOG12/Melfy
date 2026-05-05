@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       card.querySelector('.border-card').style.cursor = 'pointer';
       card.querySelector('.border-card').addEventListener('click', () => {
+         console.log("Abrindo modal para produto:", produto);
         openModal(produto, lojas, { loja: 'loja.html' });
       });
       cardsWrapper.appendChild(card);

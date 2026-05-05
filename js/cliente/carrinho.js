@@ -4,7 +4,7 @@ import { openModal, adicionarNaSacola } from "../modal.js";
 // ============================================================
 // API URL
 // ============================================================
-const API_URL = "https://melfy-backend-production.up.railway.app";
+const API_URL = "http://localhost:38791";
 
 // ============================================================
 // BUSCAR SACOLA DO BACKEND
@@ -26,11 +26,11 @@ async function carregarSacola() {
     });
 
     const texto = await res.text();
-    console.log("RAW RESPONSE:", texto);
 
     let data;
     try {
       data = JSON.parse(texto);
+      console.log(data);
       renderizarCarrinhoCarrinhoAPI(data.result);
       localStorage.setItem("Sacola", JSON.stringify(data.result));
     } catch (e) {
@@ -68,18 +68,18 @@ function renderizarCarrinhoCarrinhoAPI(data) {
     if (!lojasAgrupadas[id_loja]) {
       lojasAgrupadas[id_loja] = {
         id_loja,
-        nomeLoja: produto.nomeLoja || "Loja",
-        logoLoja: produto.logoLoja || "img/default-loja.png",
+        nomeLoja: produto.nome_loja || "Loja",
+        logoLoja: produto.pfp_Loja || "img/default-loja.png",
         itens: [],
       };
     }
 
     lojasAgrupadas[id_loja].itens.push({
       item: {
-        valorUnitario: parseFloat(produto.valor_uni),
+        valorUnitario: parseFloat(produto.preco),
         quantidade: produto.quantidade || 1,
-        valorTotal: parseFloat(produto.valor_uni) * (produto.quantidade || 1),
-        id: produto.id_item_carrinho,
+        valorTotal: parseFloat(produto.preco) * (produto.quantidade || 1),
+        id: produto._id,
       },
       produto,
       idx,
@@ -96,8 +96,8 @@ function renderizarCarrinhoCarrinhoAPI(data) {
 
     loja.itens.forEach(({ item, produto, idx }) => {
       const nome = produto.nome;
-      const imagem = produto.imagem;
-      const valorUnit = parseFloat(produto.valor_uni);
+      const imagem = produto.imagens[0];
+      const valorUnit = parseFloat(produto.preco);
       subtotal += valorUnit * item.quantidade;
 
       const tr = document.createElement("tr");
@@ -148,14 +148,17 @@ async function alterarQuantidadeSacola(index, delta) {
 
     let res;
 
-    if (delta > 0) {
-      res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
-        method: "POST",
+    if (delta) {
+      res = await fetch(`${API_URL}/carrinho`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ qtd: delta }),
+        body: JSON.stringify({
+          id_produto: item.id_produto || item.idProduto,
+          delta: delta,
+        }),
       });
     } else {
       res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
@@ -178,13 +181,13 @@ async function alterarQuantidadeSacola(index, delta) {
     }
 
     if (sacola[index]) {
-      item.valorTotal = item.quantidade * (item.valorUnitario || item.valor_uni);
+      item.valorTotal =
+        item.quantidade * (item.valorUnitario || item.valor_uni);
     }
 
     localStorage.setItem("Sacola", JSON.stringify(sacola));
     renderizarCarrinhoCarrinhoAPI(sacola);
     atualizarTotal();
-
   } catch (err) {
     alertError("Não foi possível atualizar a quantidade no servidor.");
     console.error(err);
@@ -203,13 +206,13 @@ window.removerItem = async function (index) {
 
   const token = localStorage.getItem("tokenCliente");
   try {
-    const res = await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
+    console.log("Removendo item do carrinho API:", item);
+    const res = await fetch(`${API_URL}/carrinho/${item._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ qtd: item.quantidade }), 
     });
     const data = await res.json();
     if (!res.ok || data.error) throw data;
@@ -218,6 +221,7 @@ window.removerItem = async function (index) {
     localStorage.setItem("Sacola", JSON.stringify(sacola));
     renderizarCarrinhoCarrinhoAPI(sacola);
     atualizarTotal();
+    alertSuccess("Item removido da sacola.");
   } catch (err) {
     alertError("Não foi possível remover o item do carrinho.");
     console.error(err);
@@ -234,7 +238,7 @@ async function atualizarTotal() {
 
   let subtotal = 0;
 
-  checkboxes.forEach(cb => {
+  checkboxes.forEach((cb) => {
     if (cb.checked) {
       const item = sacola[parseInt(cb.dataset.index)];
       if (item) {
@@ -252,11 +256,12 @@ async function atualizarTotal() {
 }
 window.atualizarTotal = atualizarTotal;
 
-
 function LojaCheckbox(el) {
   const id_loja = el.dataset.id_loja;
-  const cbs = document.querySelectorAll(`.check-produto[data-id_loja="${id_loja}"]`);
-  cbs.forEach(c => (c.checked = el.checked));
+  const cbs = document.querySelectorAll(
+    `.check-produto[data-id_loja="${id_loja}"]`,
+  );
+  cbs.forEach((c) => (c.checked = el.checked));
   atualizarTotal();
 }
 window.LojaCheckbox = LojaCheckbox;
@@ -266,8 +271,11 @@ window.LojaCheckbox = LojaCheckbox;
 // ============================================================
 function abrirModalCompra() {
   const modal = document.getElementById("modal-compra-buy");
+  const span = modal?.querySelector("#subtotal-modal");
+  if (span) span.textContent = "Carregando...";
   modal.style.display = "flex";
-  setTimeout(preencherResumoCompra, 50);
+  document.body.style.overflow = "hidden";
+  setTimeout(preencherResumoCompra, 150);
 }
 
 function fecharModalCompra() {
@@ -277,16 +285,37 @@ window.abrirModalCompra = abrirModalCompra;
 window.fecharModalCompra = fecharModalCompra;
 
 async function preencherResumoCompra() {
-  const sacola = await carregarSacola();
+  const sacolaAPI = await carregarSacola();
+  let sacola = sacolaAPI;
+
+  // Fallback se API vazia
+  if (sacolaAPI.length === 0) {
+    const sacolaLocal = JSON.parse(localStorage.getItem("Sacola") || "[]");
+    if (sacolaLocal.length > 0) {
+      console.warn("🔍 Fallback localStorage:", sacolaLocal.length, "itens");
+      sacola = sacolaLocal;
+    }
+  }
+
   let subtotal = sacola.reduce((t, i) => {
     const valorUnitario = parseFloat(i.valor_uni || i.valorUnitario || 0);
     const quantidade = parseInt(i.quantidade || i.qtd || 1);
     return t + valorUnitario * quantidade;
   }, 0);
 
-  const subtotalModalSpan = document.querySelector("#modal-compra-buy #subtotal-modal");
+  const subtotalModalSpan = document.querySelector(
+    "#modal-compra-buy #subtotal-modal",
+  );
+
   if (subtotalModalSpan) {
-    subtotalModalSpan.textContent = "R$ " + subtotal.toFixed(2).replace(".", ",");
+    if (subtotal > 0) {
+      subtotalModalSpan.textContent =
+        "R$ " + subtotal.toFixed(2).replace(".", ",");
+    } else {
+      subtotalModalSpan.textContent = "Sacola vazia";
+    }
+  } else {
+    console.error("🔍 ERRO: Span #subtotal-modal NÃO encontrado!");
   }
 
   window.modalSubtotalBuy = subtotal;
@@ -351,8 +380,15 @@ if (form) {
 
 // FINALIZAR COMPRA
 // ============================================================
-async function finalizarCompra() {
-  try {
+
+async function criarPedido(){
+  // [STELA] aqui eu não consegui pegar os produtos selecionados, peguei todos que estão na sacola.
+  // precisa ajustar o modal pra poder selecionar um dos endereços para entrega, os endereços já estão vindo no login, e armazenados no  localstorage, dá pra trabalhar com isso por enquanto
+  //precisa bloquear o botão de finalizar compra e colocar um loading
+  //ainda vou pensar sobre o frete 
+  // o id_pagamento e id_entrega estão fixos por testes
+ try {
+
     const token = localStorage.getItem("tokenCliente");
     if (!token) {
       alertWarning("Você precisa estar logado para finalizar a compra.");
@@ -364,65 +400,52 @@ async function finalizarCompra() {
       alertWarning("Sua sacola está vazia.");
       return;
     }
+   sacola = JSON.parse(localStorage.getItem("Sacola")) || [];
 
-    const itens = {};
-    sacola.forEach((p, i) => {
-      itens[`item${i + 1}`] = {
-        id_produto: p.idProduto || p.id_produto,
-        valor_uni: p.valorUnitario || p.valor_uni,
-        qtd: p.quantidade || p.qtd,
-      };
+  let body = {
+    id_pagamento: 1,
+    id_entrega: 1,
+    id_status: 1,
+    id_endereco: "3f8c8ed9-5c64-4d9a-9b59-7a6f4d2b8e31",
+    itens: [],
+  };
+
+  sacola.forEach((item) => {
+    body.itens.push({
+      id_produto: item.id_produto,
+      qtd: item.quantidade,
     });
+  });
 
-    const pedido = {
-      itens,
-      id_pagamento: 1,
-      id_entrega: 1,
-      id_status: 1,
-    };
+  console.log("Corpo do pedido a ser enviado:", body);
 
-    const res = await fetch(`${API_URL}/pedidos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(pedido),
-    });
 
-    const data = await res.json();
+  const res = await fetch(`${API_URL}/pedidos/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await res.json();
+
     if (!res.ok || data.error) {
       console.error("Erro:", data);
       alertError("Erro ao finalizar compra.");
       return;
     }
 
-    alertSuccess("Pedido criado com sucesso!");
-
-    for (const item of sacola) {
-      await fetch(`${API_URL}/carrinho?id=${item.id_produto}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ qtd: item.quantidade }),
-      });
-    }
-
-    localStorage.removeItem("Sacola");
-
-    renderizarCarrinhoCarrinhoAPI([]);
-    document.querySelector("#subtotal").textContent = "R$ 0,00";
-    document.querySelector("#total").textContent = "R$ 0,00";
-
     fecharModalCompra();
-  } catch (err) {
-    console.error(err);
-    alertError("Erro inesperado ao finalizar compra.");
-  }
-}
-window.finalizarCompra = finalizarCompra;
+  window.location.href = data.result.paymentUrl;
+}catch(err){
+ console.error(err);
+ alertError("Erro inesperado ao finalizar compra.");
+}}
+;
+
+window.finalizarCompra = criarPedido;
 
 // ============================================================
 // BUSCAR PRODUTOS E LOJAS DA API
@@ -463,40 +486,42 @@ function limitarDescricao(texto, limite = 45) {
 }
 
 function formatarPreco(valor) {
-  return parseFloat(valor).toFixed(2).replace('.', ',');
+  return parseFloat(valor).toFixed(2).replace(".", ",");
 }
 
 // ============================================================
 // RENDERIZAR PRODUTOS ALEATÓRIOS
 // ============================================================
 function renderizarProdutosAleatorios(produtos, lojas) {
-  const cardsWrapper = document.querySelector('.cards-wrapper');
-  cardsWrapper.innerHTML = '';
+  const cardsWrapper = document.querySelector(".cards-wrapper");
+  cardsWrapper.innerHTML = "";
 
   const produtosAleatorios = produtos
     .slice()
     .sort(() => 0.5 - Math.random())
     .slice(0, 5);
 
-  produtosAleatorios.forEach(produto => {
+  produtosAleatorios.forEach((produto) => {
     const lojaEncontrada = lojas.find(
-      l => String(l.id_loja) === String(produto.id_loja) || String(l.idLoja) === String(produto.id_loja)
+      (l) =>
+        String(l.id_loja) === String(produto.id_loja) ||
+        String(l.idLoja) === String(produto.id_loja),
     );
     const loja = lojaEncontrada || {
       id: produto.id_loja || produto.idLoja,
-      nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || 'Loja',
-      pfp: produto.pfp || produto.logoLoja || produto.logo_loja || ''
+      nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || "Loja",
+      pfp: produto.pfp_loja || produto.logoLoja || produto.logo_loja || "",
     };
 
-    const card = document.createElement('div');
-    card.classList.add('card');
+    const card = document.createElement("div");
+    card.classList.add("card");
 
     card.innerHTML = `
       <div class="headerNovidade">
         <img src="${loja.pfp}" alt="Logo da Loja" class="logoLoja" />
       </div>
       <div class="border-card">
-        <img src="${produto.midia?.imagens?.[0]?.path || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
+        <img src="${produto.imagens[0] || produto.foto}" alt="${produto.nome}" class="imagem-produto" />
         <div class="descricao">
           <h3>${produto.nome}</h3>
           <p>${limitarDescricao(produto.descricao || produto.subtitulo || "")}</p>
@@ -514,14 +539,15 @@ function renderizarProdutosAleatorios(produtos, lojas) {
       </div>
     `;
 
-    card.querySelector('.logoLoja').addEventListener('click', e => {
+    card.querySelector(".logoLoja").addEventListener("click", (e) => {
       e.stopPropagation();
       window.location.href = `${rotasCliente.loja}?id=${loja.id}`;
     });
 
-    card.addEventListener('click', e => {
-      if (!e.target.closest('.headerNovidade'))
-        openModal(produto, lojas, rotasCliente);
+    card.addEventListener("click", (e) => {
+      if (!e.target.closest(".headerNovidade"))
+        console.log("Abrindo modal para produto:", produto);
+      openModal(produto, lojas, rotasCliente);
     });
 
     cardsWrapper.appendChild(card);
@@ -531,12 +557,14 @@ function renderizarProdutosAleatorios(produtos, lojas) {
 // ============================================================
 // INICIALIZAÇÃO AO CARREGAR A PÁGINA
 // ============================================================
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const lojas = await buscarLojasAPI();
   const produtos = await buscarProdutosAPI();
   renderizarProdutosAleatorios(produtos, lojas);
 
-  document.querySelector('.btn-add')?.addEventListener('click', adicionarNaSacola);
+  document
+    .querySelector(".btn-add")
+    ?.addEventListener("click", adicionarNaSacola);
   carregarSacola();
 });
 
@@ -544,12 +572,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 // MODAIS DE PAGAMENTO
 // ============================================================
 const btn = document.getElementById("btn_cartao");
-const modal = document.getElementById("modal_cartao");
+var modal = document.getElementById("modal_cartao");
 
 btn.addEventListener("click", () => {
-  modal.style.height = (modal.style.height === "0px" || modal.style.height === "") 
-    ? modal.scrollHeight + "px" 
-    : "0px";
+  modal.style.height =
+    modal.style.height === "0px" || modal.style.height === ""
+      ? modal.scrollHeight + "px"
+      : "0px";
 });
 
 const btnPix = document.getElementById("btn_pix");
@@ -558,7 +587,7 @@ const modalPix = document.getElementById("modal_pix");
 const modalCompra = document.getElementById("modal-compra-buy");
 const btnFechar = document.getElementById("fechar_modal");
 
-btnFechar.addEventListener("click", () => modalCompra.style.display = "none");
-modalCompra.addEventListener("click", e => {
+btnFechar.addEventListener("click", () => (modalCompra.style.display = "none"));
+modalCompra.addEventListener("click", (e) => {
   if (e.target === modalCompra) modalCompra.style.display = "none";
 });

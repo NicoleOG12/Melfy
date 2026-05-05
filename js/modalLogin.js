@@ -1,11 +1,11 @@
 export function abrirModalLogin(tipoUsuario) {
-  let modalOverlay = document.getElementById('loginModalOverlay');
+  let modalOverlay = document.getElementById("loginModalOverlay");
   const baseURL = window.location.origin + "/";
 
-  if (!document.getElementById('modalLoginCSS')) {
-    const link = document.createElement('link');
-    link.id = 'modalLoginCSS';
-    link.rel = 'stylesheet';
+  if (!document.getElementById("modalLoginCSS")) {
+    const link = document.createElement("link");
+    link.id = "modalLoginCSS";
+    link.rel = "stylesheet";
     link.href = `${baseURL}css/modalLogin.css`;
     document.head.appendChild(link);
   }
@@ -62,35 +62,41 @@ export function abrirModalLogin(tipoUsuario) {
         </div>
       </div>
     `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    modalOverlay = document.getElementById('loginModalOverlay');
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+    modalOverlay = document.getElementById("loginModalOverlay");
   }
 
-  const modal = modalOverlay.querySelector('.login-modal');
+  const modal = modalOverlay.querySelector(".login-modal");
   const emailInput = modal.querySelector("#emailLogin");
   const senhaInput = modal.querySelector("#senhaLogin");
-  if (emailInput) { emailInput.value = ""; }
-  if (senhaInput) { senhaInput.value = ""; }
-  
+  if (emailInput) {
+    emailInput.value = "";
+  }
+  if (senhaInput) {
+    senhaInput.value = "";
+  }
+
   setTimeout(() => {
-    if (emailInput && !emailInput.matches(':focus')) emailInput.value = "";
-    if (senhaInput && !senhaInput.matches(':focus')) senhaInput.value = "";
+    if (emailInput && !emailInput.matches(":focus")) emailInput.value = "";
+    if (senhaInput && !senhaInput.matches(":focus")) senhaInput.value = "";
   }, 50);
 
-  const imagens = modal.querySelectorAll('.image-slider img');
-  const dotsContainer = modal.querySelector('.slider-indicadores');
-  const imagensAtivas = Array.from(imagens).filter(img => img.dataset.tipo === tipoUsuario);
+  const imagens = modal.querySelectorAll(".image-slider img");
+  const dotsContainer = modal.querySelector(".slider-indicadores");
+  const imagensAtivas = Array.from(imagens).filter(
+    (img) => img.dataset.tipo === tipoUsuario,
+  );
 
-  imagens.forEach(img => img.classList.remove('ativa'));
-  imagensAtivas.forEach((img, i) => img.style.display = 'none');
-  imagensAtivas[0].style.display = 'block';
-  imagensAtivas[0].classList.add('ativa');
+  imagens.forEach((img) => img.classList.remove("ativa"));
+  imagensAtivas.forEach((img, i) => (img.style.display = "none"));
+  imagensAtivas[0].style.display = "block";
+  imagensAtivas[0].classList.add("ativa");
 
-  dotsContainer.innerHTML = '';
+  dotsContainer.innerHTML = "";
   imagensAtivas.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.classList.add('dot');
-    if (i === 0) dot.classList.add('ativa');
+    const dot = document.createElement("div");
+    dot.classList.add("dot");
+    if (i === 0) dot.classList.add("ativa");
     dotsContainer.appendChild(dot);
   });
 
@@ -98,41 +104,49 @@ export function abrirModalLogin(tipoUsuario) {
   const sliderInterval = setInterval(() => {
     imagensAtivas.forEach((img, i) => {
       if (i === indexAtual % imagensAtivas.length) {
-        img.style.display = 'block';
-        img.classList.add('ativa');
+        img.style.display = "block";
+        img.classList.add("ativa");
       } else {
-        img.style.display = 'none';
-        img.classList.remove('ativa');
+        img.style.display = "none";
+        img.classList.remove("ativa");
       }
     });
-    dotsContainer.querySelectorAll('.dot').forEach((dot, i) =>
-      dot.classList.toggle('ativa', i === indexAtual % imagensAtivas.length)
-    );
+    dotsContainer
+      .querySelectorAll(".dot")
+      .forEach((dot, i) =>
+        dot.classList.toggle("ativa", i === indexAtual % imagensAtivas.length),
+      );
     indexAtual++;
   }, 5000);
 
   function fecharModal() {
-    modalOverlay.style.display = 'none';
+    modalOverlay.style.display = "none";
     clearInterval(sliderInterval);
     imagens.forEach((img, i) => {
-      img.style.display = (i === 0 ? 'block' : 'none');
-      img.classList.toggle('ativa', i === 0);
+      img.style.display = i === 0 ? "block" : "none";
+      img.classList.toggle("ativa", i === 0);
     });
-    dotsContainer.querySelectorAll('.dot').forEach((dot, i) =>
-      dot.classList.toggle('ativa', i === 0)
-    );
+    dotsContainer
+      .querySelectorAll(".dot")
+      .forEach((dot, i) => dot.classList.toggle("ativa", i === 0));
   }
 
-  modalOverlay.querySelector('#closeLoginModal').addEventListener('click', fecharModal);
-  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) fecharModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === "Escape") fecharModal(); });
+  modalOverlay
+    .querySelector("#closeLoginModal")
+    .addEventListener("click", fecharModal);
+  modalOverlay.addEventListener("click", (e) => {
+    if (e.target === modalOverlay) fecharModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") fecharModal();
+  });
 
-  const togglePass = modal.querySelector('#togglePassword');
-  togglePass.addEventListener('click', () => {
-    const type = senhaInput.type === 'password' ? 'text' : 'password';
+  const togglePass = modal.querySelector("#togglePassword");
+  togglePass.addEventListener("click", () => {
+    const type = senhaInput.type === "password" ? "text" : "password";
     senhaInput.type = type;
     togglePass.innerHTML =
-      type === 'password'
+      type === "password"
         ? '<i class="fa-regular fa-eye"></i>'
         : '<i class="fa-regular fa-eye-slash"></i>';
   });
@@ -140,9 +154,15 @@ export function abrirModalLogin(tipoUsuario) {
   const btnLogin = modal.querySelector("#btnLogin");
 
   function obterNomeUsuario(dados) {
-    if (!dados) return 'amigo';
+    if (!dados) return "amigo";
     const usuario = Array.isArray(dados) ? dados[0] : dados;
-    return usuario?.nome || usuario?.nome_loja || usuario?.nomeLoja || usuario?.razaoSocial || 'amigo';
+    return (
+      usuario?.nome ||
+      usuario?.nome_loja ||
+      usuario?.nomeLoja ||
+      usuario?.razaoSocial ||
+      "amigo"
+    );
   }
 
   btnLogin.addEventListener("click", async () => {
@@ -158,22 +178,25 @@ export function abrirModalLogin(tipoUsuario) {
     const tipoUsuario = btnLogin.dataset.id;
 
     try {
-      const API_URL = "https://melfy-backend-production.up.railway.app";
+      const API_URL = "http://localhost:38791";
       let url, nextPage, token, info;
 
       if (tipoUsuario === "cliente") {
-        url = API_URL + "/clientes/login";
+        url = API_URL + "/usuario/login";
         nextPage = `${baseURL}pages/cliente/doces.html`;
         token = "tokenCliente";
         info = "infoCliente";
       } else if (tipoUsuario === "confeiteira") {
-        url = API_URL + "/lojas/login";
+        url = API_URL + "/usuario/login";
         nextPage = "https://melfy-confeiteira.vercel.app/";
         token = "tokenLoja";
         info = "infoLoja";
       } else if (tipoUsuario === "entregador") {
         localStorage.setItem("tokenEntregador", "tokenSimulado");
-        localStorage.setItem("infoEntregador", JSON.stringify({ nome: "Entregador Simulado" }));
+        localStorage.setItem(
+          "infoEntregador",
+          JSON.stringify({ nome: "Entregador Simulado" }),
+        );
         await alertSuccess("Bem-vindo de volta, Entregador Simulado!");
         window.location.href = "https://melfy-entregador.vercel.app/";
         return;
@@ -190,29 +213,33 @@ export function abrirModalLogin(tipoUsuario) {
         body: JSON.stringify({ email, senha }),
       });
 
-      const data = await res.json();
+      var data = await res.json();
 
       if (data.error === false) {
-        const nomeUsuario = obterNomeUsuario(data.dados);
-        const mensagemSucesso = tipoUsuario === "cliente"
-          ? `Bem-vindo de volta, ${nomeUsuario}!`
-          : `Seja bem-vindo(a), ${nomeUsuario}!`;
+        data = data.result[0];
+        console.log("Login bem-sucedido:", data);
+        const nomeUsuario = obterNomeUsuario(data);
+        const mensagemSucesso =
+          tipoUsuario === "cliente"
+            ? `Bem-vindo de volta, ${nomeUsuario}!`
+            : `Seja bem-vindo(a), ${nomeUsuario}!`;
 
         if (tipoUsuario === "confeiteira") {
           const params = new URLSearchParams();
-          params.set("token", data.token);
-          params.set("info", encodeURIComponent(JSON.stringify(data.dados)));
+          console.log("Token recebido:", data.token);
+          params.set("token", data.dados.token);
+          params.set("info", encodeURIComponent(JSON.stringify(data)));
 
           await alertSuccess(mensagemSucesso);
           window.location.href = nextPage + "#" + params.toString();
         } else {
           localStorage.setItem(token, data.token);
-          localStorage.setItem(info, JSON.stringify(data.dados));
+          localStorage.setItem(info, JSON.stringify(data));
           await alertSuccess(mensagemSucesso);
           window.location.href = nextPage;
         }
       } else {
-        await alertError(data.mensagem || 'Não foi possível efetuar login.');
+        await alertError(data.mensagem || "Não foi possível efetuar login.");
         btnLogin.disabled = false;
         btnLogin.textContent = originalText;
       }
@@ -224,5 +251,5 @@ export function abrirModalLogin(tipoUsuario) {
     }
   });
 
-  modalOverlay.style.display = 'flex';
+  modalOverlay.style.display = "flex";
 }

@@ -1,4 +1,4 @@
-const API_URL = "https://melfy-backend-production.up.railway.app";
+const API_URL = "http://localhost:38791";
 let produtoAtual = null;
 let precoUnitario = 0;
 
@@ -7,59 +7,74 @@ export function openModal(produto, lojas, rotasCliente) {
 
   const idLojaProduto = parseInt(produto.id_loja ?? produto.idLoja);
   const lojaEncontrada = lojas.find(
-    l => parseInt(l.id_loja) === idLojaProduto || parseInt(l.idLoja) === idLojaProduto
+    (l) =>
+      parseInt(l.id_loja) === idLojaProduto ||
+      parseInt(l.idLoja) === idLojaProduto,
   );
   const loja = lojaEncontrada || {
     id_loja: idLojaProduto,
     idLoja: idLojaProduto,
-    nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || 'Loja Desconhecida',
-    pfp: produto.pfp || produto.logoLoja || produto.logo_loja || produto.fotoPerfil || ''
+    nomeLoja:
+      produto.loja_nome ||
+      produto.nomeLoja ||
+      produto.nome ||
+      "Loja Desconhecida",
+    pfp:
+      produto.pfp ||
+      produto.logoLoja ||
+      produto.logo_loja ||
+      produto.fotoPerfil ||
+      "",
   };
 
-  document.querySelector('.modal-img').src =
-    produto.midia?.imagens?.[0]?.path || produto.foto || '';
-  document.querySelector('.modal-img').alt = produto.nome || '';
+  document.querySelector(".modal-img").src =
+    produto.imagens[0] || produto.foto || "";
+  document.querySelector(".modal-img").alt = produto.nome || "";
 
-  const modalLogo = document.querySelector('.modal-logo');
-  const modalNomeLoja = document.querySelector('.modal-nome-loja');
+  const modalLogo = document.querySelector(".modal-logo");
+  const modalNomeLoja = document.querySelector(".modal-nome-loja");
 
-  modalLogo.src = loja?.pfp || loja?.fotoPerfil || '';
-  modalLogo.alt = loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja';
+  modalLogo.src = loja?.pfp || loja?.fotoPerfil || "";
+  modalLogo.alt = loja?.nomeLoja || loja?.loja_nome || loja?.nome || "Loja";
   modalNomeLoja.textContent =
-    loja?.nomeLoja || loja?.loja_nome || loja?.nome || 'Loja Desconhecida';
+    loja?.nomeLoja || loja?.loja_nome || loja?.nome || "Loja Desconhecida";
 
   modalLogo.onclick = modalNomeLoja.onclick = function () {
     const idLoja = loja?.id_loja || loja?.idLoja;
     if (idLoja) {
-      localStorage.setItem('idLojaSelecionada', idLoja);
+      localStorage.setItem("idLojaSelecionada", idLoja);
       window.location.href = rotasCliente.loja;
     }
   };
 
-  document.querySelector('.modal-title').textContent = produto.nome || '';
-  document.querySelector('.modal-subtitulo').textContent = produto.subtitulo || '';
-  document.querySelector('.modal-description').textContent = produto.descricao || '';
+  document.querySelector(".modal-title").textContent = produto.nome || "";
+  document.querySelector(".modal-subtitulo").textContent =
+    produto.subtitulo || "";
+  document.querySelector(".modal-description").textContent =
+    produto.descricao || "";
 
-  const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
+  const preco = parseFloat(
+    produto.valor_uni ?? produto.preco ?? produto.valor ?? 0,
+  );
   precoUnitario = preco;
 
-  document.querySelector('.modal-price').textContent =
-    `R$ ${preco.toFixed(2).replace('.', ',')}`;
+  document.querySelector(".modal-price").textContent =
+    `R$ ${preco.toFixed(2).replace(".", ",")}`;
 
-  document.getElementById('qtd-value').textContent = 1;
+  document.getElementById("qtd-value").textContent = 1;
 
   atualizarTotal();
 
-  document.getElementById('product-modal').style.display = 'flex';
+  document.getElementById("product-modal").style.display = "flex";
 }
 
 function atualizarTotal() {
-  const quantidade = parseInt(document.getElementById('qtd-value').textContent);
+  const quantidade = parseInt(document.getElementById("qtd-value").textContent);
   const total = quantidade * precoUnitario;
 
-  const totalElement = document.getElementById('total-price');
+  const totalElement = document.getElementById("total-price");
   if (totalElement) {
-    totalElement.textContent = total.toFixed(2).replace('.', ',');
+    totalElement.textContent = total.toFixed(2).replace(".", ",");
   }
 }
 
@@ -68,7 +83,7 @@ export function fecharModal() {
 }
 
 export function alterarQuantidade(valor) {
-  const qtdSpan = document.getElementById('qtd-value');
+  const qtdSpan = document.getElementById("qtd-value");
   let quantidade = parseInt(qtdSpan.textContent);
 
   quantidade += valor;
@@ -91,17 +106,20 @@ export async function adicionarNaSacola() {
     return;
   }
 
-  if (!produtoAtual || !produtoAtual.id_produto) {
+  if (!produtoAtual || !produtoAtual._id) {
     alertError("Produto não encontrado ou sem ID válido.");
     return;
   }
 
   const quantidade = parseInt(document.getElementById("qtd-value").textContent);
-  const body = { qtd: quantidade };
+  const body = {
+    id_produto: produtoAtual._id,
+    qtd: quantidade,
+  };
 
   let respostaJson = null;
   try {
-    const resposta = await fetch(`${API_URL}/carrinho?id=${produtoAtual.id_produto}`, {
+    const resposta = await fetch(`${API_URL}/carrinho`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +146,8 @@ export async function adicionarNaSacola() {
     localStorage.setItem("Sacola", JSON.stringify(respostaJson.carrinho));
   }
 
-  const imagemProduto = produtoAtual.midia?.imagens?.[0]?.path || produtoAtual.foto || '';
+  const imagemProduto =
+    produtoAtual.imagens[0] || produtoAtual.foto || "";
   mostrarAnimacaoCarrinho(imagemProduto, produtoAtual.nome);
 
   fecharModal();
@@ -140,20 +159,22 @@ export async function adicionarNaSacola() {
 }
 
 export function mostrarAnimacaoCarrinho(imgProduto, nomeProduto) {
-  const animacao = document.getElementById('carrinho-animacao');
-  const img = document.getElementById('img-doce-animado');
-  const mensagem = document.getElementById('mensagem-sacola');
+  const animacao = document.getElementById("carrinho-animacao");
+  const img = document.getElementById("img-doce-animado");
+  const mensagem = document.getElementById("mensagem-sacola");
 
   img.src = imgProduto;
   img.alt = nomeProduto;
   mensagem.textContent = `"${nomeProduto}" foi adicionado à sacola com sucesso!`;
 
-  img.classList.remove('img-doce-sacola');
+  img.classList.remove("img-doce-sacola");
   void img.offsetWidth;
-  img.classList.add('img-doce-sacola');
+  img.classList.add("img-doce-sacola");
 
-  animacao.style.display = 'flex';
-  setTimeout(() => { animacao.style.display = 'none'; }, 3000);
+  animacao.style.display = "flex";
+  setTimeout(() => {
+    animacao.style.display = "none";
+  }, 3000);
 }
 
 window.alterarQuantidade = alterarQuantidade;
