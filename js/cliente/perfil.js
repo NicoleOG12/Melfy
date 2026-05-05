@@ -2,6 +2,15 @@ import { rotasGerais } from "../rotas.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   exibirInformacoes();
+
+  const botaoMinhasLojas = document.getElementById("menu-lojas");
+  if (botaoMinhasLojas) {
+    botaoMinhasLojas.addEventListener("click", function (event) {
+      event.preventDefault();
+      console.log("menu-lojas clicado");
+      window.minhasLojas?.();
+    });
+  }
 });
 
 function exibirInformacoes() {
@@ -119,6 +128,35 @@ window.sairConta = async function () {
   await alertSuccess("Logout realizado com sucesso. Até breve!");
   window.location.href = rotasGerais.home;
 };
+
+
+//[STELA] Função para pegar as lojas e direcionar corretamente
+  const API_URL = "http://localhost:38791/";
+
+window.minhasLojas = async function () {
+  try {
+    console.log("minhasLojas chamada");
+    const response = await fetch(`${API_URL}/lojas`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("tokenCliente")}`,
+      },
+    });
+    const data = await response.json();
+    if (data.length === 0) {
+      alertInfo("Você ainda não tem nenhuma loja, gostaria de configurar agora?");
+      return;
+    } else {
+      localStorage.setItem("minhasLojas", JSON.stringify(data));
+      window.location.href = `https://melfy-confeiteira.vercel.app/`;
+    }
+  } catch (error) {
+    console.error('Erro ao carregar minhas lojas:', error);
+  }
+};
+
+
 
 window.abrirModal = function () {
   document.getElementById("modal").style.display = "flex";
@@ -339,3 +377,5 @@ window.selecionarSubBadge = function (elemento) {
     .forEach((el) => el.classList.remove("active"));
   elemento.classList.add("active");
 };
+
+

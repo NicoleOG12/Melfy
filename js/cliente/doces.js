@@ -4,7 +4,7 @@ import { openModal, adicionarNaSacola } from "../modal.js";
 document.addEventListener("DOMContentLoaded", async function () {
   function verificarParametroPagamento() {
     const params = new URLSearchParams(window.location.search);
-    const status = params.get("payment");
+    const status = params.get("payment");              
 
     if (status === "error") {
       alert("Seu pagamento não foi concluído");
