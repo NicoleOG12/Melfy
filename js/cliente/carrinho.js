@@ -500,15 +500,18 @@ function renderizarProdutosAleatorios(produtos, lojas) {
   const cardsWrapper = document.querySelector('.cards-wrapper');
   cardsWrapper.innerHTML = '';
 
+  const limite = window.innerWidth < 1367 ? 4 : 5;
+
   const produtosAleatorios = produtos
     .slice()
     .sort(() => 0.5 - Math.random())
-    .slice(0, 5);
+    .slice(0, limite);
 
   produtosAleatorios.forEach(produto => {
     const lojaEncontrada = lojas.find(
       l => String(l.id_loja) === String(produto.id_loja) || String(l.idLoja) === String(produto.id_loja)
     );
+
     const loja = lojaEncontrada || {
       id: produto.id_loja || produto.idLoja,
       nomeLoja: produto.loja_nome || produto.nomeLoja || produto.nome || 'Loja',
@@ -554,7 +557,6 @@ function renderizarProdutosAleatorios(produtos, lojas) {
     cardsWrapper.appendChild(card);
   });
 }
-
 // ============================================================
 // INICIALIZAÇÃO AO CARREGAR A PÁGINA
 // ============================================================
