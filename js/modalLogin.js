@@ -31,6 +31,7 @@ export function abrirModalLogin(tipoUsuario) {
             </div>
 
             <div class="login">
+              <img src="/assents/img/Logo/Melfy-versão final.svg" class="logo-login" alt="Logo Melfy"/>
               <h1 class="titulo-login">Faça o seu login!</h1>
               <div class="input-group">
                 <div class="input-container">

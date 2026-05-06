@@ -354,12 +354,127 @@ input:focus{
   margin-bottom: 6px;
 }
 
-.container-button { width: 100%; max-width: 600px; display:flex; justify-content:center; }
+.container-button { 
+  width: 100%; 
+  max-width: 600px; 
+  display:flex; 
+  justify-content:center; 
+}
 
+.logo-login {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .logo-login {
+    display: block;
+  }
+  
+  .login-modal {
+    width: 95%;
+    height: auto;
+    max-height: 95vh;
+    border-radius: 20px;
+    overflow-y: auto;
+  }
+
+  .container-modal {
+    flex-direction: column;
+  }
+
+  .image-slider {
+    display: none;
+  }
+
+  .login {
+    width: 100%;
+    height: 100%;
+    padding: 60px 25px 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .titulo-login {
+    font-size: 28px;
+    margin-top: 0;
+    bottom: 0;
+    margin-bottom: 20px;
+    position: static;
+  }
+
+  .input-group {
+    width: 95%;
+    gap: 15px;
+  }
+
+  .recup-senha {
+    text-align: right;
+    font-size: 14px;
+    padding-right: 5px;
+  }
+
+  .btn-login {
+    width: 100%;
+    padding: 16px;
+    font-size: 20px;
+    margin-top: 5px;
+  }
+
+  .cadastro {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+}
 
 @media (max-width: 520px) {
-  .input-group { width: 88%; }
-  .input-container input { padding: 12px 12px 12px 46px; font-size: 15px; }
-  .input-container .icon { left: 12px; font-size: 16px; }
-  .visible-pass { right: 10px; }
+  .logo-login {
+    display: block;
+  }
+
+  .login-modal {
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .image-slider {
+    display: none;
+  }
+
+  .login {
+    padding: 30px 15px;
+  }
+
+  .titulo-login {
+    font-size: 24px;
+  }
+
+  .input-container input { 
+    padding: 12px 12px 12px 46px; 
+    font-size: 15px; 
+  }
+  
+  .input-container .icon { 
+    left: 12px; 
+    font-size: 16px; 
+  }
+  
+  .visible-pass { 
+    right: 10px; 
+  }
+
+  .btn-login {
+    width: 100%;
+    font-size: 18px;
+    padding: 14px;
+    --radii: 20px;
+  }
+
+  .logo-login {
+    width: 170px;
+    height: 100px;
+    margin-top: -70px;
+    margin-bottom: 10px;
+  }
 }
