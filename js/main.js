@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!res.ok) throw new Error("Erro ao carregar carrinho");
 
           const data = await res.json();
-          const carrinho = data.result || [];
+          const carrinho = Array.isArray(data.result) ? data.result : Array.isArray(data.items) ? data.items : [];
 
           const cartCount = document.getElementById("cartCount");
           if (!cartCount) return;
