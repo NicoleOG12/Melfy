@@ -250,6 +250,30 @@ document.addEventListener("DOMContentLoaded", function () {
       e.target.value = formatarCEP(e.target.value).substring(0, 9);
     });
   }
+
+  const modal = document.getElementById("modal-endereco");
+  const btnAbrir = document.getElementById("btn-adicionar-endereco");
+  const btnFechar = document.getElementById("fechar-modal");
+
+  if (btnAbrir && modal) {
+    btnAbrir.addEventListener("click", () => {
+      modal.style.display = "flex";
+    });
+  }
+
+  if (btnFechar && modal) {
+    btnFechar.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+  }
 });
 
 window.abrirModalPagamento = function() {

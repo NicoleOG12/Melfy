@@ -232,3 +232,30 @@ a {
   color: inherit;
 
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-endereco {
+  background: #fff7eb;
+  padding: 30px;
+  border-radius: 20px;
+  width: 700px;
+  max-width: 95%;
+  border: 2px solid #ffe8b3;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
