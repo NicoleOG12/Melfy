@@ -173,11 +173,10 @@ export function abrirModalLogin(tipoUsuario) {
         token = "tokenLoja";
         info = "infoLoja";
       } else if (tipoUsuario === "entregador") {
-        localStorage.setItem("tokenEntregador", "tokenSimulado");
-        localStorage.setItem("infoEntregador", JSON.stringify({ nome: "Entregador Simulado" }));
-        await alertSuccess("Bem-vindo de volta, Entregador Simulado!");
-        window.location.href = "https://melfy-entregador.vercel.app/";
-        return;
+        url = "https://melfy-api-production.up.railway.app/auth/signin";
+        nextPage = `https://melfy-entregador.vercel.app/`;
+        token = "tokenDelivery";
+        info = "infoDelivery";
       } else {
         return;
       }
