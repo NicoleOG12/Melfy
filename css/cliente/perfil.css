@@ -114,13 +114,13 @@
 
 .perfil-content {
   flex: 1;
-  max-width: 900px;
+  max-width: 1100px;
   background: #fff7eb;
   padding: 40px;
   border-radius: 22px;
   box-shadow: 0 8px 20px rgba(255, 194, 80, 0.15); 
   border: 2px solid #ffe8b3;
-  margin-top: -30px;
+  margin: 0px auto 0; 
 }
 
 .dados-header {
