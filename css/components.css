@@ -379,14 +379,14 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 
 .modal-price {
   color: #b36800;
-  font-weight: 900;
-  font-size: 22px;
+  font-weight: 700;
+  font-size: 20px;
   margin-top: -16px;
   text-shadow: 0 0 8px #ffbe3e88;
 }
 
 .modal-total {
-  font-weight: 900;
+  font-weight: 600;
   font-size: 24px;
   color: #8b4d00;
   margin-top: -35px;
@@ -408,8 +408,8 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   align-items: center;
   gap: 10px;
   background-color: #fff1b8;
-  padding: 6px 16px;
-  border-radius: 14px;
+  padding: 10px 10px;
+  border-radius: 15px;
   font-weight: 700;
   color: #7c6000;
   user-select: none;

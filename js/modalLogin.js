@@ -169,7 +169,7 @@ export function abrirModalLogin(tipoUsuario) {
         info = "infoCliente";
       } else if (tipoUsuario === "confeiteira") {
         url = API_URL + "/lojas/login";
-        nextPage = "https://melfy-confeiteira.vercel.app/";
+        nextPage = "http://localhost:5174/";
         token = "tokenLoja";
         info = "infoLoja";
       } else if (tipoUsuario === "entregador") {

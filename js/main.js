@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i class="fas fa-user"></i>
               </button>
               <div class="user-dropdown-menu" id="userDropdownMenu">
-                <a href="#" class="user-dropdown-item">Sou confeiteira</a>
                 <a href="#" class="user-dropdown-item">Sou cliente</a>
                 <a href="#" class="user-dropdown-item">Sou entregador</a>
               </div>
@@ -136,8 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             dropdownMenu.classList.remove("active");
             let tipoUsuario = "";
-            if (link.textContent.includes("confeiteira")) tipoUsuario = "confeiteira";
-            else if (link.textContent.includes("cliente")) tipoUsuario = "cliente";
+            if (link.textContent.includes("cliente")) tipoUsuario = "cliente";
             else if (link.textContent.includes("entregador")) tipoUsuario = "entregador";
             abrirModalLogin(tipoUsuario);
           });

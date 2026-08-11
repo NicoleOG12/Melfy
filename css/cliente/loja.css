@@ -12,7 +12,9 @@ main {
   border-radius: 20px;  
   box-shadow: 0 6px 20px rgba(0,0,0,0.2); 
   box-sizing: border-box;
+  margin-top: 30px;
 }
+
 .banner {
   width: 100%;               
   max-width: 1080px;        
