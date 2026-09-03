@@ -11,11 +11,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
-              <img
-                src="/public/assents/img/Logo/melfy.svg"
-                alt="Logo"
-                className="footer-logo-image"
-              />
+              <img src="/assents/img/Logo/melfy.svg" alt="Logo" className="footer-logo-image"/>
             </div>
             <p className="footer-description">
               Conectamos você aos melhores confeiteiros da sua região. Descubra
