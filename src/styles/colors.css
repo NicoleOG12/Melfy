@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mellow-yellow-100: #FFF9E6;
+  --color-mellow-yellow-200: #FFF0B3;
+  --color-mellow-yellow-300: #FFE680;
+  --color-mellow-yellow-400: #FFDD4D;
+  --color-mellow-yellow-500: #FFD11A;
+  --color-mellow-yellow-600: #E6BC00;
+  --color-mellow-yellow-700: #B38F00;
+
+  --color-cosy-brown-100: #F5EEE6;
+  --color-cosy-brown-200: #E8D5C0;
+  --color-cosy-brown-300: #D9BB95;
+  --color-cosy-brown-400: #C9A06A;
+  --color-cosy-brown-500: #BA8540;
+  --color-cosy-brown-600: #9C6A2D;
+  --color-cosy-brown-700: #754F1F;
+
+  --color-sweet-pink: #FFB6C1;
+  --color-cream: #FFFDD0;
+
+  --font-nunito: "Nunito", sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+:root {
+   
+  /* Amarelos */
+  --yellow-light:    #FFF0B3;   /* fundos, cards, highlights suaves     */
+  --yellow:          #FFD868;   /* accent principal, bordas             */
+  --yellow-mid:      #FFC43D;   /* botões, badges, ícones               */
+  --yellow-dark:     #e8af2c;   /* hover, active, estados               */
+
+  /* Marrons */
+  --brown-light:     #6B3F2A;   /* textos sobre fundo claro             */
+  --brown:           #4A2014;   /* header, botões escuros, toast        */
+  --brown-dark:      #2e1200;   /* contraste máximo, footer             */
+
+  /* Fundos */
+  --surface-0:       #ffffff;   /* branco puro — cards, paper           */
+  --surface-1:       #fff9f1;   /* fundo warm da página                 */
+  --surface-2:       #fff4d3;   /* fundo warm amarelado — imagens       */
+
+  /* Bordas */
+  --border-light:    #ffe3a6;   /* bordas suaves — cards, inputs        */
+  --border:          #FFD868;   /* bordas padrão                        */
+  --border-strong:   #92400e;   /* bordas de contraste — header         */
+
+  /* Verdes */
+  --green:           #4f9b62;   /* status, sucesso, cupom               */
+  --green-light:     #38ca7a;   /* live dot, online, badge              */
+
+  /* Vermelhos */
+  --red:             #c53030;   /* danger, logout, excluir              */
+  --red-light:       #fee2e2;   /* fundo hover destrutivo               */
+
+  /* Neutros */
+  --muted:           #8a6f5e;   /* texto secundário, placeholder        */
+  --white:           #ffffff;
+
+  /* Únicos sem equivalente na escala */
+  --footer-bg:       #f59e0b;   /* laranja âmbar do footer              */
+  --footer-border:   #fbbf24;   /* linha divisória do footer            */
+  --header-text:     #fef3c7;   /* texto claro sobre header escuro      */
+
+  /* Fontes */
+  --font-principal:  'Nunito', sans-serif;
+}

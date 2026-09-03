@@ -16,9 +16,9 @@
 
 <h2>🛠️ Tecnologias Usadas</h2>
 <ul>
-  <li>HTML5 🍪</li>
-  <li>CSS3 🍫</li>
-  <li>JavaScript 🍭</li>
+  <li>React 🍪</li>
+  <li>CSS3/Tailwind css 🍫</li>
+  <li>JavaScript (JSX) 🍭</li>
   <li>JSON 🍬 (para gerenciar os dados)</li>
 </ul>
 
