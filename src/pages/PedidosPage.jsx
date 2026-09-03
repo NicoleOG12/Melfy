@@ -37,8 +37,8 @@ export default function PedidosPage() {
 
     if (!encontrado) return;
 
-    localStorage.removeItem("melfy_pedido_aberto");
     pedidoAbertoRef.current = true;
+    localStorage.removeItem("melfy_pedido_aberto");
 
     const emAtivo = active.some(
       (o) => String(o.id) === idPendente || String(o.id_pedido) === idPendente

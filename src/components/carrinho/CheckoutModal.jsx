@@ -249,6 +249,18 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
           alt="calda"
         />
 
+        {etapa === 2 && (
+          <div className="checkout-voltar">
+            <button
+              type="button"
+              className="btn-voltar-endereco"
+              onClick={voltarParaEndereco}
+            >
+              <i className="fa-solid fa-arrow-left" /> Alterar endereço
+            </button>
+          </div>
+        )}
+
         <div className="checkout-steps">
           <div className={`checkout-step ${etapa >= 1 ? "ativo" : ""}`}>
             <div className="checkout-step-numero">
@@ -513,7 +525,6 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
               >
                 <div className="subtitulo">
                   <h2 className="tipo_cartao">Visa - Crédito</h2>
-                  <span className="dados_cartao">****7634</span>
                   <input className="selecionar" type="checkbox" />
                 </div>
 
@@ -532,14 +543,14 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
 
                   <div className="tipos_add">
                     <div className="cartao_tipos">
-                      <div className="cartao">
+                      <label className="cartao">
+                        <input type="radio" name="tipo_cartao" value="debito" />
                         <span>Débito</span>
-                        <input className="selecionar" type="checkbox" />
-                      </div>
-                      <div className="cartao">
-                        <span className="tipo_cartao">Crédito</span>
-                        <input className="selecionar" type="checkbox" />
-                      </div>
+                      </label>
+                      <label className="cartao">
+                        <input type="radio" name="tipo_cartao" value="credito" />
+                        <span>Crédito</span>
+                      </label>
                     </div>
                     <button type="button" className="btn_add">
                       ADICIONAR
@@ -630,15 +641,6 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
               </div>
             </form>
 
-            <div className="checkout-voltar">
-              <button
-                type="button"
-                className="btn-voltar-endereco"
-                onClick={voltarParaEndereco}
-              >
-                <i className="fa-solid fa-arrow-left" /> Alterar endereço
-              </button>
-            </div>
           </>
         )}
       </div>
