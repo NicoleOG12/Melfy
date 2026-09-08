@@ -32,7 +32,9 @@ beforeEach(() => {
     setItem: vi.fn(),
     removeItem: vi.fn(),
   });
-  vi.stubGlobal("dispatchEvent", vi.fn());
+  vi.stubGlobal("window", {
+    dispatchEvent: vi.fn(),
+  });
 });
 
 afterEach(() => {
@@ -216,7 +218,7 @@ describe("adicionarAoCarrinho", () => {
       })
     );
     expect(result).toEqual(responseData);
-    expect(dispatchEvent).toHaveBeenCalled();
+    expect(window.dispatchEvent).toHaveBeenCalled();
   });
 });
 
@@ -240,7 +242,7 @@ describe("removerDoCarrinho", () => {
       expect.objectContaining({ method: "DELETE" })
     );
     expect(result).toEqual({ removed: true });
-    expect(dispatchEvent).toHaveBeenCalled();
+    expect(window.dispatchEvent).toHaveBeenCalled();
   });
 });
 
@@ -268,7 +270,7 @@ describe("criarPedido", () => {
       })
     );
     expect(result).toEqual({ id_pedido: 42 });
-    expect(dispatchEvent).toHaveBeenCalled();
+    expect(window.dispatchEvent).toHaveBeenCalled();
   });
 });
 

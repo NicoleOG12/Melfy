@@ -7,7 +7,7 @@ export default defineConfig({
   server: { port: 5173 },
   build: { sourcemap: true },
   test: {
-    environment: "jsdom",
+    environment: "node",
     globals: true,
     coverage: {
       provider: "v8",
