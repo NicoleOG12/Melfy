@@ -1,0 +1,136 @@
+name: CI – Melfy Frontend
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# ---------------------------------------------------------------------------
+# Variables (informações de configuração não-sensíveis)
+# ---------------------------------------------------------------------------
+env:
+  NODE_ENV: test
+  VITE_APP_NAME: Melfy
+  COVERAGE_THRESHOLD: "80"
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Gitleaks — verificação de segredos no histórico do repositório
+  # -------------------------------------------------------------------------
+  gitleaks:
+    name: Gitleaks – Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  # -------------------------------------------------------------------------
+  # CI principal — roda em múltiplas versões do Node (Matrix)
+  # -------------------------------------------------------------------------
+  ci:
+    name: CI – Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    needs: gitleaks
+
+    # Matrix: garante compatibilidade com as versões LTS ativas do Node
+    strategy:
+      matrix:
+        node-version: ["20", "22"]
+      fail-fast: false
+
+    steps:
+      # -----------------------------------------------------------------------
+      # 1. Checkout
+      # -----------------------------------------------------------------------
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      # -----------------------------------------------------------------------
+      # 2. Setup Node com Cache das dependências npm
+      # -----------------------------------------------------------------------
+      - name: Configurar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      # -----------------------------------------------------------------------
+      # 3. Instalar dependências (usa lock-file para instalação determinista)
+      # -----------------------------------------------------------------------
+      - name: Instalar dependências
+        run: npm ci
+
+      # -----------------------------------------------------------------------
+      # 4. Linter (oxlint)
+      # -----------------------------------------------------------------------
+      - name: Executar linter (oxlint)
+        run: npm run lint
+
+      # -----------------------------------------------------------------------
+      # 5. Testes unitários
+      # -----------------------------------------------------------------------
+      - name: Executar testes unitários
+        run: npm test
+        env:
+          # Secret: URL base da API (não exposta em logs nem no código)
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      # -----------------------------------------------------------------------
+      # 6. Cobertura de testes
+      # -----------------------------------------------------------------------
+      - name: Gerar relatório de cobertura
+        run: npm run test:coverage
+
+      # -----------------------------------------------------------------------
+      # 7. Fazer upload do relatório de cobertura como artefato
+      # -----------------------------------------------------------------------
+      - name: Upload do relatório de cobertura
+        uses: actions/upload-artifact@v4
+        if: matrix.node-version == '22'
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # Build de produção — só executa após o CI passar na versão LTS mais recente
+  # -------------------------------------------------------------------------
+  build:
+    name: Build de produção
+    runs-on: ubuntu-latest
+    needs: ci
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build de produção (Vite)
+        run: npm run build
+        env:
+          # Secret: URL da API injetada no bundle de produção
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Upload do artefato de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
