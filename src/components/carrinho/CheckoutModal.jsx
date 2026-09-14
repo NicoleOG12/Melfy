@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { formatarPreco } from "../../utils/cartUtils";
 import MelfySwal from "../../services/melfySwal";
+import {
+  fetchEnderecosAPI,
+  criarEnderecoAPI,
+  atualizarEnderecoAPI,
+  removerEnderecoAPI,
+} from "../../services/api";
 
 const STORAGE_KEY = "melfy_endereco_entrega";
 
@@ -20,14 +26,14 @@ function carregarEnderecoSalvo() {
     const parsed = JSON.parse(raw);
 
     if (parsed && (parsed.rua || parsed.cidade)) return parsed;
-  } catch {}
+  } catch { }
   return null;
 }
 
 function persistirEndereco(end) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(end));
-  } catch {}
+  } catch { }
 }
 
 async function buscarEnderecoporCoordenadas(lat, lng) {
@@ -39,12 +45,12 @@ async function buscarEnderecoporCoordenadas(lat, lng) {
   const data = await res.json();
   const a = data.address ?? {};
   return {
-    rua:    a.road ?? a.pedestrian ?? a.footway ?? "",
-    numero: a.house_number ?? "",
+    rua: a.road ?? a.pedestrian ?? a.footway ?? "",
+    numero: a.house_number || "0",
     bairro: a.suburb ?? a.neighbourhood ?? a.quarter ?? a.city_district ?? "",
     cidade: a.city ?? a.town ?? a.village ?? a.municipality ?? "",
-    uf:     a.state_code?.replace("BR-", "") ?? a.state ?? "",
-    cep:    (a.postcode ?? "").replace(/\s/g, ""),
+    uf: a.state_code?.replace("BR-", "") ?? a.state ?? "",
+    cep: (a.postcode ?? "").replace(/\s/g, ""),
   };
 }
 
@@ -52,6 +58,11 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
   const [etapa, setEtapa] = useState(1);
 
   const [editando, setEditando] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
+  const [enderecosLista, setEnderecosLista] = useState([]);
+  const [enderecoSelecionadoId, setEnderecoSelecionadoId] = useState(null);
+  const [carregandoLista, setCarregandoLista] = useState(false);
+
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
   const [enderecoEdit, setEnderecoEdit] = useState(ENDERECO_VAZIO);
   const [geoStatus, setGeoStatus] = useState("idle");
@@ -61,30 +72,60 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
   const frete = cep.length === 9 ? 9 : 0;
   const total = subtotal + frete;
 
-  // Ao abrir o modal: carrega do localStorage se existir, senão pede permissão
+  function selecionarEndereco(item) {
+    if (!item) return;
+    const idItem = item.id || item.id_endereco;
+    const norm = {
+      id: idItem,
+      rua: item.rua || "",
+      numero: item.numero || "",
+      bairro: item.bairro || "",
+      cidade: item.cidade || "",
+      uf: item.uf || item.estado || "",
+      cep: item.cep || "",
+    };
+    setEndereco(norm);
+    setEnderecoEdit(norm);
+    setEnderecoSelecionadoId(idItem);
+    setGeoStatus("ok");
+    if (norm.cep) {
+      setCep(norm.cep);
+      setCepStatus("ok");
+    }
+  }
+
+  // Ao abrir o modal: carrega endereços da API
   useEffect(() => {
     if (!open) return;
     setEtapa(1);
     setEditando(false);
+    setEditandoId(null);
     setCepFormStatus("idle");
 
-    const salvo = carregarEnderecoSalvo();
-    if (salvo) {
-      setEndereco(salvo);
-      setEnderecoEdit(salvo);
-      setGeoStatus("ok");
-
-      if (salvo.cep) {
-        setCep(salvo.cep);
-        setCepStatus("ok");
+    async function carregar() {
+      setCarregandoLista(true);
+      let lista = await fetchEnderecosAPI();
+      if (!Array.isArray(lista) || lista.length === 0) {
+        const salvo = carregarEnderecoSalvo();
+        if (salvo) lista = [{ id: salvo.id || 1, ...salvo }];
       }
-    } else {
-      setEndereco(ENDERECO_VAZIO);
-      setEnderecoEdit(ENDERECO_VAZIO);
-      setCep("");
-      setCepStatus("idle");
-      setGeoStatus(navigator.geolocation ? "aguardando" : "erro");
+      setEnderecosLista(lista || []);
+      setCarregandoLista(false);
+
+      if (lista && lista.length > 0) {
+        const principal = lista.find((a) => a.principal) || lista[0];
+        selecionarEndereco(principal);
+      } else {
+        setEndereco(ENDERECO_VAZIO);
+        setEnderecoEdit(ENDERECO_VAZIO);
+        setEnderecoSelecionadoId(null);
+        setCep("");
+        setCepStatus("idle");
+        setGeoStatus(navigator.geolocation ? "aguardando" : "erro");
+      }
     }
+
+    carregar();
   }, [open]);
 
   function solicitarLocalizacao() {
@@ -96,14 +137,32 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
             pos.coords.latitude,
             pos.coords.longitude
           );
-          setEndereco(encontrado);
-          setEnderecoEdit(encontrado);
           setGeoStatus("ok");
 
-          if (encontrado.cep) {
-            setCep(encontrado.cep);
-            setCepStatus("ok");
+          let itemComId = { ...encontrado, id: Date.now() };
+          try {
+            const res = await criarEnderecoAPI({
+              ...encontrado,
+              estado: encontrado.uf,
+              principal: true,
+            });
+            const criado = res?.data || res?.address || res;
+            if (criado && (criado.id || criado.id_endereco)) {
+              itemComId.id = criado.id || criado.id_endereco;
+            }
+          } catch (apiErr) {
+            //console.warn("Aviso ao salvar localização na API:", apiErr);
           }
+
+          setEnderecosLista((prev) => {
+            const filtrados = prev.filter(
+              (e) => (e.id || e.id_endereco) !== itemComId.id
+            );
+            return [itemComId, ...filtrados];
+          });
+
+          selecionarEndereco(itemComId);
+          persistirEndereco(itemComId);
         } catch {
           setGeoStatus("erro");
         }
@@ -113,7 +172,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     );
   }
 
-  const [cepStatus, setCepStatus] = useState("idle");    
+  const [cepStatus, setCepStatus] = useState("idle");
   const [cepFormStatus, setCepFormStatus] = useState("idle");
 
   async function mudarCep(event) {
@@ -131,12 +190,12 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
         if (data.erro) throw new Error("CEP não encontrado");
 
         const novo = {
-          rua:    data.logradouro ?? "",
+          rua: data.logradouro ?? "",
           numero: endereco.numero ?? "",
           bairro: data.bairro ?? "",
           cidade: data.localidade ?? "",
-          uf:     data.uf ?? "",
-          cep:    valor,
+          uf: data.uf ?? "",
+          cep: valor,
         };
         setEndereco(novo);
         setEnderecoEdit(novo);
@@ -163,11 +222,11 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
         if (data.erro) throw new Error("não encontrado");
         setEnderecoEdit((prev) => ({
           ...prev,
-          cep:    valor,
-          rua:    data.logradouro ?? prev.rua,
-          bairro: data.bairro     ?? prev.bairro,
+          cep: valor,
+          rua: data.logradouro ?? prev.rua,
+          bairro: data.bairro ?? prev.bairro,
           cidade: data.localidade ?? prev.cidade,
-          uf:     data.uf         ?? prev.uf,
+          uf: data.uf ?? prev.uf,
         }));
         setCepFormStatus("ok");
       } catch {
@@ -178,21 +237,120 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     }
   }
 
-  function salvarEndereco() {
-    persistirEndereco(enderecoEdit);
-    setEndereco(enderecoEdit);
-    setEditando(false);
-    setGeoStatus("ok");
-
-    if (enderecoEdit.cep) {
-      setCep(enderecoEdit.cep);
-      setCepStatus("ok");
+  async function salvarEndereco() {
+    if (!enderecoEdit.rua || !enderecoEdit.numero) {
+      MelfySwal({
+        icon: "warning",
+        title: "Campos obrigatórios",
+        text: "Por favor, preencha ao menos a rua e o número.",
+      });
+      return;
     }
+
+    const payload = {
+      cep: enderecoEdit.cep || "",
+      estado: enderecoEdit.uf || enderecoEdit.estado || "",
+      cidade: enderecoEdit.cidade || "",
+      bairro: enderecoEdit.bairro || "",
+      rua: enderecoEdit.rua || "",
+      numero: enderecoEdit.numero || "",
+      principal: true,
+    };
+
+    try {
+      let itemSalvo;
+      if (editandoId) {
+        await atualizarEnderecoAPI(editandoId, payload);
+        itemSalvo = { ...enderecoEdit, id: editandoId, uf: payload.estado };
+        setEnderecosLista((prev) =>
+          prev.map((item) =>
+            (item.id || item.id_endereco) === editandoId ? itemSalvo : item
+          )
+        );
+      } else {
+        const res = await criarEnderecoAPI(payload);
+        const criado = res?.data || res?.address || res;
+        const novoId = criado?.id || criado?.id_endereco || Date.now();
+        itemSalvo = { ...enderecoEdit, id: novoId, uf: payload.estado };
+        setEnderecosLista((prev) => [itemSalvo, ...prev]);
+      }
+
+      selecionarEndereco(itemSalvo);
+      persistirEndereco(itemSalvo);
+      setEditando(false);
+      setEditandoId(null);
+    } catch (err) {
+      console.error("Erro ao salvar endereço:", err);
+      MelfySwal({
+        icon: "error",
+        title: "Erro ao salvar",
+        text: err.message || "Não foi possível salvar o endereço.",
+      });
+    }
+  }
+
+  async function excluirEnderecoCard(id, event) {
+    if (event) event.stopPropagation();
+    const result = await MelfySwal({
+      icon: "warning",
+      title: "Excluir endereço?",
+      text: "Deseja realmente remover este endereço?",
+      showCancelButton: true,
+      confirmButtonText: "Sim, remover",
+      cancelButtonText: "Cancelar",
+    });
+    if (!result.isConfirmed) return;
+
+    try {
+      await removerEnderecoAPI(id);
+      const filtrados = enderecosLista.filter(
+        (item) => (item.id || item.id_endereco) !== id
+      );
+      setEnderecosLista(filtrados);
+
+      if (enderecoSelecionadoId === id) {
+        if (filtrados.length > 0) {
+          selecionarEndereco(filtrados[0]);
+        } else {
+          setEndereco(ENDERECO_VAZIO);
+          setEnderecoSelecionadoId(null);
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao remover endereço:", err);
+      MelfySwal({
+        icon: "error",
+        title: "Erro ao excluir",
+        text: err.message || "Não foi possível remover o endereço.",
+      });
+    }
+  }
+
+  function iniciarEdicaoCard(item, event) {
+    if (event) event.stopPropagation();
+    const id = item.id || item.id_endereco;
+    setEditandoId(id);
+    setEnderecoEdit({
+      rua: item.rua || "",
+      numero: item.numero || "",
+      bairro: item.bairro || "",
+      cidade: item.cidade || "",
+      uf: item.uf || item.estado || "",
+      cep: item.cep || "",
+    });
+    setEditando(true);
+  }
+
+  function iniciarNovoEndereco() {
+    setEditandoId(null);
+    setEnderecoEdit(ENDERECO_VAZIO);
+    setEditando(true);
   }
 
   function cancelarEdicao() {
     setEnderecoEdit(endereco);
     setEditando(false);
+    setEditandoId(null);
   }
 
   function confirmarEndereco() {
@@ -214,7 +372,12 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
       });
       return;
     }
-    onFinish();
+    const dadosCheckout = {
+      id_endereco_entrega: enderecoSelecionadoId || endereco.id || 1,
+      tipo_pagamento: "PIX",
+      methods: ["PIX"],
+    };
+    onFinish(dadosCheckout);
   }
 
   function handleCampoEdit(campo, valor) {
@@ -279,125 +442,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
           <div className="checkout-endereco">
             <h1>Confirmar endereço</h1>
 
-            {geoStatus === "aguardando" && (
-              <div className="geo-permissao">
-                <div className="geo-permissao-icone">
-                  <i className="fa-solid fa-location-dot" />
-                </div>
-                <h3>Usar minha localização atual</h3>
-                <p>
-                  Vamos detectar seu endereço automaticamente para facilitar
-                  a entrega. O navegador vai pedir sua permissão.
-                </p>
-                <button
-                  type="button"
-                  className="btn-permitir-localizacao"
-                  onClick={solicitarLocalizacao}
-                >
-                  <i className="fa-solid fa-location-crosshairs" />
-                  Permitir localização
-                </button>
-                <button
-                  type="button"
-                  className="btn-preencher-manual"
-                  onClick={() => {
-                    setEnderecoEdit(ENDERECO_VAZIO);
-                    setEditando(true);
-                    setGeoStatus("erro");
-                  }}
-                >
-                  Prefiro preencher manualmente
-                </button>
-              </div>
-            )}
-
-            {geoStatus === "carregando" && (
-              <div className="geo-status carregando">
-                <div className="geo-spinner" />
-                <p>Buscando sua localização atual…</p>
-              </div>
-            )}
-
-            {geoStatus === "erro" && !editando && (
-              <div className="geo-status erro">
-                <i className="fa-solid fa-triangle-exclamation" />
-                <p>
-                  Não foi possível obter sua localização.
-                  <br />
-                  <span>Verifique as permissões do navegador ou preencha manualmente.</span>
-                </p>
-                <div className="geo-erro-acoes">
-                  <button
-                    type="button"
-                    className="btn-editar-endereco"
-                    onClick={tentarNovamente}
-                  >
-                    <i className="fa-solid fa-rotate-right" /> Tentar novamente
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-confirmar-endereco"
-                    onClick={() => {
-                      setEnderecoEdit(ENDERECO_VAZIO);
-                      setEditando(true);
-                    }}
-                  >
-                    <i className="fa-solid fa-pen" /> Preencher manualmente
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {geoStatus === "ok" && !editando && (
-              <>
-                <div className="geo-badge">
-                  <i className="fa-solid fa-circle-check" />
-                  Localização detectada automaticamente
-                </div>
-
-                <div className="endereco-card">
-                  <div className="endereco-icone">
-                    <i className="fa-solid fa-location-dot" />
-                  </div>
-                  <div className="endereco-info">
-                    <p className="endereco-linha-principal">
-                      {endereco.rua || "—"}
-                      {endereco.numero ? `, ${endereco.numero}` : ""}
-                    </p>
-                    <p className="endereco-linha-secundaria">
-                      {endereco.bairro && `${endereco.bairro} — `}
-                      {endereco.cidade}
-                      {endereco.uf && `/${endereco.uf}`}
-                    </p>
-                    {endereco.cep && (
-                      <p className="endereco-cep">CEP: {endereco.cep}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="endereco-acoes">
-                  <button
-                    type="button"
-                    className="btn-editar-endereco"
-                    onClick={() => {
-                      setEnderecoEdit(endereco);
-                      setEditando(true);
-                    }}
-                  >
-                    <i className="fa-solid fa-pen" /> Editar
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-confirmar-endereco"
-                    onClick={confirmarEndereco}
-                  >
-                    Entregar aqui <i className="fa-solid fa-arrow-right" />
-                  </button>
-                </div>
-              </>
-            )}
-
-            {editando && (
+            {editando ? (
               <div className="endereco-form">
                 <div className="endereco-form-linha">
                   <div className="endereco-form-grupo flex-2">
@@ -495,9 +540,141 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
                   </button>
                 </div>
               </div>
+            ) : (
+              <>
+                <div className="enderecos-lista-header">
+                  <button
+                    type="button"
+                    className="btn-obter-geo"
+                    onClick={solicitarLocalizacao}
+                  >
+                    <i className="fa-solid fa-location-crosshairs" />
+                    {geoStatus === "carregando"
+                      ? "Obtendo GPS..."
+                      : "Usar localização atual"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-novo-endereco-modal"
+                    onClick={iniciarNovoEndereco}
+                  >
+                    <i className="fa-solid fa-plus" /> Adicionar endereço
+                  </button>
+                </div>
+
+                {geoStatus === "carregando" && (
+                  <div className="geo-status carregando">
+                    <div className="geo-spinner" />
+                    <p>Buscando sua localização atual…</p>
+                  </div>
+                )}
+
+                {carregandoLista ? (
+                  <div className="geo-status carregando">
+                    <div className="geo-spinner" />
+                    <p>Carregando endereços salvos…</p>
+                  </div>
+                ) : enderecosLista.length === 0 ? (
+                  <div className="geo-permissao">
+                    <div className="geo-permissao-icone">
+                      <i className="fa-solid fa-location-dot" />
+                    </div>
+                    <h3>Nenhum endereço encontrado</h3>
+                    <p>
+                      Use sua localização atual via GPS ou adicione um novo
+                      endereço manualmente para entrega.
+                    </p>
+                    <button
+                      type="button"
+                      className="btn-permitir-localizacao"
+                      onClick={solicitarLocalizacao}
+                    >
+                      <i className="fa-solid fa-location-crosshairs" />
+                      Permitir localização
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-preencher-manual"
+                      onClick={iniciarNovoEndereco}
+                    >
+                      Preencher manualmente
+                    </button>
+                  </div>
+                ) : (
+                  <div className="enderecos-lista-container">
+                    {enderecosLista.map((item) => {
+                      const idItem = item.id || item.id_endereco;
+                      const isSelecionado = String(idItem) === String(enderecoSelecionadoId);
+                      return (
+                        <div
+                          key={idItem || Math.random()}
+                          className={`endereco-card-selectable ${isSelecionado ? "selecionado" : ""
+                            }`}
+                          onClick={() => selecionarEndereco(item)}
+                        >
+                          <div className="endereco-card-left">
+                            <div className="endereco-card-radio" />
+                            <div className="endereco-info">
+                              <p className="endereco-linha-principal">
+                                {item.rua || "—"}
+                                {item.numero ? `, ${item.numero}` : ""}
+                              </p>
+                              <p className="endereco-linha-secundaria">
+                                {item.bairro ? `${item.bairro} — ` : ""}
+                                {item.cidade}
+                                {item.uf || item.estado
+                                  ? `/${item.uf || item.estado}`
+                                  : ""}
+                              </p>
+                              {item.cep && (
+                                <p className="endereco-cep">
+                                  CEP: {item.cep}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="endereco-card-actions">
+                            <button
+                              type="button"
+                              className="btn-acao-card"
+                              title="Editar"
+                              onClick={(e) => iniciarEdicaoCard(item, e)}
+                            >
+                              <i className="fa-solid fa-pen" /> Editar
+                            </button>
+                            <button
+                              type="button"
+                              className="btn-acao-card btn-excluir"
+                              title="Excluir"
+                              onClick={(e) => excluirEnderecoCard(idItem, e)}
+                            >
+                              <i className="fa-solid fa-trash" /> Excluir
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {enderecoSelecionadoId && (
+                  <div className="endereco-acoes" style={{ marginTop: "20px" }}>
+                    <button
+                      type="button"
+                      className="btn-confirmar-endereco"
+                      onClick={confirmarEndereco}
+                    >
+                      Entregar aqui <i className="fa-solid fa-arrow-right" />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
+
 
         {etapa === 2 && (
           <>
@@ -512,9 +689,8 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
               >
                 <h3 className="titulo">Cartão</h3>
                 <i
-                  className={`fa-solid fa-angle-${
-                    cartaoAberto ? "down" : "right"
-                  }`}
+                  className={`fa-solid fa-angle-${cartaoAberto ? "down" : "right"
+                    }`}
                 />
               </button>
 

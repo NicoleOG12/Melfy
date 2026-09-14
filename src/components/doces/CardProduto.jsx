@@ -1,17 +1,22 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { formatarPreco, limitarDescricao } from "../../utils/formatters";
+import {
+  formatarPreco,
+  limitarDescricao,
+  getPrecoProduto,
+} from "../../utils/formatters";
 
 export default function CardProduto({ produto, onCardClick, variant = "doces", hideLojaLogo = false }) {
   const isHome = variant === "home";
   const navigate = useNavigate();
 
   const imgSrc = produto.imagem || produto.midia?.imagens?.[0]?.path || produto.foto || "";
-  const loja   = { id: produto.id_loja ?? produto.idLoja, pfp: produto.pfp || produto.logoLoja || "" };
+  const loja   =  produto.loja;
+  const { temOferta, precoBase, precoOferta } = getPrecoProduto(produto);
 
   function irParaLoja(e) {
     e.stopPropagation();
-    if (loja.id) navigate(`/loja/${loja.id}`);
+    if (loja.id) navigate(`/loja/${loja.id_loja}`);
   }
 
   return (
@@ -19,7 +24,7 @@ export default function CardProduto({ produto, onCardClick, variant = "doces", h
       <div className="headerNovidade">
         {!hideLojaLogo && (
           <img
-            src={loja.pfp}
+            src={loja.foto_loja}
             alt="Logo da Loja"
             className="logoLoja"
             onClick={irParaLoja}
@@ -27,17 +32,27 @@ export default function CardProduto({ produto, onCardClick, variant = "doces", h
         )}
       </div>
       <div className={isHome ? "border-card-home" : "border-card"}>
-        <img src={imgSrc} alt={produto.nome} className="imagem-produto" />
+        <div className="imagem-produto-wrap">
+          {temOferta && <span className="oferta-badge">Oferta</span>}
+          <img src={imgSrc} alt={produto.nome} className="imagem-produto" />
+        </div>
         <div className={isHome ? "descricao-home" : "descricao"}>
           <h3>{produto.nome}</h3>
           <p dangerouslySetInnerHTML={{ __html: limitarDescricao(produto.descricao || produto.subtitulo || "") }} />
         </div>
         <div className="footerNovidades">
-          <div className="preco">
-            <span className="icone-preco">R$</span>
-            <span className="valor">
-              {formatarPreco(produto.valor_uni || produto.preco || 0)}
-            </span>
+          <div className="preco-wrap">
+            <div className="preco">
+              {temOferta && (
+                <span className="preco-antigo">
+                  R$ {formatarPreco(precoBase)}
+                </span>
+              )}
+              <span className="icone-preco">R$</span>
+              <span className="valor">
+                {formatarPreco(precoOferta)}
+              </span>
+            </div>
           </div>
         </div>
         <button

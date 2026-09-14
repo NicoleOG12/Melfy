@@ -30,7 +30,7 @@ export default function LoginForm({ onSwitchToCadastro }) {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/clientes/login`, {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), senha }),
@@ -38,10 +38,9 @@ export default function LoginForm({ onSwitchToCadastro }) {
       const data = await res.json();
 
       if (data.error === false) {
-        const dados = Array.isArray(data.dados) ? data.dados[0] : data.dados;
-        const nome = dados?.nome || "Cliente";
+        const nome = data.data.user.nome || "Cliente";
 
-        login(data.token, dados);
+        login(data.data.token, data.data.user);
 
         await MelfySwal({
           icon: "success",

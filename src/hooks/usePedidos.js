@@ -49,7 +49,7 @@ export function usePedidos() {
 
   useEffect(() => {
     load(true);
-    const timer = setInterval(() => load(false), 5000);
+    const timer = setInterval(() => load(false), 12000);
     const focus = () => load(false);
     window.addEventListener("focus", focus);
     return () => {

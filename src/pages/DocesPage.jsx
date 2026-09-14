@@ -137,7 +137,6 @@ export default function DocesPage() {
 
       <ProductModal
         produto={modalProd}
-        lojas={lojas}
         onClose={() => setModalProd(null)}
       />
 

@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { adicionarAoCarrinho } from "../../services/api";
-import { formatarPreco } from "../../utils/formatters";
+import { formatarPreco, getPrecoProduto } from "../../utils/formatters";
 import MelfySwal from "../../services/melfySwal";
 
-export default function ProductModal({ produto, lojas = [], onClose }) {
+export default function ProductModal({ produto, onClose }) {
   const navigate = useNavigate();
   const [qtd, setQtd] = useState(1);
   const [animando, setAnimando] = useState(false);
+
+  //console.log(produto)
+  const loja = produto?.loja ?? null;
+
+  // imagem pode vir como array ou como string direta
+  const imagemSrc = Array.isArray(produto?.imagem)
+    ? produto.imagem[0]
+    : produto?.imagem ?? "/assents/img/Geral/Perfil.png";
 
   useEffect(() => {
     setQtd(1);
@@ -16,31 +24,12 @@ export default function ProductModal({ produto, lojas = [], onClose }) {
 
   if (!produto) return null;
 
-  const idLojaProduto = parseInt(produto.id_loja ?? produto.idLoja);
-  const lojaEncontrada = lojas.find(
-    (l) => parseInt(l.id_loja ?? l.idLoja) === idLojaProduto
-  );
-  const loja = lojaEncontrada || {
-    id_loja: idLojaProduto,
-    idLoja: idLojaProduto,
-    nomeLoja: produto.loja_nome || produto.nomeLoja || "Loja Desconhecida",
-    pfp:
-      produto.pfp ||
-      produto.logoLoja ||
-      produto.logo_loja ||
-      "/assents/img/Geral/Perfil.png",
-  };
-
-  const lojaId = loja.id_loja ?? loja.idLoja;
-  const lojaNome = loja.nomeLoja || loja.loja_nome || loja.nome || "Loja";
-  const lojaLogo = loja.pfp || loja.fotoPerfil || "/assents/img/Geral/Perfil.png";
-
-  const preco = parseFloat(produto.valor_uni ?? produto.preco ?? produto.valor ?? 0);
-  const imgSrc = produto.imagem || produto.midia?.imagens?.[0]?.path || produto.foto || "";
+  const { temOferta, precoBase, precoOferta } = getPrecoProduto(produto);
+  const preco = precoOferta;
 
   const handleLojaClick = (e) => {
     e.stopPropagation();
-    if (lojaId) navigate(`/loja/${lojaId}`);
+    if (loja.id_loja) navigate(`/loja/${loja.id_loja}`);
   };
 
   const handleAdicionar = async () => {
@@ -84,7 +73,7 @@ export default function ProductModal({ produto, lojas = [], onClose }) {
           </button>
 
           <img
-            src={imgSrc}
+            src={imagemSrc}
             alt={produto.nome || ""}
             className="modal-img"
             onError={(e) => {
@@ -94,29 +83,37 @@ export default function ProductModal({ produto, lojas = [], onClose }) {
 
           <div className="modal-info">
             <div className="modal-header">
-              <div
-                className="modal-loja"
-                style={{ cursor: "pointer" }}
-                onClick={handleLojaClick}
-              >
-                <img
-                  src={lojaLogo}
-                  alt="Logo da loja"
-                  className="modal-logo"
-                  onError={(e) => {
-                    e.currentTarget.src = "/assents/img/Geral/Perfil.png";
-                  }}
-                />
-                <span className="modal-nome-loja">{lojaNome}</span>
-                <span className="modal-avaliacoes">★ 4.8</span>
-              </div>
+              {loja && (
+                <div
+                  className="modal-loja"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleLojaClick}
+                >
+                  <img
+                    src={loja.foto_loja ?? "/assents/img/Geral/Perfil.png"}
+                    alt="Logo da loja"
+                    className="modal-logo"
+                    onError={(e) => {
+                      e.currentTarget.src = "/assents/img/Geral/Perfil.png";
+                    }}
+                  />
+                  <span className="modal-nome-loja">{loja.nome_loja}</span>
+                  <span className="modal-avaliacoes">★ 4.8</span>
+                </div>
+              )}
             </div>
 
             <h2 className="modal-title">{produto.nome}</h2>
             <p className="modal-subtitulo">{produto.subtitulo || ""}</p>
             <p className="modal-description">{produto.descricao || ""}</p>
             {produto.peso && <p className="modal-peso">{produto.peso}</p>}
-            <p className="modal-price">R$ {formatarPreco(preco)}</p>
+            {temOferta && <span className="modal-badge-oferta">Oferta</span>}
+            <p className={`modal-price ${temOferta ? "modal-price--promo" : ""}`}>
+              R$ {formatarPreco(preco)}
+            </p>
+            {temOferta && (
+              <p className="modal-price-old">R$ {formatarPreco(precoBase)}</p>
+            )}
             <p className="modal-total">
               Total: R$ <span id="total-price">{formatarPreco(preco * qtd)}</span>
             </p>
@@ -155,7 +152,7 @@ export default function ProductModal({ produto, lojas = [], onClose }) {
             <i className="fas fa-shopping-bag icone-sacola" />
             <img
               className="img-doce-sacola"
-              src={imgSrc || "/assents/img/Geral/Perfil.png"}
+              src={imagemSrc || "/assents/img/Geral/Perfil.png"}
               alt={produto.nome || "Doce"}
             />
             <p className="mensagem-sacola">

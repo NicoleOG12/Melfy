@@ -60,6 +60,30 @@ export default function PedidoDetalhes({ o, history = false }) {
           <span>
             Pagamento
             <b>{o.payment}</b>
+            {o.paymentLink && (o.paymentStatus === "PENDENTE" || !o.paymentStatus) && (
+              <a
+                href={o.paymentLink}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-pagar-pix-order"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "5px",
+                  marginTop: "6px",
+                  padding: "4px 10px",
+                  background: "linear-gradient(135deg, var(--yellow), var(--yellow-mid))",
+                  color: "var(--brown)",
+                  borderRadius: "8px",
+                  fontWeight: "700",
+                  fontSize: "12px",
+                  textDecoration: "none",
+                  boxShadow: "0 2px 6px rgba(74, 32, 20, 0.15)"
+                }}
+              >
+                <i className="fa-solid fa-up-right-from-square" /> Realizar Pagamento
+              </a>
+            )}
           </span>
         </div>
 
@@ -118,7 +142,7 @@ export default function PedidoDetalhes({ o, history = false }) {
         </strong>
       </div>
 
-      {o.status.stage === 3 && (
+      {o.status.stage === 4 && (
         <div className="m-tracking">
           <div className="m-track-copy">
             <div>

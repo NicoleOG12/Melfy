@@ -4,20 +4,23 @@ import ProductModal from "../doces/ProductModal";
 import CardProduto from "../doces/CardProduto";
 
 export default function ProductsSection() {
-  const [produtos,  setProdutos]  = useState([]);
-  const [lojas,     setLojas]     = useState([]);
-  const [loading,   setLoading]   = useState(true);
+  const [produtos, setProdutos] = useState([]);
+  const [lojas, setLojas] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [modalProd, setModalProd] = useState(null);
 
   const carouselRef = useRef(null);
-  const dragging    = useRef(false);
-  const startX      = useRef(0);
-  const scrollLeft  = useRef(0);
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
 
   useEffect(() => {
+    //console.log("chegou")
     Promise.all([fetchLojas(), fetchProdutos()])
       .then(([ls, ps]) => {
         setLojas(ls);
+        //console.log('ps',ps)
+        //console.log('ls', ls)
         setProdutos(ps.slice(0, 4));
       })
       .catch(console.error)
@@ -27,27 +30,27 @@ export default function ProductsSection() {
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
-    const down  = (e) => { dragging.current = true;  startX.current = e.pageX - el.offsetLeft; scrollLeft.current = el.scrollLeft; };
-    const leave = ()  => { dragging.current = false; };
-    const up    = ()  => { dragging.current = false; };
-    const move  = (e) => { if (!dragging.current) return; e.preventDefault(); el.scrollLeft = scrollLeft.current - (e.pageX - el.offsetLeft - startX.current) * 2; };
-    const tdown = (e) => { dragging.current = true;  startX.current = e.touches[0].pageX - el.offsetLeft; scrollLeft.current = el.scrollLeft; };
+    const down = (e) => { dragging.current = true; startX.current = e.pageX - el.offsetLeft; scrollLeft.current = el.scrollLeft; };
+    const leave = () => { dragging.current = false; };
+    const up = () => { dragging.current = false; };
+    const move = (e) => { if (!dragging.current) return; e.preventDefault(); el.scrollLeft = scrollLeft.current - (e.pageX - el.offsetLeft - startX.current) * 2; };
+    const tdown = (e) => { dragging.current = true; startX.current = e.touches[0].pageX - el.offsetLeft; scrollLeft.current = el.scrollLeft; };
     const tmove = (e) => { if (!dragging.current) return; el.scrollLeft = scrollLeft.current - (e.touches[0].pageX - el.offsetLeft - startX.current) * 2; };
-    el.addEventListener("mousedown",  down);
+    el.addEventListener("mousedown", down);
     el.addEventListener("mouseleave", leave);
-    el.addEventListener("mouseup",    up);
-    el.addEventListener("mousemove",  move);
+    el.addEventListener("mouseup", up);
+    el.addEventListener("mousemove", move);
     el.addEventListener("touchstart", tdown);
-    el.addEventListener("touchend",   up);
-    el.addEventListener("touchmove",  tmove);
+    el.addEventListener("touchend", up);
+    el.addEventListener("touchmove", tmove);
     return () => {
-      el.removeEventListener("mousedown",  down);
+      el.removeEventListener("mousedown", down);
       el.removeEventListener("mouseleave", leave);
-      el.removeEventListener("mouseup",    up);
-      el.removeEventListener("mousemove",  move);
+      el.removeEventListener("mouseup", up);
+      el.removeEventListener("mousemove", move);
       el.removeEventListener("touchstart", tdown);
-      el.removeEventListener("touchend",   up);
-      el.removeEventListener("touchmove",  tmove);
+      el.removeEventListener("touchend", up);
+      el.removeEventListener("touchmove", tmove);
     };
   }, []);
 
@@ -56,8 +59,8 @@ export default function ProductsSection() {
     : produtos.length === 0
       ? <p className="text-center w-full py-8">Nenhum produto encontrado.</p>
       : produtos.map((p) => (
-          <CardProduto key={p.id_produto} produto={p} onCardClick={setModalProd} variant="home" />
-        ));
+        <CardProduto key={p.id_produto} produto={p} onCardClick={setModalProd} variant="home" />
+      ));
 
   return (
     <>
@@ -100,7 +103,6 @@ export default function ProductsSection() {
       {modalProd && (
         <ProductModal
           produto={modalProd}
-          lojas={lojas}
           onClose={() => setModalProd(null)}
         />
       )}

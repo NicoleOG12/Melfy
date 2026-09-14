@@ -1,9 +1,26 @@
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Nunito', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Nunito", sans-serif;
 }
 
-body, p, span, div, a, button, input, textarea, select, label, li, td, th {
-  font-family: 'Nunito', sans-serif;
+body,
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select,
+label,
+li,
+td,
+th {
+  font-family: "Nunito", sans-serif;
 }
 
 .search-bar {
@@ -24,17 +41,19 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   width: 600px;
   padding: 15px;
   border-radius: 20px;
-  border: 1px solid var(--yellow); 
+  border: 1px solid var(--yellow);
   background-color: white;
   color: #333;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .search-bar input:focus {
   border-color: var(--yellow-mid);
   box-shadow: 0 0 8px rgba(255, 211, 100, 0.5);
-  outline: none; 
+  outline: none;
 }
 
 .search-bar:hover input {
@@ -47,7 +66,9 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   color: var(--brown-light);
   margin-left: -65px;
   cursor: pointer;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
   z-index: 10;
 }
 
@@ -60,16 +81,16 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 50px 30px;
-  justify-content: center; 
-  justify-items: center; 
+  justify-content: center;
+  justify-items: center;
   padding: 40px 100px;
-  margin: 0 auto; 
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
 .card {
   width: 270px;
-  height: 370px; 
+  height: 370px;
   background: var(--surface-0);
   border-radius: 12px;
   padding: 8px;
@@ -79,7 +100,9 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   cursor: pointer;
 }
 
@@ -121,7 +144,9 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 }
 
@@ -169,16 +194,49 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   margin-bottom: -25px;
 }
 
+.preco-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .preco {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.icone-preco {
+.imagem-produto-wrap {
+  position: relative;
+}
+
+.oferta-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--red);
+  color: var(--red-light);
   font-size: 16px;
-  color: var(--yellow-mid);
-  font-weight: 600;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  z-index: 3;
+}
+
+.preco-antigo {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #9a7c5b;
+  text-decoration: line-through;
+}
+
+.icone-preco {
+  font-size: 12px;
+  color: var(--color-mellow-yellow-700);
+  font-weight: 800;
   transition: transform 0.2s ease;
 }
 
@@ -188,7 +246,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 
 .valor {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 800;
   color: var(--brown-light);
 }
 
@@ -211,7 +269,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   gap: 6px;
   cursor: pointer;
   position: relative;
-  transition: all .4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
   box-shadow:
     0 1px var(--yellow-dark),
     0 2px var(--yellow-dark),
@@ -221,7 +279,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     0 6px var(--yellow-dark),
     0 7px var(--yellow-dark),
     0 10px var(--yellow-dark),
-    0 8px 8px rgba(0,0,0,0.25);
+    0 8px 8px rgba(0, 0, 0, 0.25);
 }
 
 .btn-carrinho i {
@@ -234,7 +292,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     0 1px var(--yellow-dark),
     0 2px var(--yellow-dark),
     0 3px var(--yellow-dark),
-    0 3px 6px rgba(0,0,0,0.25);
+    0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
 .modal-overlay {
@@ -248,7 +306,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   justify-content: center;
   z-index: 9999;
   backdrop-filter: blur(6px);
-  background-color: transparent !important; 
+  background-color: transparent !important;
 }
 
 #product-modal {
@@ -268,14 +326,14 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   background: var(--surface-1);
   padding: 30px 40px;
   border-radius: 25px;
-  border: 3px solid var(--yellow); 
+  border: 3px solid var(--yellow);
   height: 520px;
   width: 950px;
   max-width: 100%;
   display: flex;
   gap: 30px;
   box-shadow: 0 8px 20px rgba(74, 32, 20, 0.12);
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   color: var(--brown-light);
   z-index: 10000;
 }
@@ -353,6 +411,21 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   font-weight: 600;
 }
 
+.modal-badge-oferta {
+  display: inline-flex;
+  align-self: flex-start;
+  background: linear-gradient(135deg, #ffbf5a, #f59e0b);
+  color: #5a3200;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+  margin-bottom: 8px;
+}
+
 .modal-price {
   color: #b36800;
   font-weight: 700;
@@ -360,6 +433,18 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   text-shadow: 0 0 8px #ffbe3e88;
   margin-bottom: -15px;
   margin-top: 10px;
+}
+
+.modal-price--promo {
+  color: #b85b00;
+}
+
+.modal-price-old {
+  color: #9a7c5b;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: line-through;
+  margin: 8px 0 -10px;
 }
 
 .modal-total {
@@ -405,7 +490,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   color: #ffbf00;
 }
 
-.btn-add{
+.btn-add {
   background: linear-gradient(180deg, var(--yellow), var(--yellow-mid));
   color: var(--brown-light);
   width: 220px;
@@ -424,7 +509,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   gap: 6px;
   cursor: pointer;
   position: relative;
-  transition: all .4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
   box-shadow:
     0 1px var(--yellow-dark),
     0 2px var(--yellow-dark),
@@ -434,7 +519,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     0 6px var(--yellow-dark),
     0 7px var(--yellow-dark),
     0 10px var(--yellow-dark),
-    0 8px 8px rgba(0,0,0,0.25);
+    0 8px 8px rgba(0, 0, 0, 0.25);
 }
 
 .btn-add i {
@@ -447,7 +532,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     0 1px var(--yellow-dark),
     0 2px var(--yellow-dark),
     0 3px var(--yellow-dark),
-    0 3px 6px rgba(0,0,0,0.25);
+    0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
 .modal-close {
@@ -467,14 +552,16 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   z-index: 10;
 }
 
 .modal-close:hover {
   transform: scale(1.1);
   color: var(--brown-light);
-  background: linear-gradient(135deg, #FFB400, #FFD600);
+  background: linear-gradient(135deg, #ffb400, #ffd600);
   box-shadow: 0 8px 20px 0 8px 20px rgba(74, 32, 20, 0.12);
 }
 
@@ -567,14 +654,14 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     padding-right: 10px;
     margin-bottom: 10px;
   }
-  
+
   .search-bar input {
     width: 100%;
     max-width: 450px;
     padding: 12px 15px;
     font-size: 0.9rem;
   }
-  
+
   .iconsearch {
     margin-left: -45px;
     padding: 10px 15px;
@@ -658,7 +745,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
       0 5px var(--yellow-dark),
       0 6px var(--yellow-dark),
       0 7px var(--yellow-dark),
-      0 8px 8px rgba(0,0,0,0.25);
+      0 8px 8px rgba(0, 0, 0, 0.25);
   }
 
   .btn-carrinho i {
@@ -697,7 +784,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
 
   .modal-header {
     width: 100%;
-    order: 1; 
+    order: 1;
   }
 
   .modal-img {
@@ -708,7 +795,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   }
 
   .modal-text {
-    order: 3; 
+    order: 3;
   }
 
   .modal-title {
@@ -764,12 +851,13 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
     gap: 10px;
     margin-top: 10px;
     padding: 10px 0;
-    border-top: 1px solid rgba(0,0,0,0.05);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     order: 4;
   }
 
-  .modal-price, .modal-total {
+  .modal-price,
+  .modal-total {
     font-size: 18px;
   }
 
@@ -865,7 +953,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   color: var(--green-light) !important;
 }
 
-.swal2-icon.swal2-success [class^='swal2-success-line'] {
+.swal2-icon.swal2-success [class^="swal2-success-line"] {
   background-color: var(--green-light) !important;
 }
 
@@ -878,7 +966,7 @@ body, p, span, div, a, button, input, textarea, select, label, li, td, th {
   color: var(--red) !important;
 }
 
-.swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+.swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
   background-color: var(--red) !important;
 }
 

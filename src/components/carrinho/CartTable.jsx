@@ -4,13 +4,14 @@ import { formatarPreco, imagemProduto } from "../../utils/cartUtils";
 export default function CartTable({ sacola, selecionados, onToggle, onQuantidade, onRemover }) {
   const grupos = useMemo(() => {
     const result = {};
+    //console.log('sacola', sacola)
     sacola.forEach((produto, idx) => {
-      const idLoja = produto.id_loja || 0;
+      const idLoja = produto.loja.id_loja || 0;
       if (!result[idLoja]) {
         result[idLoja] = {
           id_loja: idLoja,
-          nomeLoja: produto.nomeLoja || "Loja",
-          logoLoja: produto.logoLoja || "img/default-loja.png",
+          nomeLoja: produto.loja.nome_loja || "Loja",
+          logoLoja: produto.loja.logo_loja || "img/default-loja.png",
           itens: [],
         };
       }
@@ -41,8 +42,8 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
             )}
 
             {loja.itens.map(({ produto, idx }) => {
-              const valor = Number.parseFloat(produto.valor_uni ?? produto.valorUnitario ?? produto.preco ?? 0);
-              const quantidade = Number.parseInt(produto.quantidade ?? produto.qtd ?? 1, 10);
+              const valor = Number.parseFloat(produto.preco_unitario ?? 0);
+              const quantidade = Number.parseInt(produto.quantidade ?? 1, 10);
 
               return (
                 <tr

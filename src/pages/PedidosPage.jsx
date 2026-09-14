@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Pedido from "../components/pedidos/Pedido";
@@ -6,6 +7,7 @@ import PedidoHistorico from "../components/pedidos/PedidoHistorico";
 import { SyncBar, ErrorBanner, LoadingSpinner, SectionHeading, EmptyState } from "../components/pedidos/PedidosUI";
 import { usePedidos } from "../hooks/usePedidos";
 import { PAGE_SIZE } from "../utils/orderUtils";
+import MelfySwal from "../services/melfySwal";
 import "../styles/cliente/pedidos.css";
 
 export default function PedidosPage() {
@@ -20,10 +22,23 @@ export default function PedidosPage() {
     load,
   } = usePedidos();
 
+  const { status } = useParams();
+  const [searchParams] = useSearchParams();
+  const res = status ?? searchParams.get("status");
+
   const [activeOpen, setActiveOpen] = React.useState(null);
   const [historyOpen, setHistoryOpen] = React.useState(null);
   const [scrollParaId, setScrollParaId] = useState(null);
   const pedidoAbertoRef = useRef(false);
+
+  useEffect(() => {
+    if (res === "1") {
+      MelfySwal("Pagamento Aprovado! 🎉", "Seu pagamento foi realizado com sucesso.", "success");
+    } else if (res === "0") {
+      MelfySwal("Pagamento não Concluído ⚠️", "O pagamento não foi finalizado. Tente novamente.", "error");
+    }
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [res]);
 
   useEffect(() => {
     if (loading || pedidoAbertoRef.current) return;

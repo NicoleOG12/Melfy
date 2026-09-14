@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function LojaSobre({ descricao, endereco, telefone, email, horarios, aberto }) {
+export default function LojaSobre({ descricao, endereco, telefone, email, horarios, aberto, formaEntrega = [] }) {
   const diaAtual = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][new Date().getDay()];
 
   return (
@@ -61,6 +61,33 @@ export default function LojaSobre({ descricao, endereco, telefone, email, horari
                 <i className="fas fa-arrow-right loja-contato-arrow" />
               </a>
             )}
+          </div>
+        </div>
+      )}
+
+      {Array.isArray(formaEntrega) && formaEntrega.length > 0 && (
+        <div className="loja-sobre-card">
+          <div className="loja-sobre-card-header">
+            <i className="fas fa-truck" />
+            <h3>Formas de entrega</h3>
+          </div>
+          <div className="loja-formas-lista">
+            {formaEntrega.map((item) => (
+              <div
+                key={item.key || item.label}
+                className={`loja-forma-item ${item.ativo ? "ativo" : "inativo"}`}
+              >
+                <div className="loja-forma-info">
+                  <span className="loja-forma-label">{item.label}</span>
+                  {item.descricao && (
+                    <small className="loja-forma-desc">{item.descricao}</small>
+                  )}
+                </div>
+                <span className={`loja-forma-status ${item.ativo ? "ativo" : "inativo"}`}>
+                  {item.ativo ? "Disponível" : "Indisponível"}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       )}

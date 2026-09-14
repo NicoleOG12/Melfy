@@ -42,7 +42,7 @@ export default function Pedido({ o, open, setOpen }) {
           <div className="m-order-meta">
             <span>
               <i className="fa-regular fa-clock" />{" "}
-              {o.status.stage === 3
+              {o.status.stage === 4
                 ? `Chega por volta de ${onlyTime(o.eta)}`
                 : `Previsão: ${onlyTime(o.eta)}`}
             </span>

@@ -8,7 +8,7 @@ import CartTable from "../components/carrinho/CartTable";
 import CartSummary from "../components/carrinho/CartSummary";
 import CheckoutModal from "../components/carrinho/CheckoutModal";
 import RecommendationCards from "../components/carrinho/RecommendationCards";
-import { fetchCarrinho, fetchProdutos, fetchLojas, adicionarAoCarrinho, removerDoCarrinho, criarPedido } from "../services/api";
+import { fetchCarrinho, fetchProdutos, fetchLojas, adicionarAoCarrinho, removerDoCarrinho, criarPedido, atualizarQuantidadeCarrinho } from "../services/api";
 import MelfySwal from "../services/melfySwal";
 import "../styles/carrinho.css";
 import "../styles/cliente/modal.css";
@@ -28,30 +28,48 @@ export default function CarrinhoPage() {
     let ativo = true;
 
     async function carregar() {
-      const token = localStorage.getItem("tokenCliente");
-      if (!token) return;
+      // 1. Carrega do localStorage imediatamente para renderização instantânea
+      const salvo = localStorage.getItem("Sacola");
+      if (salvo) {
+        try {
+          const dadosSalvos = JSON.parse(salvo);
+          if (Array.isArray(dadosSalvos) && dadosSalvos.length > 0) {
+            setSacola(dadosSalvos);
+            setSelecionados(new Set(dadosSalvos.map((_, index) => index)));
+          }
+        } catch { }
+      }
 
+      // 2. Busca catálogo (produtos e lojas) utilizando o cache inteligente
       try {
-        const [carrinho, ps, ls] = await Promise.all([
-          fetchCarrinho(token),
+        const [ps, ls] = await Promise.all([
           fetchProdutos(),
           fetchLojas(),
         ]);
-
         if (!ativo) return;
-
-        const dados = Array.isArray(carrinho) ? carrinho : [];
-        const dadosValidos = dados.filter((item) => {
-          const qtd = Number.parseInt(item.quantidade ?? item.qtd ?? 0, 10);
-          return qtd > 0;
-        });
-        setSacola(dadosValidos);
-        localStorage.setItem("Sacola", JSON.stringify(dadosValidos));
-        setSelecionados(new Set(dadosValidos.map((_, index) => index)));
         setProdutos(ps);
         setLojas(ls);
       } catch (err) {
-        console.error("Erro ao carregar carrinho:", err);
+        console.error("Erro ao carregar catálogo:", err);
+      }
+
+      // 3. Sincroniza carrinho via API em segundo plano caso o usuário esteja autenticado
+      const token = localStorage.getItem("tokenCliente");
+      if (token) {
+        try {
+          const carrinho = await fetchCarrinho(token);
+          if (!ativo) return;
+          const dados = Array.isArray(carrinho) ? carrinho : [];
+          const dadosValidos = dados.filter((item) => {
+            const qtd = Number.parseInt(item.quantidade ?? item.qtd ?? 0, 10);
+            return qtd > 0;
+          });
+          setSacola(dadosValidos);
+          localStorage.setItem("Sacola", JSON.stringify(dadosValidos));
+          setSelecionados(new Set(dadosValidos.map((_, index) => index)));
+        } catch (err) {
+          console.error("Erro ao carregar carrinho via API:", err);
+        }
       }
     }
 
@@ -63,7 +81,7 @@ export default function CarrinhoPage() {
     () =>
       sacola.reduce((sum, item, index) => {
         if (!selecionados.has(index)) return sum;
-        const valor = Number.parseFloat(item.valor_uni ?? item.valorUnitario ?? item.preco ?? 0);
+        const valor = Number.parseFloat(item.valor_uni ?? item.valorUnitario ?? item.preco_unitario ?? 0);
         const quantidade = Number.parseInt(item.quantidade ?? item.qtd ?? 1, 10);
         return sum + valor * quantidade;
       }, 0),
@@ -89,43 +107,37 @@ export default function CarrinhoPage() {
     const item = sacola[index];
     if (!item) return;
 
-    const idProd = item.id_produto ?? item.idProduto ?? item.id;
-    if (!idProd) return;
+    const idItem = item.id_item_carrinho;
+    const novaQuantidade = item.quantidade + Number(delta);
+
+    if (!idItem) return;
 
     try {
-      if (delta > 0) {
-        await adicionarAoCarrinho(idProd, delta);
+      if (novaQuantidade <= 0) {
+        await removerDoCarrinho(idItem);
+
+        const novaSacola = sacola.filter((_, i) => i !== index);
+        atualizarSacola(novaSacola);
+
       } else {
-        await removerDoCarrinho(idProd, Math.abs(delta));
+        await atualizarQuantidadeCarrinho(idItem, novaQuantidade);
+
+        const novaSacola = [...sacola];
+        novaSacola[index] = {
+          ...item,
+          quantidade: novaQuantidade
+        };
+
+        atualizarSacola(novaSacola);
       }
-
-      const qtdAtual = Number.parseInt(item.quantidade ?? item.qtd ?? 1, 10);
-      const nova = [...sacola];
-
-      if (delta < 0 && qtdAtual + delta <= 0) {
-        nova.splice(index, 1);
-        setSelecionados((atual) => {
-          const novo = new Set();
-          atual.forEach((i) => {
-            if (i < index) novo.add(i);
-            if (i > index) novo.add(i - 1);
-          });
-          return novo;
-        });
-      } else {
-        nova[index] = { ...item, quantidade: qtdAtual + delta };
-      }
-
-      atualizarSacola(nova);
-      await carregarSacolaNovamente();
     } catch (err) {
       console.error(err);
+
       MelfySwal({
         icon: "error",
         title: "Erro ao atualizar",
-        text: err.message || "Não foi possível atualizar a quantidade no servidor.",
+        text: err.message || "Não foi possível atualizar a quantidade."
       });
-      carregarSacolaNovamente();
     }
   }
 
@@ -149,7 +161,6 @@ export default function CarrinhoPage() {
   async function removerItem(index) {
     const item = sacola[index];
     if (!item) return;
-
     const result = await MelfySwal({
       icon: "warning",
       title: "Remover item?",
@@ -158,40 +169,30 @@ export default function CarrinhoPage() {
       confirmButtonText: "Sim, remover",
       cancelButtonText: "Não, manter",
     });
-
-    if (!result.isConfirmed) {
-      return;
-    }
-
-    const idProd = item.id_produto ?? item.idProduto ?? item.id;
-    const qtdAtual = Number.parseInt(item.quantidade ?? item.qtd ?? 1, 10);
-
+    if (!result.isConfirmed) return;
     try {
-      await removerDoCarrinho(idProd, qtdAtual);
+      await removerDoCarrinho(item.id_item_carrinho);
+      atualizarSacola(
+        sacola.filter((_, i) => i !== index)
+      );
 
-      const nova = sacola.filter((_, i) => i !== index);
-      atualizarSacola(nova);
       setSelecionados((atual) => {
         const novo = new Set();
+
         atual.forEach((i) => {
           if (i < index) novo.add(i);
           if (i > index) novo.add(i - 1);
         });
+
         return novo;
       });
-      await carregarSacolaNovamente();
     } catch (err) {
       console.error(err);
-      MelfySwal({
-        icon: "error",
-        title: "Erro ao remover",
-        text: err.message || "Não foi possível remover o item do carrinho.",
-      });
-      carregarSacolaNovamente();
+      MelfySwal({ icon: "error", title: "Erro ao remover", text: err.message || "Não foi possível remover o item do carrinho.", });
     }
   }
 
-  async function finalizarCompra() {
+  async function finalizarCompra(dadosCheckout = {}) {
     const token = localStorage.getItem("tokenCliente");
     if (!token) {
       MelfySwal({
@@ -214,28 +215,25 @@ export default function CarrinhoPage() {
     }
 
     try {
-      const itens = {};
-      itensEscolhidos.forEach((p, i) => {
-        itens[`item${i + 1}`] = {
-          id_produto: p.id_produto ?? p.idProduto ?? p.id,
-          valor_uni: Number.parseFloat(p.valor_uni ?? p.valorUnitario ?? p.preco ?? 0),
-          qtd: Number.parseInt(p.quantidade ?? p.qtd ?? 1, 10),
-        };
-      });
+      const itens = itensEscolhidos.map((p) => ({
+        id_produto: Number(p.id_produto ?? p.idProduto ?? p.id),
+        quantidade: Number(p.quantidade ?? p.qtd ?? 1),
+      }));
 
       const pedidoCriado = await criarPedido({
+        id_endereco_entrega: dadosCheckout?.id_endereco_entrega || 1,
+        tipo_pagamento: dadosCheckout?.tipo_pagamento || "PIX",
+        methods: dadosCheckout?.methods || ["PIX"],
         itens,
-        id_pagamento: 1,
-        id_entrega: 1,
-        id_status: 1,
       });
 
+      //console.log("PEDIDO CRIADO", pedidoCriado)
+      const checkoutUrl =
+        pedidoCriado?.data?.pagamento?.checkout_url ??
+        null;
+
       const idPedidoNovo =
-        pedidoCriado?.id_pedido ??
-        pedidoCriado?.idPedido ??
-        pedidoCriado?.id ??
-        pedidoCriado?.result?.id_pedido ??
-        pedidoCriado?.result?.id ??
+        pedidoCriado?.data?.id_pedido ??
         null;
       if (idPedidoNovo) {
         localStorage.setItem("melfy_pedido_aberto", String(idPedidoNovo));
@@ -255,7 +253,12 @@ export default function CarrinhoPage() {
       atualizarSacola(itensRestantes);
       setSelecionados(new Set(itensRestantes.map((_, i) => i)));
       setCheckoutAberto(false);
-      navigate("/pedidos");
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        navigate("/pedidos");
+      }
     } catch (err) {
       console.error(err);
       MelfySwal({
@@ -301,7 +304,6 @@ export default function CarrinhoPage() {
 
         <ProductModal
           produto={produtoModal}
-          lojas={lojas}
           onClose={() => setProdutoModal(null)}
         />
 
