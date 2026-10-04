@@ -66,73 +66,7 @@ export default function ModalPagamento({
               <i className="fa-solid fa-money-check-dollar"></i>
               <span>Débito</span>
             </div>
-            <div
-              className={`pay-option ${
-                tipoPagamento === "voucher" ? "active" : ""
-              }`}
-              onClick={() => setTipoPagamento("voucher")}
-            >
-              <i className="fa-solid fa-gift"></i>
-              <span>Voucher</span>
-            </div>
-            <div
-              className={`pay-option ${
-                tipoPagamento === "vale" ? "active" : ""
-              }`}
-              onClick={() => setTipoPagamento("vale")}
-            >
-              <i className="fa-solid fa-utensils"></i>
-              <span>Vale Refeição</span>
-            </div>
           </div>
-
-          {tipoPagamento === "voucher" && (
-            <div
-              id="sub-opcoes-voucher"
-              className="pay-animation-wrapper"
-              style={{ marginBottom: "20px" }}
-            >
-              <label className="pay-modal-label">Selecione o seu Voucher:</label>
-              <div className="pay-sub-badges">
-                {["Caju", "Flash", "Swile", "Outro"].map((b) => (
-                  <span
-                    key={b}
-                    className={`pay-sub-badge ${
-                      subBadge === b ? "active" : ""
-                    }`}
-                    onClick={() => setSubBadge(b)}
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {tipoPagamento === "vale" && (
-            <div
-              id="sub-opcoes-vale"
-              className="pay-animation-wrapper"
-              style={{ marginBottom: "20px" }}
-            >
-              <label className="pay-modal-label">
-                Selecione a Operadora do Benefício:
-              </label>
-              <div className="pay-sub-badges">
-                {["Pluxee", "Alelo", "Sodexo", "Ticket", "VR"].map((b) => (
-                  <span
-                    key={b}
-                    className={`pay-sub-badge ${
-                      subBadge === b ? "active" : ""
-                    }`}
-                    onClick={() => setSubBadge(b)}
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="pay-divider"></div>
 

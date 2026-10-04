@@ -342,6 +342,34 @@
   transform: translateY(-1px);
 }
 
+.carrinho-page .btn-finalizar_compra:disabled,
+.carrinho-page .qtd button:disabled,
+.carrinho-page .remover:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.carrinho-loading {
+  padding: 36px !important;
+  text-align: center;
+  color: var(--brown-light);
+  font-weight: 700;
+}
+
+.carrinho-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: carrinho-spin 0.7s linear infinite;
+}
+
+@keyframes carrinho-spin {
+  to { transform: rotate(360deg); }
+}
+
 .carrinho-page .h3Novidades {
   color: var(--brown-light);
   font-size: 28px;

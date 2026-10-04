@@ -1,7 +1,7 @@
 import React from "react";
 import { formatarPreco } from "../../utils/cartUtils";
 
-export default function CartSummary({ subtotal, onCheckout }) {
+export default function CartSummary({ subtotal, onCheckout, disabled }) {
   return (
     <aside>
       <div className="box-finalizar-compra">
@@ -31,8 +31,10 @@ export default function CartSummary({ subtotal, onCheckout }) {
         type="button"
         className="btn-finalizar_compra"
         onClick={onCheckout}
+        disabled={disabled}
+        aria-busy={disabled}
       >
-        Finalizar Compra
+        {disabled ? "Carregando..." : "Finalizar Compra"}
       </button>
     </aside>
   );

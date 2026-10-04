@@ -32,12 +32,11 @@ export default function PedidosPage() {
   const pedidoAbertoRef = useRef(false);
 
   useEffect(() => {
-    if (res === "1") {
+    if (res === "approved") {
       MelfySwal("Pagamento Aprovado! 🎉", "Seu pagamento foi realizado com sucesso.", "success");
-    } else if (res === "0") {
+    } else if (res === "pending") {
       MelfySwal("Pagamento não Concluído ⚠️", "O pagamento não foi finalizado. Tente novamente.", "error");
     }
-    window.history.replaceState({}, "", window.location.pathname);
   }, [res]);
 
   useEffect(() => {

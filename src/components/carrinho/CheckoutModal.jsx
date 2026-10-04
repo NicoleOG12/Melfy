@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { formatarPreco } from "../../utils/cartUtils";
+import { formatarCartao, formatarValidade } from "../../utils/masks";
 import MelfySwal from "../../services/melfySwal";
 import {
   fetchEnderecosAPI,
@@ -69,7 +70,24 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
   const [cartaoAberto, setCartaoAberto] = useState(false);
   const [cep, setCep] = useState("");
 
-  const frete = cep.length === 9 ? 9 : 0;
+  // Estados de Formas de Pagamento Salvas e Seleção
+  const [metodoPagamento, setMetodoPagamento] = useState("pix"); // "pix" | "cartao"
+  const [cartaoSelecionadoId, setCartaoSelecionadoId] = useState(null);
+  const [pagamentosSalvos, setPagamentosSalvos] = useState([]);
+
+  // Estados do Formulário de Novo Cartão (Adicionar na hora)
+  const [criandoCartao, setCriandoCartao] = useState(false);
+  const [novoNumCartao, setNovoNumCartao] = useState("");
+  const [novoTitularCartao, setNovoTitularCartao] = useState("");
+  const [novoValCartao, setNovoValCartao] = useState("");
+  const [novoCvvCartao, setNovoCvvCartao] = useState("");
+  const [novoTipoCartao, setNovoTipoCartao] = useState("credito");
+
+  const temCepValido = Boolean(
+    (endereco?.cep && endereco.cep.replace(/\D/g, "").length === 8) ||
+    (cep && cep.replace(/\D/g, "").length === 8)
+  );
+  const frete = temCepValido ? 9 : 0;
   const total = subtotal + frete;
 
   function selecionarEndereco(item) {
@@ -94,13 +112,28 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     }
   }
 
-  // Ao abrir o modal: carrega endereços da API
+  // Ao abrir o modal: carrega endereços e cartões salvos
   useEffect(() => {
     if (!open) return;
     setEtapa(1);
     setEditando(false);
     setEditandoId(null);
     setCepFormStatus("idle");
+    setCriandoCartao(false);
+
+    // Carregar cartões salvos do localStorage
+    try {
+      const salvosRaw = localStorage.getItem("pagamentosCliente");
+      if (salvosRaw) {
+        const parsed = JSON.parse(salvosRaw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setPagamentosSalvos(parsed);
+          setCartaoSelecionadoId(parsed[0].id);
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao carregar cartões salvos:", err);
+    }
 
     async function carregar() {
       setCarregandoLista(true);
@@ -362,20 +395,102 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     setEtapa(1);
   }
 
-  function pagar(event) {
-    event.preventDefault();
-    if (!cep || cep.length !== 9) {
+  function handleSalvarNovoCartaoOnSpot(e) {
+    if (e) e.preventDefault();
+    if (!novoNumCartao || novoNumCartao.length < 14) {
       MelfySwal({
         icon: "warning",
-        title: "CEP Inválido",
-        text: "Por favor, preencha um CEP válido (XXXXX-XX).",
+        title: "Número inválido",
+        text: "Por favor, digite o número completo do cartão.",
       });
       return;
     }
+    if (!novoTitularCartao) {
+      MelfySwal({
+        icon: "warning",
+        title: "Nome do titular",
+        text: "Por favor, digite o nome impresso no cartão.",
+      });
+      return;
+    }
+    if (!novoValCartao || novoValCartao.length < 5) {
+      MelfySwal({
+        icon: "warning",
+        title: "Validade inválida",
+        text: "Por favor, informe a validade no formato MM/AA.",
+      });
+      return;
+    }
+
+    const novoItem = {
+      id: Date.now(),
+      tipo: novoTipoCartao,
+      ultimosDigitos: novoNumCartao.replace(/\s/g, "").slice(-4) || "0000",
+      titular: novoTitularCartao.toUpperCase(),
+      validade: novoValCartao,
+    };
+
+    const listaAtualizada = [novoItem, ...pagamentosSalvos];
+    setPagamentosSalvos(listaAtualizada);
+    try {
+      localStorage.setItem("pagamentosCliente", JSON.stringify(listaAtualizada));
+    } catch (err) {
+      console.error("Erro ao salvar cartão no localStorage:", err);
+    }
+
+    setCartaoSelecionadoId(novoItem.id);
+    setMetodoPagamento("cartao");
+    setCriandoCartao(false);
+
+    setNovoNumCartao("");
+    setNovoTitularCartao("");
+    setNovoValCartao("");
+    setNovoCvvCartao("");
+
+    MelfySwal({
+      icon: "success",
+      title: "Cartão Adicionado! 🎉",
+      text: "Sua nova forma de pagamento foi salva e selecionada para este pedido.",
+    });
+  }
+
+  function pagar(event) {
+    event.preventDefault();
+
+    if (!endereco || (!endereco.rua && !endereco.cidade)) {
+      MelfySwal({
+        icon: "warning",
+        title: "Endereço Pendente",
+        text: "Por favor, selecione e confirme seu endereço de entrega na etapa anterior.",
+      });
+      setEtapa(1);
+      return;
+    }
+
+    let tipoPag = "PIX";
+    let methods = ["PIX"];
+
+    if (metodoPagamento === "cartao") {
+      const cartaoSel = pagamentosSalvos.find(
+        (c) => String(c.id) === String(cartaoSelecionadoId)
+      );
+      if (!cartaoSel) {
+        MelfySwal({
+          icon: "warning",
+          title: "Forma de Pagamento",
+          text: "Por favor, selecione um cartão ou adicione um novo para continuar.",
+        });
+        return;
+      }
+      const sub = cartaoSel.tipo === "debito" ? "DEBITO" : "CREDITO";
+      tipoPag = sub;
+      methods = [sub];
+    }
+
     const dadosCheckout = {
       id_endereco_entrega: enderecoSelecionadoId || endereco.id || 1,
-      tipo_pagamento: "PIX",
-      methods: ["PIX"],
+      tipo_pagamento: tipoPag,
+      methods: methods,
     };
     onFinish(dadosCheckout);
   }
@@ -681,109 +796,259 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
             <h1>Como deseja pagar?</h1>
 
             <div className="container_opcao">
-              <button
-                type="button"
-                className="opcaoC"
-                id="btn_cartao"
-                onClick={() => setCartaoAberto((v) => !v)}
-              >
-                <h3 className="titulo">Cartão</h3>
-                <i
-                  className={`fa-solid fa-angle-${cartaoAberto ? "down" : "right"
-                    }`}
-                />
-              </button>
-
-              <div
-                id="modal_cartao"
-                className="modal_tipo"
-                style={{ height: cartaoAberto ? "auto" : 0 }}
-              >
-                <div className="subtitulo">
-                  <h2 className="tipo_cartao">Visa - Crédito</h2>
-                  <input className="selecionar" type="checkbox" />
-                </div>
-
-                <div className="inserir_dados">
-                  <input className="nome" type="text" placeholder="Nome" />
-                  <input
-                    className="numero"
-                    type="text"
-                    placeholder="Número"
-                  />
-
-                  <div className="subdados">
-                    <input type="date" placeholder="Data" />
-                    <input type="text" placeholder="CVV" />
-                  </div>
-
-                  <div className="tipos_add">
-                    <div className="cartao_tipos">
-                      <label className="cartao">
-                        <input type="radio" name="tipo_cartao" value="debito" />
-                        <span>Débito</span>
-                      </label>
-                      <label className="cartao">
-                        <input type="radio" name="tipo_cartao" value="credito" />
-                        <span>Crédito</span>
-                      </label>
+              {/* 1. OPÇÃO CARTÃO */}
+              <div className={`pay-method-card ${metodoPagamento === "cartao" ? "ativo" : ""}`}>
+                <div
+                  className="pay-method-header"
+                  onClick={() => {
+                    setMetodoPagamento("cartao");
+                    setCartaoAberto((v) => !v);
+                  }}
+                >
+                  <div className="pay-method-left">
+                    <input
+                      type="radio"
+                      name="metodo_pagamento_radio"
+                      checked={metodoPagamento === "cartao"}
+                      onChange={() => {
+                        setMetodoPagamento("cartao");
+                        setCartaoAberto(true);
+                      }}
+                      className="pay-radio"
+                    />
+                    <div className="pay-method-icon">
+                      <i className="fa-regular fa-credit-card" />
                     </div>
-                    <button type="button" className="btn_add">
-                      ADICIONAR
-                    </button>
+                    <div>
+                      <h3 className="titulo">Cartão de Crédito / Débito</h3>
+                      <p className="pay-subtitle">Selecione um cartão salvo ou adicione um novo</p>
+                    </div>
                   </div>
+                  <i className={`fa-solid fa-angle-${cartaoAberto || metodoPagamento === "cartao" ? "down" : "right"}`} />
                 </div>
+
+                {(cartaoAberto || metodoPagamento === "cartao") && (
+                  <div className="pay-card-body">
+                    {/* Lista de cartões salvos */}
+                    {pagamentosSalvos.length > 0 && (
+                      <div className="pay-saved-cards-list">
+                        <label className="pay-section-label">Cartões Salvos</label>
+                        {pagamentosSalvos.map((c) => {
+                          const isSelected =
+                            metodoPagamento === "cartao" &&
+                            String(cartaoSelecionadoId) === String(c.id);
+                          return (
+                            <div
+                              key={c.id}
+                              className={`pay-saved-item ${isSelected ? "selecionado" : ""}`}
+                              onClick={() => {
+                                setMetodoPagamento("cartao");
+                                setCartaoSelecionadoId(c.id);
+                                setCriandoCartao(false);
+                              }}
+                            >
+                              <input
+                                type="radio"
+                                name="cartao_salvo_radio"
+                                checked={isSelected}
+                                onChange={() => {
+                                  setMetodoPagamento("cartao");
+                                  setCartaoSelecionadoId(c.id);
+                                  setCriandoCartao(false);
+                                }}
+                              />
+                              <div className="pay-saved-icon">
+                                <i className="fa-solid fa-credit-card" />
+                              </div>
+                              <div className="pay-saved-info">
+                                <p className="pay-saved-title">
+                                  <span className="pay-badge">
+                                    {c.tipo === "debito" ? "DÉBITO" : "CRÉDITO"}
+                                  </span>
+                                  •••• {c.ultimosDigitos}
+                                </p>
+                                <p className="pay-saved-sub">
+                                  {c.titular} | Validade: {c.validade}
+                                </p>
+                              </div>
+                              {isSelected && <i className="fa-solid fa-circle-check pay-check-icon" />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Botão de adicionar ou Formulário de Novo Cartão */}
+                    {!criandoCartao ? (
+                      <button
+                        type="button"
+                        className="btn-add-cartao-onthefly"
+                        onClick={() => {
+                          setMetodoPagamento("cartao");
+                          setCriandoCartao(true);
+                        }}
+                      >
+                        <i className="fa-solid fa-plus" /> Adicionar novo cartão
+                      </button>
+                    ) : (
+                      <div className="pay-new-card-form">
+                        <div className="pay-form-header">
+                          <h4>Novo Cartão</h4>
+                          <button
+                            type="button"
+                            className="btn-cancel-new-card"
+                            onClick={() => setCriandoCartao(false)}
+                            title="Cancelar"
+                          >
+                            <i className="fa-solid fa-xmark" />
+                          </button>
+                        </div>
+
+                        <div className="inserir_dados">
+                          <div className="pay-input-icon">
+                            <input
+                              type="text"
+                              className="numero"
+                              placeholder="Número do Cartão"
+                              value={novoNumCartao}
+                              onChange={(e) => setNovoNumCartao(formatarCartao(e.target.value))}
+                            />
+                          </div>
+
+                          <div className="pay-input-icon">
+                            <input
+                              type="text"
+                              className="nome"
+                              placeholder="Nome impresso no cartão (Titular)"
+                              value={novoTitularCartao}
+                              onChange={(e) => setNovoTitularCartao(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="subdados">
+                            <input
+                              type="text"
+                              placeholder="Validade (MM/AA)"
+                              value={novoValCartao}
+                              onChange={(e) => setNovoValCartao(formatarValidade(e.target.value))}
+                            />
+                            <input
+                              type="text"
+                              placeholder="CVV"
+                              maxLength={4}
+                              value={novoCvvCartao}
+                              onChange={(e) => setNovoCvvCartao(e.target.value.replace(/\D/g, ""))}
+                            />
+                          </div>
+
+                          <div className="tipos_add">
+                            <div className="cartao_tipos">
+                              <label className="cartao">
+                                <input
+                                  type="radio"
+                                  name="novo_tipo_cartao"
+                                  value="credito"
+                                  checked={novoTipoCartao === "credito"}
+                                  onChange={() => setNovoTipoCartao("credito")}
+                                />
+                                <span>Crédito</span>
+                              </label>
+                              <label className="cartao">
+                                <input
+                                  type="radio"
+                                  name="novo_tipo_cartao"
+                                  value="debito"
+                                  checked={novoTipoCartao === "debito"}
+                                  onChange={() => setNovoTipoCartao("debito")}
+                                />
+                                <span>Débito</span>
+                              </label>
+                            </div>
+
+                            <button
+                              type="button"
+                              className="btn_add"
+                              onClick={handleSalvarNovoCartaoOnSpot}
+                            >
+                              SALVAR E USAR
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
-              <button type="button" className="opcaoP" id="btn_pix">
-                <h3 className="titulo">Pix</h3>
-                <input className="selecionar" type="checkbox" />
-              </button>
+              {/* 2. OPÇÃO PIX */}
+              <div
+                className={`pay-method-card ${metodoPagamento === "pix" ? "ativo" : ""}`}
+                onClick={() => {
+                  setMetodoPagamento("pix");
+                  setCartaoAberto(false);
+                  setCriandoCartao(false);
+                }}
+              >
+                <div className="pay-method-header">
+                  <div className="pay-method-left">
+                    <input
+                      type="radio"
+                      name="metodo_pagamento_radio"
+                      checked={metodoPagamento === "pix"}
+                      onChange={() => {
+                        setMetodoPagamento("pix");
+                        setCartaoAberto(false);
+                        setCriandoCartao(false);
+                      }}
+                      className="pay-radio"
+                    />
+                    <div className="pay-method-icon pix-icon">
+                      <i className="fa-solid fa-qrcode" />
+                    </div>
+                    <div>
+                      <h3 className="titulo">Pix</h3>
+                      <p className="pay-subtitle">Aprovação imediata via QR Code ou Copia e Cola</p>
+                    </div>
+                  </div>
+                  <span className="pix-badge-tag">Rápido & Seguro</span>
+                </div>
+              </div>
             </div>
 
             <form className="info" onSubmit={pagar}>
               <div className="subs">
                 <div className="conteudo_pagamento">
                   <div className="titulo_btn">
-                    <h4 className="titulo_menor">Calcule o frete</h4>
+                    <h4 className="titulo_menor">Endereço de Entrega</h4>
                   </div>
 
-                  <div className="cep-wrapper">
-                    <input
-                      type="text"
-                      className={`cep${cepStatus === "erro" ? " cep-erro" : cepStatus === "ok" ? " cep-ok" : ""}`}
-                      placeholder="00000-000"
-                      maxLength="9"
-                      value={cep}
-                      onChange={mudarCep}
-                    />
-                    <span className="cep-icone">
-                      {cepStatus === "carregando" && (
-                        <span className="cep-spinner" />
-                      )}
-                      {cepStatus === "ok" && (
-                        <i className="fa-solid fa-circle-check cep-check" />
-                      )}
-                      {cepStatus === "erro" && (
-                        <i className="fa-solid fa-circle-xmark cep-xmark" />
-                      )}
-                    </span>
+                  <div className="endereco-resumo-checkout">
+                    {endereco.rua ? (
+                      <>
+                        <p className="endereco-resumo-rua">
+                          <i className="fa-solid fa-location-dot" />{" "}
+                          <strong>
+                            {endereco.rua}
+                            {endereco.numero ? `, ${endereco.numero}` : ""}
+                          </strong>
+                        </p>
+                        <p className="endereco-resumo-detalhes">
+                          {endereco.bairro ? `${endereco.bairro} — ` : ""}
+                          {endereco.cidade}
+                          {endereco.uf ? `/${endereco.uf}` : ""}
+                        </p>
+                        {(endereco.cep || cep) && (
+                          <p className="endereco-resumo-cep">
+                            CEP: <span>{endereco.cep || cep}</span>
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="endereco-resumo-vazio">
+                        Nenhum endereço selecionado na etapa anterior.
+                      </p>
+                    )}
                   </div>
-
-                  {cepStatus === "ok" && (
-                    <p className="cep-feedback ok">
-                      <i className="fa-solid fa-location-dot" />
-                      {endereco.rua ? `${endereco.rua}, ` : ""}
-                      {endereco.bairro ? `${endereco.bairro} — ` : ""}
-                      {endereco.cidade}{endereco.uf ? `/${endereco.uf}` : ""}
-                    </p>
-                  )}
-                  {cepStatus === "erro" && (
-                    <p className="cep-feedback erro">
-                      <i className="fa-solid fa-triangle-exclamation" />
-                      CEP não encontrado. Verifique e tente novamente.
-                    </p>
-                  )}
 
                   <div className="dados">
                     <span>Valor do frete:</span>

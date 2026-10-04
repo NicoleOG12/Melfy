@@ -33,10 +33,11 @@ export default function ProductModal({ produto, onClose }) {
   };
 
   const handleAdicionar = async () => {
+    if (animando) return;
+    setAnimando(true);
     try {
       const prodId = produto.id_produto ?? produto.idProduto ?? produto.id;
       await adicionarAoCarrinho(prodId, qtd);
-      setAnimando(true);
       setTimeout(() => {
         setAnimando(false);
         onClose();
@@ -55,6 +56,7 @@ export default function ProductModal({ produto, onClose }) {
           text: err.message || "Erro ao adicionar ao carrinho.",
         });
       }
+      setAnimando(false);
     }
   };
 
@@ -137,9 +139,9 @@ export default function ProductModal({ produto, onClose }) {
                 </button>
               </div>
 
-              <button type="button" className="btn-add" onClick={handleAdicionar}>
-                <span>Adicionar ao carrinho</span>
-                <i className="fas fa-shopping-bag" />
+              <button type="button" className="btn-add" onClick={handleAdicionar} disabled={animando} aria-busy={animando}>
+                <span>{animando ? "Adicionando..." : "Adicionar ao carrinho"}</span>
+                {animando ? <span className="carrinho-spinner" aria-label="Adicionando" /> : <i className="fas fa-shopping-bag" />}
               </button>
             </div>
           </div>

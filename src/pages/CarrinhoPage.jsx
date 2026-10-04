@@ -23,6 +23,9 @@ export default function CarrinhoPage() {
   const [produtoModal, setProdutoModal] = useState(null);
   const [animacaoSacola, setAnimacaoSacola] = useState(null);
   const [animacaoVisivel, setAnimacaoVisivel] = useState(false);
+  const [carregandoSacola, setCarregandoSacola] = useState(true);
+  const [operacaoCarrinho, setOperacaoCarrinho] = useState(null);
+  const [finalizandoCompra, setFinalizandoCompra] = useState(false);
 
   useEffect(() => {
     let ativo = true;
@@ -71,10 +74,17 @@ export default function CarrinhoPage() {
           console.error("Erro ao carregar carrinho via API:", err);
         }
       }
+      setCarregandoSacola(false);
     }
 
     carregar();
     return () => { ativo = false; };
+  }, []);
+
+  useEffect(() => {
+    const atualizarComEvento = () => carregarSacolaNovamente();
+    window.addEventListener("carrinhoAtualizado", atualizarComEvento);
+    return () => window.removeEventListener("carrinhoAtualizado", atualizarComEvento);
   }, []);
 
   const subtotal = useMemo(
@@ -108,10 +118,12 @@ export default function CarrinhoPage() {
     if (!item) return;
 
     const idItem = item.id_item_carrinho;
-    const novaQuantidade = item.quantidade + Number(delta);
+    const quantidadeAtual = Number.parseInt(item.quantidade ?? item.qtd ?? 0, 10);
+    const novaQuantidade = quantidadeAtual + Number(delta);
 
     if (!idItem) return;
 
+    setOperacaoCarrinho(`quantidade-${index}`);
     try {
       if (novaQuantidade <= 0) {
         await removerDoCarrinho(idItem);
@@ -138,6 +150,8 @@ export default function CarrinhoPage() {
         title: "Erro ao atualizar",
         text: err.message || "Não foi possível atualizar a quantidade."
       });
+    } finally {
+      setOperacaoCarrinho(null);
     }
   }
 
@@ -145,16 +159,20 @@ export default function CarrinhoPage() {
     try {
       const token = localStorage.getItem("tokenCliente");
       if (!token) return;
+      setCarregandoSacola(true);
       const dados = await fetchCarrinho(token);
       const lista = Array.isArray(dados) ? dados : [];
       const listaValida = lista.filter((item) => {
         const qtd = Number.parseInt(item.quantidade ?? item.qtd ?? 0, 10);
         return qtd > 0;
       });
-      atualizarSacola(listaValida);
+      setSacola(listaValida);
+      localStorage.setItem("Sacola", JSON.stringify(listaValida));
       setSelecionados(new Set(listaValida.map((_, index) => index)));
     } catch (err) {
       console.error(err);
+    } finally {
+      setCarregandoSacola(false);
     }
   }
 
@@ -170,6 +188,7 @@ export default function CarrinhoPage() {
       cancelButtonText: "Não, manter",
     });
     if (!result.isConfirmed) return;
+    setOperacaoCarrinho(`remover-${index}`);
     try {
       await removerDoCarrinho(item.id_item_carrinho);
       atualizarSacola(
@@ -189,6 +208,8 @@ export default function CarrinhoPage() {
     } catch (err) {
       console.error(err);
       MelfySwal({ icon: "error", title: "Erro ao remover", text: err.message || "Não foi possível remover o item do carrinho.", });
+    } finally {
+      setOperacaoCarrinho(null);
     }
   }
 
@@ -214,6 +235,7 @@ export default function CarrinhoPage() {
       return;
     }
 
+    setFinalizandoCompra(true);
     try {
       const itens = itensEscolhidos.map((p) => ({
         id_produto: Number(p.id_produto ?? p.idProduto ?? p.id),
@@ -266,6 +288,8 @@ export default function CarrinhoPage() {
         title: "Erro ao finalizar",
         text: err.message || "Erro inesperado ao finalizar compra.",
       });
+    } finally {
+      setFinalizandoCompra(false);
     }
   }
 
@@ -283,6 +307,8 @@ export default function CarrinhoPage() {
                 <CartTable
                   sacola={sacola}
                   selecionados={selecionados}
+                  carregando={carregandoSacola}
+                  operacao={operacaoCarrinho}
                   onToggle={toggleProduto}
                   onQuantidade={alterarQuantidade}
                   onRemover={removerItem}
@@ -290,7 +316,11 @@ export default function CarrinhoPage() {
               </section>
             </div>
 
-            <CartSummary subtotal={subtotal} onCheckout={() => setCheckoutAberto(true)} />
+            <CartSummary
+              subtotal={subtotal}
+              onCheckout={() => setCheckoutAberto(true)}
+              disabled={finalizandoCompra || carregandoSacola}
+            />
           </div>
         </div>
 
