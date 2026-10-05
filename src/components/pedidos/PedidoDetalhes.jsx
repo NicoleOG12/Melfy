@@ -3,7 +3,17 @@ import PedidoImagem from "./PedidoImagem";
 import PedidoProgresso from "./PedidoProgresso";
 import PedidoMapa from "./PedidoMapa";
 
-export default function PedidoDetalhes({ o, history = false }) {
+export default function PedidoDetalhes({
+  o,
+  history = false,
+  onAbrirPagamento,
+}) {
+  const statusPagamento = String(o.paymentStatus ?? "").toLowerCase();
+  const pagamentoPendente =
+    !statusPagamento ||
+    statusPagamento.includes("pend") ||
+    statusPagamento === "in_process";
+
   return (
     <div className="m-details">
       <div className="m-detail-head">
@@ -60,29 +70,14 @@ export default function PedidoDetalhes({ o, history = false }) {
           <span>
             Pagamento
             <b>{o.payment}</b>
-            {o.paymentLink && (o.paymentStatus === "PENDENTE" || !o.paymentStatus) && (
-              <a
-                href={o.paymentLink}
-                target="_blank"
-                rel="noreferrer"
+            {pagamentoPendente && onAbrirPagamento && (
+              <button
+                type="button"
+                onClick={() => onAbrirPagamento(o)}
                 className="btn-pagar-pix-order"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  marginTop: "6px",
-                  padding: "4px 10px",
-                  background: "linear-gradient(135deg, var(--yellow), var(--yellow-mid))",
-                  color: "var(--brown)",
-                  borderRadius: "8px",
-                  fontWeight: "700",
-                  fontSize: "12px",
-                  textDecoration: "none",
-                  boxShadow: "0 2px 6px rgba(74, 32, 20, 0.15)"
-                }}
               >
-                <i className="fa-solid fa-up-right-from-square" /> Realizar Pagamento
-              </a>
+                <i className="fa-solid fa-qrcode" /> Ver pagamento
+              </button>
             )}
           </span>
         </div>

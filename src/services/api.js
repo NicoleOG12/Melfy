@@ -5,7 +5,6 @@ async function parseResponse(res) {
   let data = {};
   try {
     data = text ? JSON.parse(text) : {};
-    console.log(data);
   } catch {
     data = {};
   }
@@ -15,6 +14,104 @@ async function parseResponse(res) {
     );
 
   return data;
+}
+
+export async function checkoutPedidoAPI(pedido) {
+  const token = localStorage.getItem("tokenCliente");
+  if (!token) throw new Error("não autenticado");
+
+  const itens = Array.isArray(pedido.itens)
+    ? pedido.itens.map((item) => ({
+        id_produto: Number(item.id_produto),
+        quantidade: Number(item.quantidade ?? item.qtd ?? 1),
+      }))
+    : [];
+
+  if (
+    !itens.length ||
+    itens.some(
+      (item) =>
+        !Number.isInteger(item.id_produto) ||
+        item.id_produto <= 0 ||
+        !Number.isInteger(item.quantidade) ||
+        item.quantidade <= 0,
+    )
+  ) {
+    throw new Error("Os itens do pedido são inválidos.");
+  }
+
+  const idEndereco = Number(pedido.id_endereco_entrega);
+  if (!Number.isInteger(idEndereco) || idEndereco <= 0) {
+    throw new Error("Selecione um endereço de entrega válido.");
+  }
+
+  const metodo = String(pedido.metodo ?? "").toUpperCase();
+  if (!["CARD", "PIX"].includes(metodo)) {
+    throw new Error("Selecione uma forma de pagamento válida.");
+  }
+  if (!pedido.payment || typeof pedido.payment !== "object") {
+    throw new Error("Os dados do pagamento estão incompletos.");
+  }
+
+  const body = {
+    id_endereco_entrega: idEndereco,
+    metodo,
+    itens,
+    payment: pedido.payment,
+  };
+
+  const res = await fetch(`${API_URL}/orders/checkout-api`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await parseResponse(res);
+  window.dispatchEvent(new Event("carrinhoAtualizado"));
+  return data;
+}
+
+export async function fetchStatusPagamento(id, signal) {
+  if (id === undefined || id === null || String(id).trim() === "") {
+    throw new Error("Identificador do pagamento inválido.");
+  }
+
+  const token = localStorage.getItem("tokenCliente");
+  if (!token) throw new Error("não autenticado");
+
+  const res = await fetch(
+    `${API_URL}/orders/payments/${encodeURIComponent(id)}/status`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      signal,
+    },
+  );
+
+  return parseResponse(res);
+}
+
+export async function fetchPedidoDetalhesAPI(id, signal) {
+  const pedidoId = String(id ?? "").trim();
+  if (!pedidoId) throw new Error("Identificador do pedido inválido.");
+
+  const token = localStorage.getItem("tokenCliente");
+  if (!token) throw new Error("Usuário não autenticado.");
+
+  const res = await fetch(`${API_URL}/orders/${encodeURIComponent(pedidoId)}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    signal,
+  });
+
+  return parseResponse(res);
 }
 
 let cacheProdutos = null;

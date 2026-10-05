@@ -2,7 +2,7 @@ import { money, onlyTime } from "../../utils/orderUtils";
 import PedidoImagem from "./PedidoImagem";
 import PedidoDetalhes from "./PedidoDetalhes";
 
-export default function Pedido({ o, open, setOpen }) {
+export default function Pedido({ o, open, setOpen, onAbrirPagamento }) {
   return (
     <article
       id={`pedido-${o.id}`}
@@ -56,7 +56,9 @@ export default function Pedido({ o, open, setOpen }) {
         </span>
       </button>
 
-      {open && <PedidoDetalhes o={o} />}
+      {open && (
+        <PedidoDetalhes o={o} onAbrirPagamento={onAbrirPagamento} />
+      )}
     </article>
   );
 }

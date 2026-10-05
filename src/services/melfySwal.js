@@ -24,7 +24,6 @@ export default async function MelfySwal(optionsOrTitle, text, icon) {
     buttonsStyling: true,
     confirmButtonColor: "#FFC43D",
     cancelButtonColor: "#c53030",
-    zIndex: 99999,
   };
 
   const swalOptions = {

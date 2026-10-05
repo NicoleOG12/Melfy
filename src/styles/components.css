@@ -880,6 +880,10 @@ th {
    SWEETALERT2 CUSTOMIZADO PARA MELFY
    ========================================== */
 
+.swal2-container {
+  z-index: 100001 !important;
+}
+
 .swal2-popup.melfy-swal-popup {
   font-family: var(--font-principal) !important;
   background-color: var(--surface-1) !important;

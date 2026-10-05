@@ -4,11 +4,13 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Pedido from "../components/pedidos/Pedido";
 import PedidoHistorico from "../components/pedidos/PedidoHistorico";
+import PagamentoPedidoModal from "../components/pedidos/PagamentoPedidoModal";
 import { SyncBar, ErrorBanner, LoadingSpinner, SectionHeading, EmptyState } from "../components/pedidos/PedidosUI";
 import { usePedidos } from "../hooks/usePedidos";
 import { PAGE_SIZE } from "../utils/orderUtils";
 import MelfySwal from "../services/melfySwal";
 import "../styles/cliente/pedidos.css";
+import "../styles/cliente/modal.css";
 
 export default function PedidosPage() {
   const {
@@ -29,6 +31,7 @@ export default function PedidosPage() {
   const [activeOpen, setActiveOpen] = React.useState(null);
   const [historyOpen, setHistoryOpen] = React.useState(null);
   const [scrollParaId, setScrollParaId] = useState(null);
+  const [pedidoPagamento, setPedidoPagamento] = useState(null);
   const pedidoAbertoRef = useRef(false);
 
   useEffect(() => {
@@ -120,6 +123,7 @@ export default function PedidosPage() {
                       o={o}
                       open={activeOpen === o.id}
                       setOpen={setActiveOpen}
+                      onAbrirPagamento={setPedidoPagamento}
                     />
                   ))}
                 </div>
@@ -152,6 +156,7 @@ export default function PedidosPage() {
                         o={o}
                         open={historyOpen === o.id}
                         setOpen={setHistoryOpen}
+                        onAbrirPagamento={setPedidoPagamento}
                       />
                     ))}
                   </div>
@@ -188,6 +193,11 @@ export default function PedidosPage() {
           </>
         )}
       </main>
+
+      <PagamentoPedidoModal
+        pedido={pedidoPagamento}
+        onClose={() => setPedidoPagamento(null)}
+      />
 
       <Footer />
     </>

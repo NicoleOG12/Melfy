@@ -1087,3 +1087,19 @@
     margin-left: 0;
   }
 }
+.btn-pagar-pix-order {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow-mid));
+  color: var(--brown);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(74, 32, 20, 0.15);
+  cursor: pointer;
+}

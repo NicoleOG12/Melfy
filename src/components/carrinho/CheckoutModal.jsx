@@ -1,13 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  CardNumber,
+  ExpirationDate,
+  SecurityCode,
+  createCardToken,
+  getPaymentMethods,
+  initMercadoPago,
+} from "@mercadopago/sdk-react";
 import { formatarPreco } from "../../utils/cartUtils";
-import { formatarCartao, formatarValidade } from "../../utils/masks";
+import { formatarCPF } from "../../utils/masks";
 import MelfySwal from "../../services/melfySwal";
+import { useAuth } from "../../context/AuthContext";
 import {
   fetchEnderecosAPI,
   criarEnderecoAPI,
   atualizarEnderecoAPI,
   removerEnderecoAPI,
 } from "../../services/api";
+
+const MERCADO_PAGO_PUBLIC_KEY = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY;
+if (MERCADO_PAGO_PUBLIC_KEY) initMercadoPago(MERCADO_PAGO_PUBLIC_KEY);
+
+const MERCADO_PAGO_FIELD_STYLE = {
+  color: "#4d3528",
+  fontFamily: "inherit",
+  fontSize: "15px",
+  height: "38px",
+  padding: "0 16px",
+  placeholderColor: "#806b5b",
+};
 
 const STORAGE_KEY = "melfy_endereco_entrega";
 
@@ -56,6 +77,7 @@ async function buscarEnderecoporCoordenadas(lat, lng) {
 }
 
 export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
+  const { usuario } = useAuth();
   const [etapa, setEtapa] = useState(1);
 
   const [editando, setEditando] = useState(false);
@@ -70,18 +92,20 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
   const [cartaoAberto, setCartaoAberto] = useState(false);
   const [cep, setCep] = useState("");
 
-  // Estados de Formas de Pagamento Salvas e Seleção
+  // Dados enviados ao Mercado Pago como identificação do pagador.
   const [metodoPagamento, setMetodoPagamento] = useState("pix"); // "pix" | "cartao"
-  const [cartaoSelecionadoId, setCartaoSelecionadoId] = useState(null);
-  const [pagamentosSalvos, setPagamentosSalvos] = useState([]);
-
-  // Estados do Formulário de Novo Cartão (Adicionar na hora)
-  const [criandoCartao, setCriandoCartao] = useState(false);
-  const [novoNumCartao, setNovoNumCartao] = useState("");
-  const [novoTitularCartao, setNovoTitularCartao] = useState("");
-  const [novoValCartao, setNovoValCartao] = useState("");
-  const [novoCvvCartao, setNovoCvvCartao] = useState("");
-  const [novoTipoCartao, setNovoTipoCartao] = useState("credito");
+  const [emailPagador, setEmailPagador] = useState("");
+  const [cpfPagador, setCpfPagador] = useState("");
+  const [titularCartao, setTitularCartao] = useState("");
+  const [paymentMethodId, setPaymentMethodId] = useState("");
+  const [paymentMethodError, setPaymentMethodError] = useState("");
+  const [secureFieldsReady, setSecureFieldsReady] = useState({
+    cardNumber: false,
+    expirationDate: false,
+    securityCode: false,
+  });
+  const [enviandoPagamento, setEnviandoPagamento] = useState(false);
+  const binRequestId = useRef(0);
 
   const temCepValido = Boolean(
     (endereco?.cep && endereco.cep.replace(/\D/g, "").length === 8) ||
@@ -112,28 +136,23 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     }
   }
 
-  // Ao abrir o modal: carrega endereços e cartões salvos
+  // Ao abrir o modal: carrega endereços e preenche os dados do pagador.
   useEffect(() => {
     if (!open) return;
     setEtapa(1);
     setEditando(false);
     setEditandoId(null);
     setCepFormStatus("idle");
-    setCriandoCartao(false);
-
-    // Carregar cartões salvos do localStorage
-    try {
-      const salvosRaw = localStorage.getItem("pagamentosCliente");
-      if (salvosRaw) {
-        const parsed = JSON.parse(salvosRaw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setPagamentosSalvos(parsed);
-          setCartaoSelecionadoId(parsed[0].id);
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao carregar cartões salvos:", err);
-    }
+    setEmailPagador(usuario?.email || "");
+    setCpfPagador(formatarCPF(usuario?.cpf || ""));
+    setTitularCartao(usuario?.nome || "");
+    setPaymentMethodId("");
+    setPaymentMethodError("");
+    setSecureFieldsReady({
+      cardNumber: false,
+      expirationDate: false,
+      securityCode: false,
+    });
 
     async function carregar() {
       setCarregandoLista(true);
@@ -159,7 +178,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     }
 
     carregar();
-  }, [open]);
+  }, [open, usuario]);
 
   function solicitarLocalizacao() {
     setGeoStatus("carregando");
@@ -395,67 +414,63 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     setEtapa(1);
   }
 
-  function handleSalvarNovoCartaoOnSpot(e) {
-    if (e) e.preventDefault();
-    if (!novoNumCartao || novoNumCartao.length < 14) {
-      MelfySwal({
-        icon: "warning",
-        title: "Número inválido",
-        text: "Por favor, digite o número completo do cartão.",
-      });
-      return;
-    }
-    if (!novoTitularCartao) {
-      MelfySwal({
-        icon: "warning",
-        title: "Nome do titular",
-        text: "Por favor, digite o nome impresso no cartão.",
-      });
-      return;
-    }
-    if (!novoValCartao || novoValCartao.length < 5) {
-      MelfySwal({
-        icon: "warning",
-        title: "Validade inválida",
-        text: "Por favor, informe a validade no formato MM/AA.",
-      });
-      return;
-    }
+  const buscarMetodoPagamento = useCallback(async ({ bin } = {}) => {
+    const requestId = ++binRequestId.current;
+    setPaymentMethodId("");
+    setPaymentMethodError("");
+    if (!bin) return;
 
-    const novoItem = {
-      id: Date.now(),
-      tipo: novoTipoCartao,
-      ultimosDigitos: novoNumCartao.replace(/\s/g, "").slice(-4) || "0000",
-      titular: novoTitularCartao.toUpperCase(),
-      validade: novoValCartao,
-    };
-
-    const listaAtualizada = [novoItem, ...pagamentosSalvos];
-    setPagamentosSalvos(listaAtualizada);
     try {
-      localStorage.setItem("pagamentosCliente", JSON.stringify(listaAtualizada));
-    } catch (err) {
-      console.error("Erro ao salvar cartão no localStorage:", err);
+      const methods = await getPaymentMethods({ bin });
+      if (requestId !== binRequestId.current) return;
+      const method = methods?.results?.find((item) =>
+        ["credit_card", "debit_card"].includes(item.payment_type_id),
+      );
+      if (!method?.id) {
+        setPaymentMethodError("Não foi possível identificar esta bandeira de cartão.");
+        return;
+      }
+      setPaymentMethodId(method.id);
+    } catch {
+      if (requestId === binRequestId.current) {
+        setPaymentMethodError("Não foi possível validar a bandeira do cartão.");
+      }
     }
+  }, []);
 
-    setCartaoSelecionadoId(novoItem.id);
-    setMetodoPagamento("cartao");
-    setCriandoCartao(false);
+  const marcarCampoSeguroPronto = useCallback((campo) => {
+    setSecureFieldsReady((ready) => ({ ...ready, [campo]: true }));
+  }, []);
+  const cardNumberPronto = useCallback(
+    () => marcarCampoSeguroPronto("cardNumber"),
+    [marcarCampoSeguroPronto],
+  );
+  const expirationDatePronto = useCallback(
+    () => marcarCampoSeguroPronto("expirationDate"),
+    [marcarCampoSeguroPronto],
+  );
+  const securityCodePronto = useCallback(
+    () => marcarCampoSeguroPronto("securityCode"),
+    [marcarCampoSeguroPronto],
+  );
 
-    setNovoNumCartao("");
-    setNovoTitularCartao("");
-    setNovoValCartao("");
-    setNovoCvvCartao("");
-
-    MelfySwal({
-      icon: "success",
-      title: "Cartão Adicionado! 🎉",
-      text: "Sua nova forma de pagamento foi salva e selecionada para este pedido.",
+  function selecionarPix() {
+    binRequestId.current += 1;
+    setMetodoPagamento("pix");
+    setCartaoAberto(false);
+    setPaymentMethodId("");
+    setPaymentMethodError("");
+    setSecureFieldsReady({
+      cardNumber: false,
+      expirationDate: false,
+      securityCode: false,
     });
   }
 
-  function pagar(event) {
+  async function pagar(event) {
     event.preventDefault();
+
+    if (enviandoPagamento) return;
 
     if (!endereco || (!endereco.rua && !endereco.cidade)) {
       MelfySwal({
@@ -467,32 +482,88 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
       return;
     }
 
-    let tipoPag = "PIX";
-    let methods = ["PIX"];
+    const email = emailPagador.trim();
+    const cpf = cpfPagador.replace(/\D/g, "");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || cpf.length !== 11) {
+      MelfySwal({
+        icon: "warning",
+        title: "Dados do pagador",
+        text: "Informe um e-mail válido e um CPF com 11 dígitos.",
+      });
+      return;
+    }
+
+    const payment = {
+      payer: {
+        email,
+        identification: { type: "CPF", number: cpf },
+      },
+    };
+    const metodo = metodoPagamento === "cartao" ? "CARD" : "PIX";
 
     if (metodoPagamento === "cartao") {
-      const cartaoSel = pagamentosSalvos.find(
-        (c) => String(c.id) === String(cartaoSelecionadoId)
-      );
-      if (!cartaoSel) {
+      if (!MERCADO_PAGO_PUBLIC_KEY) {
         MelfySwal({
-          icon: "warning",
-          title: "Forma de Pagamento",
-          text: "Por favor, selecione um cartão ou adicione um novo para continuar.",
+          icon: "error",
+          title: "Checkout indisponível",
+          text: "A chave pública do Mercado Pago não foi configurada.",
         });
         return;
       }
-      const sub = cartaoSel.tipo === "debito" ? "DEBITO" : "CREDITO";
-      tipoPag = sub;
-      methods = [sub];
+
+      if (!titularCartao.trim() || !paymentMethodId) {
+        MelfySwal({
+          icon: "warning",
+          title: "Dados do cartão",
+          text: paymentMethodError || "Informe os dados do cartão para continuar.",
+        });
+        return;
+      }
+
+      if (!Object.values(secureFieldsReady).every(Boolean)) {
+        MelfySwal({
+          icon: "warning",
+          title: "Cartão ainda carregando",
+          text: "Aguarde os campos seguros do Mercado Pago carregarem.",
+        });
+        return;
+      }
+
+      setEnviandoPagamento(true);
+      try {
+        const cardToken = await createCardToken({
+          cardholderName: titularCartao.trim(),
+          identificationType: "CPF",
+          identificationNumber: cpf,
+        });
+        if (!cardToken?.id) {
+          throw new Error("O Mercado Pago não retornou um token válido para o cartão.");
+        }
+        payment.token = cardToken.id;
+        payment.payment_method_id = paymentMethodId;
+        payment.installments = 1;
+      } catch (error) {
+        setEnviandoPagamento(false);
+        MelfySwal({
+          icon: "error",
+          title: "Não foi possível validar o cartão",
+          text: error?.message || "Confira os dados do cartão e tente novamente.",
+        });
+        return;
+      }
+    } else {
+      setEnviandoPagamento(true);
     }
 
-    const dadosCheckout = {
-      id_endereco_entrega: enderecoSelecionadoId || endereco.id || 1,
-      tipo_pagamento: tipoPag,
-      methods: methods,
-    };
-    onFinish(dadosCheckout);
+    try {
+      await onFinish({
+        id_endereco_entrega: enderecoSelecionadoId || endereco.id,
+        metodo,
+        payment,
+      });
+    } finally {
+      setEnviandoPagamento(false);
+    }
   }
 
   function handleCampoEdit(campo, valor) {
@@ -795,6 +866,31 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
           <>
             <h1>Como deseja pagar?</h1>
 
+            <div className="pay-payer-fields">
+              <label>
+                E-mail
+                <input
+                  type="email"
+                  autoComplete="email"
+                  value={emailPagador}
+                  onChange={(event) => setEmailPagador(event.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                CPF
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={14}
+                  value={cpfPagador}
+                  onChange={(event) => setCpfPagador(formatarCPF(event.target.value))}
+                  required
+                />
+              </label>
+            </div>
+
             <div className="container_opcao">
               {/* 1. OPÇÃO CARTÃO */}
               <div className={`pay-method-card ${metodoPagamento === "cartao" ? "ativo" : ""}`}>
@@ -820,8 +916,8 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
                       <i className="fa-regular fa-credit-card" />
                     </div>
                     <div>
-                      <h3 className="titulo">Cartão de Crédito / Débito</h3>
-                      <p className="pay-subtitle">Selecione um cartão salvo ou adicione um novo</p>
+                      <h3 className="titulo">Cartão de crédito ou débito</h3>
+                      <p className="pay-subtitle">Pagamento seguro processado pelo Mercado Pago</p>
                     </div>
                   </div>
                   <i className={`fa-solid fa-angle-${cartaoAberto || metodoPagamento === "cartao" ? "down" : "right"}`} />
@@ -829,152 +925,69 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
 
                 {(cartaoAberto || metodoPagamento === "cartao") && (
                   <div className="pay-card-body">
-                    {/* Lista de cartões salvos */}
-                    {pagamentosSalvos.length > 0 && (
-                      <div className="pay-saved-cards-list">
-                        <label className="pay-section-label">Cartões Salvos</label>
-                        {pagamentosSalvos.map((c) => {
-                          const isSelected =
-                            metodoPagamento === "cartao" &&
-                            String(cartaoSelecionadoId) === String(c.id);
-                          return (
-                            <div
-                              key={c.id}
-                              className={`pay-saved-item ${isSelected ? "selecionado" : ""}`}
-                              onClick={() => {
-                                setMetodoPagamento("cartao");
-                                setCartaoSelecionadoId(c.id);
-                                setCriandoCartao(false);
-                              }}
-                            >
-                              <input
-                                type="radio"
-                                name="cartao_salvo_radio"
-                                checked={isSelected}
-                                onChange={() => {
-                                  setMetodoPagamento("cartao");
-                                  setCartaoSelecionadoId(c.id);
-                                  setCriandoCartao(false);
-                                }}
-                              />
-                              <div className="pay-saved-icon">
-                                <i className="fa-solid fa-credit-card" />
-                              </div>
-                              <div className="pay-saved-info">
-                                <p className="pay-saved-title">
-                                  <span className="pay-badge">
-                                    {c.tipo === "debito" ? "DÉBITO" : "CRÉDITO"}
-                                  </span>
-                                  •••• {c.ultimosDigitos}
-                                </p>
-                                <p className="pay-saved-sub">
-                                  {c.titular} | Validade: {c.validade}
-                                </p>
-                              </div>
-                              {isSelected && <i className="fa-solid fa-circle-check pay-check-icon" />}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    {/* Botão de adicionar ou Formulário de Novo Cartão */}
-                    {!criandoCartao ? (
-                      <button
-                        type="button"
-                        className="btn-add-cartao-onthefly"
-                        onClick={() => {
-                          setMetodoPagamento("cartao");
-                          setCriandoCartao(true);
-                        }}
-                      >
-                        <i className="fa-solid fa-plus" /> Adicionar novo cartão
-                      </button>
-                    ) : (
+                    {MERCADO_PAGO_PUBLIC_KEY ? (
                       <div className="pay-new-card-form">
                         <div className="pay-form-header">
-                          <h4>Novo Cartão</h4>
-                          <button
-                            type="button"
-                            className="btn-cancel-new-card"
-                            onClick={() => setCriandoCartao(false)}
-                            title="Cancelar"
-                          >
-                            <i className="fa-solid fa-xmark" />
-                          </button>
+                          <h4>Dados do cartão</h4>
                         </div>
 
                         <div className="inserir_dados">
-                          <div className="pay-input-icon">
-                            <input
-                              type="text"
-                              className="numero"
-                              placeholder="Número do Cartão"
-                              value={novoNumCartao}
-                              onChange={(e) => setNovoNumCartao(formatarCartao(e.target.value))}
-                            />
-                          </div>
-
-                          <div className="pay-input-icon">
-                            <input
-                              type="text"
-                              className="nome"
-                              placeholder="Nome impresso no cartão (Titular)"
-                              value={novoTitularCartao}
-                              onChange={(e) => setNovoTitularCartao(e.target.value)}
-                            />
-                          </div>
-
-                          <div className="subdados">
-                            <input
-                              type="text"
-                              placeholder="Validade (MM/AA)"
-                              value={novoValCartao}
-                              onChange={(e) => setNovoValCartao(formatarValidade(e.target.value))}
-                            />
-                            <input
-                              type="text"
-                              placeholder="CVV"
-                              maxLength={4}
-                              value={novoCvvCartao}
-                              onChange={(e) => setNovoCvvCartao(e.target.value.replace(/\D/g, ""))}
-                            />
-                          </div>
-
-                          <div className="tipos_add">
-                            <div className="cartao_tipos">
-                              <label className="cartao">
-                                <input
-                                  type="radio"
-                                  name="novo_tipo_cartao"
-                                  value="credito"
-                                  checked={novoTipoCartao === "credito"}
-                                  onChange={() => setNovoTipoCartao("credito")}
-                                />
-                                <span>Crédito</span>
-                              </label>
-                              <label className="cartao">
-                                <input
-                                  type="radio"
-                                  name="novo_tipo_cartao"
-                                  value="debito"
-                                  checked={novoTipoCartao === "debito"}
-                                  onChange={() => setNovoTipoCartao("debito")}
-                                />
-                                <span>Débito</span>
-                              </label>
+                          <label className="pay-secure-field">
+                            Número do cartão
+                            <div className="pay-secure-field-frame">
+                              <CardNumber
+                                placeholder="0000 0000 0000 0000"
+                                style={MERCADO_PAGO_FIELD_STYLE}
+                                onBinChange={buscarMetodoPagamento}
+                                onReady={cardNumberPronto}
+                              />
                             </div>
+                          </label>
 
-                            <button
-                              type="button"
-                              className="btn_add"
-                              onClick={handleSalvarNovoCartaoOnSpot}
-                            >
-                              SALVAR E USAR
-                            </button>
+                          <label>
+                            Nome impresso no cartão
+                            <input
+                              type="text"
+                              autoComplete="cc-name"
+                              value={titularCartao}
+                              onChange={(event) => setTitularCartao(event.target.value)}
+                              required
+                            />
+                          </label>
+
+                          <div className="pay-secure-fields-row">
+                            <label className="pay-secure-field">
+                              Validade
+                              <div className="pay-secure-field-frame">
+                                <ExpirationDate
+                                  placeholder="MM/AA"
+                                  style={MERCADO_PAGO_FIELD_STYLE}
+                                  onReady={expirationDatePronto}
+                                />
+                              </div>
+                            </label>
+                            <label className="pay-secure-field">
+                              Código de segurança
+                              <div className="pay-secure-field-frame">
+                                <SecurityCode
+                                  placeholder="CVV"
+                                  style={MERCADO_PAGO_FIELD_STYLE}
+                                  onReady={securityCodePronto}
+                                />
+                              </div>
+                            </label>
                           </div>
                         </div>
+                        {paymentMethodError && (
+                          <p className="pay-card-error" role="alert">
+                            {paymentMethodError}
+                          </p>
+                        )}
                       </div>
+                    ) : (
+                      <p className="pay-card-error" role="alert">
+                        Configure VITE_MERCADOPAGO_PUBLIC_KEY para habilitar pagamento com cartão.
+                      </p>
                     )}
                   </div>
                 )}
@@ -983,11 +996,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
               {/* 2. OPÇÃO PIX */}
               <div
                 className={`pay-method-card ${metodoPagamento === "pix" ? "ativo" : ""}`}
-                onClick={() => {
-                  setMetodoPagamento("pix");
-                  setCartaoAberto(false);
-                  setCriandoCartao(false);
-                }}
+                onClick={selecionarPix}
               >
                 <div className="pay-method-header">
                   <div className="pay-method-left">
@@ -995,11 +1004,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
                       type="radio"
                       name="metodo_pagamento_radio"
                       checked={metodoPagamento === "pix"}
-                      onChange={() => {
-                        setMetodoPagamento("pix");
-                        setCartaoAberto(false);
-                        setCriandoCartao(false);
-                      }}
+                      onChange={selecionarPix}
                       className="pay-radio"
                     />
                     <div className="pay-method-icon pix-icon">
@@ -1075,8 +1080,8 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
                     <span>Total</span>
                     <span id="total-modal">R$ {formatarPreco(total)}</span>
                   </div>
-                  <button type="submit" className="btn-compra">
-                    Pagar
+                  <button type="submit" className="btn-compra" disabled={enviandoPagamento}>
+                    {enviandoPagamento ? "Processando..." : "Pagar"}
                   </button>
                 </div>
               </div>

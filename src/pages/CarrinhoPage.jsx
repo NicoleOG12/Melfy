@@ -8,7 +8,7 @@ import CartTable from "../components/carrinho/CartTable";
 import CartSummary from "../components/carrinho/CartSummary";
 import CheckoutModal from "../components/carrinho/CheckoutModal";
 import RecommendationCards from "../components/carrinho/RecommendationCards";
-import { fetchCarrinho, fetchProdutos, fetchLojas, adicionarAoCarrinho, removerDoCarrinho, criarPedido, atualizarQuantidadeCarrinho } from "../services/api";
+import { fetchCarrinho, fetchProdutos, fetchLojas, adicionarAoCarrinho, removerDoCarrinho, checkoutPedidoAPI, fetchStatusPagamento, atualizarQuantidadeCarrinho } from "../services/api";
 import MelfySwal from "../services/melfySwal";
 import "../styles/carrinho.css";
 import "../styles/cliente/modal.css";
@@ -26,6 +26,57 @@ export default function CarrinhoPage() {
   const [carregandoSacola, setCarregandoSacola] = useState(true);
   const [operacaoCarrinho, setOperacaoCarrinho] = useState(null);
   const [finalizandoCompra, setFinalizandoCompra] = useState(false);
+  const [pixCheckout, setPixCheckout] = useState(null);
+  const [erroConsultaPagamento, setErroConsultaPagamento] = useState("");
+
+  useEffect(() => {
+    if (!pixCheckout?.statusId) return;
+
+    let ativo = true;
+    let timer;
+    const controller = new AbortController();
+
+    async function verificarPagamento() {
+      try {
+        const response = await fetchStatusPagamento(
+          pixCheckout.statusId,
+          controller.signal,
+        );
+        if (!ativo) return;
+
+        const statusGateway = String(
+          response?.data?.mercado_pago?.status ??
+            response?.mercado_pago?.status ??
+            "",
+        ).toLowerCase();
+        if (statusGateway === "approved") {
+          setPixCheckout(null);
+          navigate("/pedidos?status=approved");
+          return;
+        }
+
+        setErroConsultaPagamento("");
+      } catch (error) {
+        if (ativo && error?.name !== "AbortError") {
+          setErroConsultaPagamento(
+            "Não foi possível consultar o pagamento. Vamos tentar novamente.",
+          );
+          console.error("Erro ao consultar status do pagamento:", error);
+        }
+      } finally {
+        if (ativo) timer = setTimeout(verificarPagamento, 30_000);
+      }
+    }
+
+    setErroConsultaPagamento("");
+    verificarPagamento();
+
+    return () => {
+      ativo = false;
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [pixCheckout?.statusId, navigate]);
 
   useEffect(() => {
     let ativo = true;
@@ -242,30 +293,29 @@ export default function CarrinhoPage() {
         quantidade: Number(p.quantidade ?? p.qtd ?? 1),
       }));
 
-      const pedidoCriado = await criarPedido({
-        id_endereco_entrega: dadosCheckout?.id_endereco_entrega || 1,
-        tipo_pagamento: dadosCheckout?.tipo_pagamento || "PIX",
-        methods: dadosCheckout?.methods || ["PIX"],
+      const pedidoCriado = await checkoutPedidoAPI({
+        id_endereco_entrega: dadosCheckout?.id_endereco_entrega,
+        metodo: dadosCheckout?.metodo || "PIX",
+        payment: dadosCheckout?.payment,
         itens,
       });
 
-      //console.log("PEDIDO CRIADO", pedidoCriado)
-      const checkoutUrl =
-        pedidoCriado?.data?.pagamento?.checkout_url ??
-        null;
+      const pedido = pedidoCriado?.data ?? pedidoCriado;
+      const pagamento = pedido?.pagamento ?? {};
+      const checkoutUrl = pagamento.checkout_url ?? null;
 
       const idPedidoNovo =
-        pedidoCriado?.data?.id_pedido ??
+        pedido?.id_pedido ??
         null;
       if (idPedidoNovo) {
         localStorage.setItem("melfy_pedido_aberto", String(idPedidoNovo));
       }
 
       for (const item of itensEscolhidos) {
-        const idProd = item.id_produto ?? item.idProduto ?? item.id;
-        const qtdItem = Number.parseInt(item.quantidade ?? item.qtd ?? 1, 10);
+        const idItemCarrinho = item.id_item_carrinho ?? item.idItemCarrinho;
+        if (!idItemCarrinho) continue;
         try {
-          await removerDoCarrinho(idProd, qtdItem);
+          await removerDoCarrinho(idItemCarrinho);
         } catch (e) {
           console.warn("Erro ao limpar item comprado:", e);
         }
@@ -276,7 +326,23 @@ export default function CarrinhoPage() {
       setSelecionados(new Set(itensRestantes.map((_, i) => i)));
       setCheckoutAberto(false);
 
-      if (checkoutUrl) {
+      if (
+        dadosCheckout?.metodo === "PIX" &&
+        (pagamento.qr_code || pagamento.qr_code_base64)
+      ) {
+        const statusId =
+          idPedidoNovo ??
+          pagamento.id_cobranca_gateway ??
+          pagamento.gateway_id ??
+          pagamento.id_pagamento_pedido;
+        setPixCheckout({
+          qrCode: pagamento.qr_code,
+          qrCodeBase64: pagamento.qr_code_base64,
+          checkoutUrl,
+          idPedido: idPedidoNovo,
+          statusId,
+        });
+      } else if (checkoutUrl) {
         window.location.href = checkoutUrl;
       } else {
         navigate("/pedidos");
@@ -349,6 +415,93 @@ export default function CarrinhoPage() {
           subtotal={subtotal}
           onFinish={finalizarCompra}
         />
+
+        {pixCheckout && (
+          <div className="pix-checkout-overlay" role="presentation">
+            <section
+              className="pix-checkout-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="pix-checkout-title"
+            >
+              <button
+                type="button"
+                className="pix-checkout-close"
+                aria-label="Fechar pagamento Pix"
+                onClick={() => {
+                  setPixCheckout(null);
+                  navigate("/pedidos");
+                }}
+              >
+                ×
+              </button>
+              <h2 id="pix-checkout-title">Finalize com Pix</h2>
+              <p role="status">
+                Aguardando confirmação do pagamento. O status é verificado a cada 30 segundos.
+              </p>
+              {erroConsultaPagamento && (
+                <p className="pix-checkout-error" role="alert">
+                  {erroConsultaPagamento}
+                </p>
+              )}
+              {pixCheckout.qrCodeBase64 && (
+                <img
+                  className="pix-checkout-qr"
+                  src={
+                    pixCheckout.qrCodeBase64.startsWith("data:")
+                      ? pixCheckout.qrCodeBase64
+                      : `data:image/png;base64,${pixCheckout.qrCodeBase64}`
+                  }
+                  alt="QR Code para pagamento Pix"
+                />
+              )}
+              {pixCheckout.qrCode && (
+                <>
+                  <p>Copie o código Pix e pague pelo aplicativo do seu banco:</p>
+                  <textarea
+                    className="pix-checkout-code"
+                    value={pixCheckout.qrCode}
+                    readOnly
+                    aria-label="Código Pix"
+                  />
+                  <button
+                    type="button"
+                    className="btn-compra"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(pixCheckout.qrCode);
+                        MelfySwal({
+                          icon: "success",
+                          title: "Código Pix copiado",
+                          text: "Cole o código no aplicativo do seu banco.",
+                        });
+                      } catch {
+                        MelfySwal({
+                          icon: "error",
+                          title: "Não foi possível copiar",
+                          text: "Selecione e copie o código Pix manualmente.",
+                        });
+                      }
+                    }}
+                  >
+                    Copiar código Pix
+                  </button>
+                </>
+              )}
+              {pixCheckout.checkoutUrl && (
+                <a
+                  className="pix-checkout-link"
+                  href={pixCheckout.checkoutUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Abrir checkout do Mercado Pago
+                </a>
+              )}
+              {pixCheckout.idPedido && <p>Pedido #{pixCheckout.idPedido}</p>}
+            </section>
+          </div>
+        )}
       </main>
 
       <Footer />
