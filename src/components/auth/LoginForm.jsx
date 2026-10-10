@@ -33,7 +33,7 @@ export default function LoginForm({ onSwitchToCadastro }) {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), senha }),
+        body: JSON.stringify({ email: email.trim(), senha , tipo: "CLIENT" }),
       });
       const data = await res.json();
 

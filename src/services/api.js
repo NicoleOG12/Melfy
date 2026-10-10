@@ -116,7 +116,6 @@ export async function fetchPedidoDetalhesAPI(id, signal) {
 
 let cacheProdutos = null;
 let cacheLojas = null;
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
 
 function normalizeUserPayload(payload) {
   if (!payload) return null;
@@ -166,7 +165,6 @@ export async function fetchLoja(id) {
     const res = await fetch(`${API_URL}/stores/${id}`);
     if (res.ok) {
       const data = await parseResponse(res);
-      console.log(data);
       if (data?.data) {
         return data.data;
       }
@@ -196,7 +194,6 @@ export async function fetchCarrinho(token) {
   });
   if (!res.ok) return [];
   const data = await parseResponse(res);
-  //console.log("CARRINHO", data);
   return Array.isArray(data.data) ? data.data : [];
 }
 
@@ -252,7 +249,6 @@ export async function atualizarQuantidadeCarrinho(idItem, qtd) {
     },
     body: JSON.stringify({ quantidade: qtd }),
   });
-  // //console.log(await res.json());
   const data = await parseResponse(res);
   window.dispatchEvent(new Event("carrinhoAtualizado"));
   return data;
@@ -271,98 +267,6 @@ export async function removerDoCarrinho(idItem) {
   const data = await parseResponse(res);
   window.dispatchEvent(new Event("carrinhoAtualizado"));
   return data;
-}
-
-// export async function criarPedido(pedido) {
-//   const token = localStorage.getItem("tokenCliente");
-//   if (!token) throw new Error("não autenticado");
-//   const res = await fetch(`${API_URL}/pedidos`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(pedido),
-//   });
-//   const data = await parseResponse(res);
-//   window.dispatchEvent(new Event("carrinhoAtualizado"));
-//   return data;
-// }
-
-export async function criarPedido(pedido) {
-  const token = localStorage.getItem("tokenCliente");
-  if (!token) throw new Error("não autenticado");
-
-  let itens = [];
-  if (Array.isArray(pedido.itens)) {
-    itens = pedido.itens.map((item) => ({
-      id_produto: Number(item.id_produto),
-      quantidade: Number(item.quantidade ?? item.qtd ?? 1),
-    }));
-  } else if (pedido.itens && typeof pedido.itens === "object") {
-    Object.values(pedido.itens).forEach((item) => {
-      itens.push({
-        id_produto: Number(item.id_produto),
-        quantidade: Number(item.quantidade ?? item.qtd ?? 1),
-      });
-    });
-  }
-
-  const idEndereco = Number(
-    pedido.id_endereco_entrega ?? pedido.id_endereco ?? pedido.id_entrega ?? 1,
-  );
-
-  const tipoPagamento = String(
-    pedido.tipo_pagamento ?? pedido.tipoPagamento ?? "PIX",
-  ).toUpperCase();
-
-  const methods = Array.isArray(pedido.methods)
-    ? pedido.methods
-    : [tipoPagamento];
-
-  const body = {
-    id_endereco_entrega: idEndereco,
-    tipo_pagamento: tipoPagamento,
-    methods: methods,
-    itens: itens,
-  };
-
-  //console.log("Payload enviado para /orders:", body);
-  const res = await fetch(`${API_URL}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-  const data = await parseResponse(res);
-  window.dispatchEvent(new Event("carrinhoAtualizado"));
-  return data;
-}
-
-function collectOrderArrays(value, found = []) {
-  if (!value || typeof value !== "object") return found;
-  if (Array.isArray(value)) {
-    if (
-      value.some(
-        (item) =>
-          item &&
-          typeof item === "object" &&
-          ("id_pedido" in item ||
-            "idPedido" in item ||
-            "status" in item ||
-            "id_status" in item ||
-            "datahora" in item ||
-            "dataPedido" in item),
-      )
-    )
-      found.push(...value);
-    value.forEach((item) => collectOrderArrays(item, found));
-    return found;
-  }
-  Object.values(value).forEach((item) => collectOrderArrays(item, found));
-  return found;
 }
 
 export async function fetchPedidos(
@@ -408,8 +312,7 @@ export async function fetchEnderecosAPI() {
       data.enderecos ??
       (Array.isArray(data) ? data : []);
     return Array.isArray(list) ? list : [];
-  } catch (err) {
-    //console.error("Erro ao buscar endereços:", err);
+  } catch {
     return [];
   }
 }

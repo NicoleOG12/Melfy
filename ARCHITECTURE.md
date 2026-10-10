@@ -276,7 +276,7 @@ Centraliza **todas as chamadas HTTP** à API REST. A URL base é importada de [`
 | `fetchCarrinho(token)` | GET | `/carrinho` | **Sim** |
 | `adicionarAoCarrinho(idProduto, qtd)` | POST | `/carrinho?id=` | **Sim** |
 | `removerDoCarrinho(idProduto, qtd)` | DELETE | `/carrinho?id=` | **Sim** |
-| `criarPedido(pedido)` | POST | `/pedidos` | **Sim** |
+| `checkoutPedidoAPI(pedido)` | POST | `/orders/checkout-api` | **Sim** |
 | `fetchPedidos(token)` | GET | `/pedidos` | **Sim** |
 
 > ⚠️ Após qualquer operação no carrinho, um evento customizado `carrinhoAtualizado` é disparado via `window.dispatchEvent`, garantindo que o `AuthContext` atualize o contador imediatamente.
