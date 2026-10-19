@@ -4,12 +4,14 @@ import Footer from "../components/layout/Footer";
 import PerfilSidebar from "../components/perfil/PerfilSidebar";
 import DadosTab from "../components/perfil/DadosTab";
 import PagamentosTab from "../components/perfil/PagamentosTab";
+import EnderecosTab from "../components/perfil/EnderecosTab";
 import NotificacoesTab from "../components/perfil/NotificacoesTab";
 import CuponsTab from "../components/perfil/CuponsTab";
 import ConfiguracoesTab from "../components/perfil/ConfiguracoesTab";
 import ModalPagamento from "../components/perfil/ModalPagamento";
+import ModalEndereco from "../components/perfil/ModalEndereco";
 import { usePerfilUsuario } from "../hooks/usePerfilUsuario";
-import { usePagamentos } from "../hooks/usePerfilDados";
+import { usePagamentos, useEnderecos } from "../hooks/usePerfilDados";
 import MelfySwal from "../services/melfySwal";
 import "../styles/cliente/perfil.css";
 import "../styles/cliente/perfil-pagamentos.css";
@@ -26,6 +28,7 @@ export default function PerfilPage() {
   const perfil = usePerfilUsuario();
 
   const pagamentoHook = usePagamentos(showToast);
+  const enderecoHook = useEnderecos(showToast);
 
   function habilitarEdicao() {
     const msg = perfil.toggleEdicao();
@@ -95,6 +98,14 @@ export default function PerfilPage() {
             />
           )}
 
+          {secaoAtiva === "enderecos" && (
+            <EnderecosTab
+              enderecos={enderecoHook.enderecos}
+              onRemoverEndereco={enderecoHook.removerEndereco}
+              onAbrirModal={enderecoHook.abrirModalEndereco}
+            />
+          )}
+
           {secaoAtiva === "notificacoes" && <NotificacoesTab />}
 
           {secaoAtiva === "cupons" && (
@@ -109,6 +120,16 @@ export default function PerfilPage() {
           {secaoAtiva === "configuracoes" && <ConfiguracoesTab />}
         </div>
       </main>
+
+      <ModalEndereco
+        isOpen={enderecoHook.modalEndereco}
+        onClose={() => enderecoHook.setModalEndereco(false)}
+        onSave={enderecoHook.salvarEndereco}
+        form={enderecoHook.formEndereco}
+        setForm={enderecoHook.setFormEndereco}
+        onBuscarCep={enderecoHook.handleBuscarCep}
+        errors={enderecoHook.errosEndereco}
+      />
 
       <ModalPagamento
         isOpen={pagamentoHook.modalPagamento}

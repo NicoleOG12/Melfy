@@ -35,13 +35,41 @@ export default function CadastroForm({ onSwitchToLogin }) {
 
   function validateStep1() {
     const e = {};
-    if (!form.nome.trim()) e.nome = "Informe seu nome completo";
-    if (!form.email.trim()) e.email = "Informe seu e-mail";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "E-mail inválido";
-    if (!form.senha) e.senha = "Crie uma senha";
-    else if (form.senha.length < 6) e.senha = "Mínimo 6 caracteres";
-    if (form.senha !== form.confirmarSenha)
-      e.confirmarSenha = "Senhas não coincidem";
+
+    // Nome: obrigatório, mínimo 2 palavras, sem números
+    const nomeTrim = form.nome.trim();
+    if (!nomeTrim) {
+      e.nome = "Informe seu nome completo";
+    } else if (/\d/.test(nomeTrim)) {
+      e.nome = "O nome não pode conter números";
+    } else if (nomeTrim.split(/\s+/).length < 2) {
+      e.nome = "Informe nome e sobrenome";
+    }
+
+    // E-mail: obrigatório, formato válido (sem espaços, com @ e domínio)
+    const emailTrim = form.email.trim();
+    if (!emailTrim) {
+      e.email = "Informe seu e-mail";
+    } else if (/\s/.test(form.email)) {
+      e.email = "E-mail inválido";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
+      e.email = "E-mail deve possuir formato válido";
+    }
+
+    // Senha: obrigatória, mínimo 6 caracteres
+    if (!form.senha) {
+      e.senha = "Crie uma senha";
+    } else if (form.senha.length < 6) {
+      e.senha = "Mínimo 6 caracteres";
+    }
+
+    // Confirmar senha: obrigatória, deve ser igual à senha
+    if (!form.confirmarSenha) {
+      e.confirmarSenha = "Confirme sua senha";
+    } else if (form.senha !== form.confirmarSenha) {
+      e.confirmarSenha = "As senhas não coincidem";
+    }
+
     setErrors(e);
     return !Object.keys(e).length;
   }
