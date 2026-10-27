@@ -75,6 +75,7 @@ function Field({ id, label, icon, value, onChange, type = "text", placeholder, d
 
 export default function DadosTab({
   isEditing,
+  isSaving = false,
   nome, setNome,
   sobrenome, setSobrenome,
   cpf, setCpf,
@@ -82,7 +83,9 @@ export default function DadosTab({
   email, setEmail,
   celular, setCelular,
   foto, setFoto,
+  setFotoArquivo,
   onToggleEdicao,
+  onCancelarEdicao,
 }) {
   const nomeCompleto = `${nome || ""} ${sobrenome || ""}`.trim() || "Usuário";
   const fotoSrc = foto || "/assents/img/Geral/Perfil.png";
@@ -90,6 +93,9 @@ export default function DadosTab({
   function handleFotoChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    setFotoArquivo?.(file);
+
     const reader = new FileReader();
     reader.onload = (ev) => setFoto(ev.target.result);
     reader.readAsDataURL(file);
@@ -140,8 +146,9 @@ export default function DadosTab({
           className={`dados-edit-btn${isEditing ? " dados-edit-btn--active" : ""}`}
           onClick={onToggleEdicao}
           type="button"
+          disabled={isSaving}
         >
-          {isEditing ? <><IcoSave /> Salvar</> : <><IcoEdit /> Editar</>}
+          {isSaving ? "Salvando..." : isEditing ? <><IcoSave /> Salvar</> : <><IcoEdit /> Editar</>}
         </button>
       </div>
 
@@ -154,7 +161,7 @@ export default function DadosTab({
             </svg>
             Modo edição ativo — altere os campos e clique em Salvar.
           </span>
-          <button type="button" className="dados-cancel-btn" onClick={onToggleEdicao}>
+          <button type="button" className="dados-cancel-btn" onClick={onCancelarEdicao}>
             <IcoCancel /> Cancelar
           </button>
         </div>
@@ -189,11 +196,24 @@ export default function DadosTab({
       {/* ── Ações ── */}
       {isEditing && (
         <div className="dados-actions">
-          <button className="perfil-btn-primary saving" onClick={onToggleEdicao} type="button">
-            <IcoSave />
-            Salvar alterações
+          <button
+            className="perfil-btn-primary saving"
+            onClick={onToggleEdicao}
+            type="button"
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              "Salvando..."
+            ) : (
+              <><IcoSave /> Salvar alterações</>
+            )}
           </button>
-          <button className="perfil-btn-ghost" onClick={onToggleEdicao} type="button">
+          <button
+            className="perfil-btn-ghost"
+            onClick={onCancelarEdicao}
+            type="button"
+            disabled={isSaving}
+          >
             <IcoCancel />
             Cancelar
           </button>

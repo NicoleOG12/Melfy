@@ -1,16 +1,17 @@
 import React, { useMemo } from "react";
 import { formatarPreco, imagemProduto } from "../../utils/cartUtils";
 
-export default function CartTable({ sacola, selecionados, onToggle, onQuantidade, onRemover }) {
+export default function CartTable({ sacola, selecionados, carregando, operacao, onToggle, onQuantidade, onRemover }) {
   const grupos = useMemo(() => {
     const result = {};
+    //console.log('sacola', sacola)
     sacola.forEach((produto, idx) => {
-      const idLoja = produto.id_loja || 0;
+      const idLoja = produto.loja.id_loja || 0;
       if (!result[idLoja]) {
         result[idLoja] = {
           id_loja: idLoja,
-          nomeLoja: produto.nomeLoja || "Loja",
-          logoLoja: produto.logoLoja || "img/default-loja.png",
+          nomeLoja: produto.loja.nome_loja || "Loja",
+          logoLoja: produto.loja.logo_loja || "img/default-loja.png",
           itens: [],
         };
       }
@@ -41,8 +42,8 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
             )}
 
             {loja.itens.map(({ produto, idx }) => {
-              const valor = Number.parseFloat(produto.valor_uni ?? produto.valorUnitario ?? produto.preco ?? 0);
-              const quantidade = Number.parseInt(produto.quantidade ?? produto.qtd ?? 1, 10);
+              const valor = Number.parseFloat(produto.preco_unitario ?? 0);
+              const quantidade = Number.parseInt(produto.quantidade ?? 1, 10);
 
               return (
                 <tr
@@ -56,6 +57,7 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
                         className="check-produto"
                         checked={selecionados.has(idx)}
                         onChange={() => onToggle(idx)}
+                        disabled={Boolean(operacao)}
                         data-index={idx}
                         data-id_loja={loja.id_loja}
                       />
@@ -74,12 +76,22 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
 
                   <td>
                     <div className="qtd">
-                      <button type="button" onClick={() => onQuantidade(idx, -1)}>
-                        <i className="bx bx-minus"></i>
+                      <button
+                        type="button"
+                        onClick={() => onQuantidade(idx, -1)}
+                        disabled={Boolean(operacao)}
+                        aria-busy={operacao === `quantidade-${idx}`}
+                      >
+                        {operacao === `quantidade-${idx}` ? <span className="carrinho-spinner" aria-label="Atualizando" /> : <i className="bx bx-minus"></i>}
                       </button>
                       <span>{quantidade}</span>
-                      <button type="button" onClick={() => onQuantidade(idx, 1)}>
-                        <i className="bx bx-plus"></i>
+                      <button
+                        type="button"
+                        onClick={() => onQuantidade(idx, 1)}
+                        disabled={Boolean(operacao)}
+                        aria-busy={operacao === `quantidade-${idx}`}
+                      >
+                        {operacao === `quantidade-${idx}` ? <span className="carrinho-spinner" aria-label="Atualizando" /> : <i className="bx bx-plus"></i>}
                       </button>
                     </div>
                   </td>
@@ -91,8 +103,10 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
                       type="button"
                       className="remover"
                       onClick={() => onRemover(idx)}
+                      disabled={Boolean(operacao)}
+                      aria-busy={operacao === `remover-${idx}`}
                     >
-                      <i className="bx bx-x"></i>
+                      {operacao === `remover-${idx}` ? <span className="carrinho-spinner" aria-label="Removendo" /> : <i className="bx bx-x"></i>}
                     </button>
                   </td>
                 </tr>
@@ -100,6 +114,16 @@ export default function CartTable({ sacola, selecionados, onToggle, onQuantidade
             })}
           </React.Fragment>
         ))}
+        {carregando && sacola.length === 0 && (
+          <tr>
+            <td colSpan="5" className="carrinho-loading">Carregando sua sacola...</td>
+          </tr>
+        )}
+        {!carregando && sacola.length === 0 && (
+          <tr>
+            <td colSpan="5" className="carrinho-loading">Sua sacola está vazia.</td>
+          </tr>
+        )}
       </tbody>
     </table>
   );

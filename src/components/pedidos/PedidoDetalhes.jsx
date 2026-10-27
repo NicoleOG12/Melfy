@@ -3,7 +3,17 @@ import PedidoImagem from "./PedidoImagem";
 import PedidoProgresso from "./PedidoProgresso";
 import PedidoMapa from "./PedidoMapa";
 
-export default function PedidoDetalhes({ o, history = false }) {
+export default function PedidoDetalhes({
+  o,
+  history = false,
+  onAbrirPagamento,
+}) {
+  const statusPagamento = String(o.paymentStatus ?? "").toLowerCase();
+  const pagamentoPendente =
+    !statusPagamento ||
+    statusPagamento.includes("pend") ||
+    statusPagamento === "in_process";
+
   return (
     <div className="m-details">
       <div className="m-detail-head">
@@ -60,6 +70,15 @@ export default function PedidoDetalhes({ o, history = false }) {
           <span>
             Pagamento
             <b>{o.payment}</b>
+            {pagamentoPendente && onAbrirPagamento && (
+              <button
+                type="button"
+                onClick={() => onAbrirPagamento(o)}
+                className="btn-pagar-pix-order"
+              >
+                <i className="fa-solid fa-qrcode" /> Ver pagamento
+              </button>
+            )}
           </span>
         </div>
 
@@ -118,7 +137,7 @@ export default function PedidoDetalhes({ o, history = false }) {
         </strong>
       </div>
 
-      {o.status.stage === 3 && (
+      {o.status.stage === 4 && (
         <div className="m-tracking">
           <div className="m-track-copy">
             <div>

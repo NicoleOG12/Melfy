@@ -1,5 +1,69 @@
 import { useState } from "react";
 
+// Siglas de estados brasileiros válidos
+const ESTADOS_VALIDOS = [
+  "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG",
+  "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO",
+];
+
+function validarEndereco(form) {
+  const erros = {};
+
+  // CEP: obrigatório, 8 dígitos numéricos
+  const cepLimpo = (form.cep || "").replace(/\D/g, "");
+  if (!cepLimpo) {
+    erros.cep = "CEP é obrigatório";
+  } else if (cepLimpo.length !== 8) {
+    erros.cep = "CEP inválido — informe 8 dígitos";
+  }
+
+  // Rua: obrigatória, não pode ser só números
+  const ruaTrim = (form.rua || "").trim();
+  if (!ruaTrim) {
+    erros.rua = "Rua é obrigatória";
+  } else if (/^\d+$/.test(ruaTrim)) {
+    erros.rua = "Rua inválida — informe um logradouro";
+  }
+
+  // Número: obrigatório, numérico e positivo
+  const numTrim = (form.numero || "").trim();
+  if (!numTrim) {
+    erros.numero = "Número é obrigatório";
+  } else if (!/^\d+$/.test(numTrim)) {
+    erros.numero = "Número inválido — informe apenas dígitos";
+  } else if (parseInt(numTrim, 10) <= 0) {
+    erros.numero = "Número deve ser positivo";
+  }
+
+  // Bairro: obrigatório, não pode ser só números
+  const bairroTrim = (form.bairro || "").trim();
+  if (!bairroTrim) {
+    erros.bairro = "Bairro é obrigatório";
+  } else if (/^\d+$/.test(bairroTrim)) {
+    erros.bairro = "Bairro inválido — informe um nome de bairro";
+  }
+
+  // Estado: obrigatório, deve ser sigla válida de UF brasileira
+  const estadoUp = (form.estado || "").trim().toUpperCase();
+  if (!estadoUp) {
+    erros.estado = "Estado é obrigatório";
+  } else if (!/^[A-Z]{2}$/.test(estadoUp)) {
+    erros.estado = "Estado inválido — informe a sigla (ex: SP)";
+  } else if (!ESTADOS_VALIDOS.includes(estadoUp)) {
+    erros.estado = "Estado inválido — sigla não reconhecida";
+  }
+
+  // Cidade: obrigatória, não pode ser só números
+  const cidadeTrim = (form.cidade || "").trim();
+  if (!cidadeTrim) {
+    erros.cidade = "Cidade é obrigatória";
+  } else if (/^\d+$/.test(cidadeTrim)) {
+    erros.cidade = "Cidade inválida — informe um nome de cidade";
+  }
+
+  return erros;
+}
+
 export function useEnderecos(showToast) {
   const [enderecos, setEnderecos] = useState(() => {
     const salvos = localStorage.getItem("enderecosCliente");
@@ -10,12 +74,14 @@ export function useEnderecos(showToast) {
   });
 
   const [modalEndereco, setModalEndereco] = useState(false);
+  const [errosEndereco, setErrosEndereco] = useState({});
   const [formEndereco, setFormEndereco] = useState({
     cep: "",
     rua: "",
     numero: "",
     complemento: "",
     bairro: "",
+    estado: "",
     cidade: "",
   });
 
@@ -30,7 +96,8 @@ export function useEnderecos(showToast) {
             ...prev,
             rua: data.logradouro || "",
             bairro: data.bairro || "",
-            cidade: `${data.localidade} / ${data.uf}`,
+            cidade: data.localidade || "",
+            estado: data.uf || "",
           }));
         }
       } catch (err) {
@@ -40,10 +107,12 @@ export function useEnderecos(showToast) {
   }
 
   function salvarEndereco() {
-    if (!formEndereco.rua || !formEndereco.numero) {
-      showToast("Preencha ao menos Rua e Número!");
+    const erros = validarEndereco(formEndereco);
+    if (Object.keys(erros).length > 0) {
+      setErrosEndereco(erros);
       return;
     }
+    setErrosEndereco({});
     const lista = [...enderecos, { id: Date.now(), ...formEndereco }];
     setEnderecos(lista);
     localStorage.setItem("enderecosCliente", JSON.stringify(lista));
@@ -54,6 +123,7 @@ export function useEnderecos(showToast) {
       numero: "",
       complemento: "",
       bairro: "",
+      estado: "",
       cidade: "",
     });
     showToast("Endereço salvo com sucesso!");
@@ -66,15 +136,31 @@ export function useEnderecos(showToast) {
     showToast("Endereço removido!");
   }
 
+  function abrirModalEndereco() {
+    setErrosEndereco({});
+    setFormEndereco({
+      cep: "",
+      rua: "",
+      numero: "",
+      complemento: "",
+      bairro: "",
+      estado: "",
+      cidade: "",
+    });
+    setModalEndereco(true);
+  }
+
   return {
     enderecos,
     modalEndereco,
     setModalEndereco,
+    errosEndereco,
     formEndereco,
     setFormEndereco,
     handleBuscarCep,
     salvarEndereco,
     removerEndereco,
+    abrirModalEndereco,
   };
 }
 

@@ -8,6 +8,7 @@ export default function ModalEndereco({
   form,
   setForm,
   onBuscarCep,
+  errors = {},
 }) {
   if (!isOpen) return null;
 
@@ -37,6 +38,7 @@ export default function ModalEndereco({
               }}
               onBlur={(e) => onBuscarCep(e.target.value)}
             />
+            {errors.cep && <span className="campo-erro">{errors.cep}</span>}
           </div>
 
           <div className="dados-card">
@@ -49,6 +51,7 @@ export default function ModalEndereco({
                 setForm((prev) => ({ ...prev, rua: e.target.value }))
               }
             />
+            {errors.rua && <span className="campo-erro">{errors.rua}</span>}
           </div>
 
           <div className="dados-card">
@@ -61,6 +64,7 @@ export default function ModalEndereco({
                 setForm((prev) => ({ ...prev, numero: e.target.value }))
               }
             />
+            {errors.numero && <span className="campo-erro">{errors.numero}</span>}
           </div>
 
           <div className="dados-card">
@@ -85,10 +89,26 @@ export default function ModalEndereco({
                 setForm((prev) => ({ ...prev, bairro: e.target.value }))
               }
             />
+            {errors.bairro && <span className="campo-erro">{errors.bairro}</span>}
           </div>
 
           <div className="dados-card">
-            <label>Cidade / Estado</label>
+            <label>Estado (UF)</label>
+            <input
+              type="text"
+              id="estado-input"
+              placeholder="Ex: SP"
+              maxLength={2}
+              value={form.estado || ""}
+              onChange={(e) =>
+                setForm((prev) => ({ ...prev, estado: e.target.value.toUpperCase() }))
+              }
+            />
+            {errors.estado && <span className="campo-erro">{errors.estado}</span>}
+          </div>
+
+          <div className="dados-card">
+            <label>Cidade</label>
             <input
               type="text"
               id="cidade-input"
@@ -97,6 +117,7 @@ export default function ModalEndereco({
                 setForm((prev) => ({ ...prev, cidade: e.target.value }))
               }
             />
+            {errors.cidade && <span className="campo-erro">{errors.cidade}</span>}
           </div>
         </div>
 
