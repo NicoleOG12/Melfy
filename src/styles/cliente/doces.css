@@ -194,11 +194,13 @@
   display: flex;
   gap: 20px;
   overflow-x: auto;
+  overflow-y: visible;
   scroll-behavior: smooth;
   cursor: grab;
   user-select: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  padding: 8px 4px;
 }
 
 .lojas-scroll::-webkit-scrollbar {
@@ -211,12 +213,13 @@
 
 .loja-card {
   position: relative;
-  flex: 0 0 280px;
+  flex: 0 0 290px;
+  height: 100px;
   background: var(--surface-0);
   border: 2px solid rgba(139, 80, 53, 0.63);
   font-family: "Nunito", sans-serif;
-  border-radius: 14px;
-  padding: 10px 12px;
+  border-radius: 10px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -228,20 +231,20 @@
 }
 
 .loja-card:hover {
-  transform: scale(0.9);
+  transform: translateY(-4px) scale(1.03);
   box-shadow: 0 6px 15px rgba(255, 200, 100, 0.35);
 }
 
 .logo-loja {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   border: 2px solid rgba(139, 80, 53, 0.63);
   object-fit: cover;
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.25s ease;
-  margin-top: -30px;
+  margin-top: -26px;
 }
 
 .logo-loja:hover {
@@ -252,23 +255,23 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin-top: -6px;
+  margin-bottom: 4px;
 }
 
 .info-loja h3 {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--brown);
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-weight: 400;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .info-loja p {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: var(--muted);
-  margin: 0 0 6px;
-  margin-top: -8px;
+  margin: 0 0 2px;
+  margin-top: -4px;
 }
 
 .btn-loja {
