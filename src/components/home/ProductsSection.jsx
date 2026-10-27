@@ -19,9 +19,10 @@ export default function ProductsSection() {
     Promise.all([fetchLojas(), fetchProdutos()])
       .then(([ls, ps]) => {
         setLojas(ls);
-        //console.log('ps',ps)
-        //console.log('ls', ls)
-        setProdutos(ps.slice(0, 4));
+        const recentes = [...ps]
+          .sort((a, b) => new Date(b.datahora) - new Date(a.datahora))
+          .slice(0, 4);
+        setProdutos(recentes);
       })
       .catch(console.error)
       .finally(() => setLoading(false));

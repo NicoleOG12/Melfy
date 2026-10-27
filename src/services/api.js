@@ -1,5 +1,32 @@
 import { API_URL } from "../constants/api";
 
+function sleep(ms) {
+  return new Promise((res) => setTimeout(res, ms));
+}
+
+async function fetchComRetry(url, options = {}, tentativas = 3) {
+  for (let i = 0; i < tentativas; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.status === 429 && i < tentativas - 1) {
+        const retryAfter = res.headers?.get?.("retry-after");
+        const retrySec = retryAfter ? parseInt(retryAfter, 10) : null;
+        const delay = Number.isFinite(retrySec) && retrySec > 0
+          ? retrySec * 1000
+          : (1500 * (i + 1)) + Math.floor(Math.random() * 500);
+
+        await sleep(delay);
+        continue;
+      }
+      return res;
+    } catch (err) {
+      if (i === tentativas - 1) throw err;
+      await sleep(1000 * (i + 1));
+    }
+  }
+  return fetch(url, options);
+}
+
 async function parseResponse(res) {
   const text = await res.text();
   let data = {};
@@ -114,8 +141,33 @@ export async function fetchPedidoDetalhesAPI(id, signal) {
   return parseResponse(res);
 }
 
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos de cache
+
 let cacheProdutos = null;
+let cacheProdutosTimestamp = 0;
+let pendingProdutosPromise = null;
+
 let cacheLojas = null;
+let cacheLojasTimestamp = 0;
+let pendingLojasPromise = null;
+
+function loadFromStorage(key) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && parsed.timestamp && Date.now() - parsed.timestamp < CACHE_TTL_MS) {
+      return parsed.data;
+    }
+  } catch {}
+  return null;
+}
+
+function saveToStorage(key, data) {
+  try {
+    sessionStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
+  } catch {}
+}
 
 function normalizeUserPayload(payload) {
   if (!payload) return null;
@@ -141,23 +193,99 @@ function normalizeUserPayload(payload) {
 }
 
 export async function fetchProdutos(forceRefresh = false) {
-  if (!forceRefresh && cacheProdutos) return cacheProdutos;
+  const agora = Date.now();
+  if (!forceRefresh) {
+    if (cacheProdutos && agora - cacheProdutosTimestamp < CACHE_TTL_MS) {
+      return cacheProdutos;
+    }
+    const stored = loadFromStorage("melfy_cache_produtos");
+    if (stored && Array.isArray(stored) && stored.length > 0) {
+      cacheProdutos = stored;
+      cacheProdutosTimestamp = agora;
+      return stored;
+    }
+    if (pendingProdutosPromise) {
+      return pendingProdutosPromise;
+    }
+  }
 
-  const res = await fetch(`${API_URL}/products`);
-  const data = await parseResponse(res);
-  const items = Array.isArray(data?.data?.items) ? data.data.items : [];
-  cacheProdutos = items;
-  return items;
+  pendingProdutosPromise = (async () => {
+    try {
+      const res = await fetchComRetry(`${API_URL}/products?limit=1000&offset=0`);
+      if (res.status === 429) {
+        const fallback = cacheProdutos || loadFromStorage("melfy_cache_produtos");
+        if (fallback) {
+          console.warn("API retornou 429 (Rate Limit). Utilizando cache de produtos.");
+          return fallback;
+        }
+      }
+      const data = await parseResponse(res);
+      const items = Array.isArray(data?.data?.items) ? data.data.items : [];
+      cacheProdutos = items;
+      cacheProdutosTimestamp = Date.now();
+      saveToStorage("melfy_cache_produtos", items);
+      return items;
+    } catch (err) {
+      const fallback = cacheProdutos || loadFromStorage("melfy_cache_produtos");
+      if (fallback) {
+        console.warn("Falha na requisição de produtos. Utilizando cache:", err);
+        return fallback;
+      }
+      throw err;
+    } finally {
+      pendingProdutosPromise = null;
+    }
+  })();
+
+  return pendingProdutosPromise;
 }
 
 export async function fetchLojas(forceRefresh = false) {
-  if (!forceRefresh && cacheLojas) return cacheLojas;
+  const agora = Date.now();
+  if (!forceRefresh) {
+    if (cacheLojas && agora - cacheLojasTimestamp < CACHE_TTL_MS) {
+      return cacheLojas;
+    }
+    const stored = loadFromStorage("melfy_cache_lojas");
+    if (stored && Array.isArray(stored) && stored.length > 0) {
+      cacheLojas = stored;
+      cacheLojasTimestamp = agora;
+      return stored;
+    }
+    if (pendingLojasPromise) {
+      return pendingLojasPromise;
+    }
+  }
 
-  const res = await fetch(`${API_URL}/stores/`);
-  const data = await parseResponse(res);
-  const stores = Array.isArray(data?.data?.store) ? data.data.store : [];
-  cacheLojas = stores;
-  return stores;
+  pendingLojasPromise = (async () => {
+    try {
+      const res = await fetchComRetry(`${API_URL}/stores/`);
+      if (res.status === 429) {
+        const fallback = cacheLojas || loadFromStorage("melfy_cache_lojas");
+        if (fallback) {
+          console.warn("API retornou 429 (Rate Limit). Utilizando cache de lojas.");
+          return fallback;
+        }
+      }
+      const data = await parseResponse(res);
+      const stores = Array.isArray(data?.data?.store) ? data.data.store : [];
+      cacheLojas = stores;
+      cacheLojasTimestamp = Date.now();
+      saveToStorage("melfy_cache_lojas", stores);
+      return stores;
+    } catch (err) {
+      const fallback = cacheLojas || loadFromStorage("melfy_cache_lojas");
+      if (fallback) {
+        console.warn("Falha na requisição de lojas. Utilizando cache:", err);
+        return fallback;
+      }
+      throw err;
+    } finally {
+      pendingLojasPromise = null;
+    }
+  })();
+
+  return pendingLojasPromise;
 }
 
 export async function fetchLoja(id) {

@@ -6,7 +6,8 @@ import CarrosselHex from "../components/doces/CarrosselHex";
 import LojasSection from "../components/home/LojasSection";
 import ProductModal from "../components/doces/ProductModal";
 import CardProduto from "../components/doces/CardProduto";
-import { fetchProdutos, fetchLojas } from "../services/api";
+import { fetchProdutos } from "../services/api";
+import { useLojasMaisProximas } from "../hooks/useLojasMaisProximas";
 import { DOCES_QUERIDINHOS, CATEGORIAS } from "../constants/categories";
 import { normalizar } from "../utils/formatters";
 import "../styles/cliente/doces.css";
@@ -20,17 +21,15 @@ function embaralhar(lista) {
 
 function ordenarProdutos(lista) {
   const sorted = [...lista].sort(
-    (a, b) => new Date(a.datahora) - new Date(b.datahora)
-  );
-  const antigos = sorted.slice(0, 45);
-  const novos = sorted.slice(45).sort(
     (a, b) => new Date(b.datahora) - new Date(a.datahora)
   );
-  return [...embaralhar(antigos), ...novos];
+  const novos = sorted.slice(0, 10);
+  const restantes = embaralhar(sorted.slice(10));
+  return [...novos, ...restantes];
 }
 
 export default function DocesPage() {
-  const [lojas, setLojas] = useState([]);
+  const { lojas, loading: loadingDist, locationDenied } = useLojasMaisProximas();
   const [produtosOrdenados, setProdutosOrdenados] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,10 +38,9 @@ export default function DocesPage() {
   const cardsRef = useRef(null);
 
   useEffect(() => {
-    Promise.all([fetchProdutos(), fetchLojas()])
-      .then(([ps, ls]) => {
+    fetchProdutos()
+      .then((ps) => {
         const ordenados = ordenarProdutos(ps);
-        setLojas(ls);
         setProdutosOrdenados(ordenados);
         setProdutosFiltrados(ordenados);
       })
@@ -102,7 +100,7 @@ export default function DocesPage() {
           onItemClick={handleCategoria}
         />
 
-        <LojasSection lojas={lojas} />
+        <LojasSection lojas={lojas} loadingDist={loadingDist} locationDenied={locationDenied} />
 
         <button
           type="button"
@@ -125,7 +123,7 @@ export default function DocesPage() {
             <p className="text-center w-full py-8">Nenhum produto encontrado.</p>
           )}
           {!loading &&
-            [...produtosFiltrados].reverse().map((p) => (
+            produtosFiltrados.map((p) => (
               <CardProduto
                 key={p.id_produto}
                 produto={p}
