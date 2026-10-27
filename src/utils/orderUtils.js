@@ -2,6 +2,7 @@ export const PAGE_SIZE = 8;
 
 export const STATUS = [
   "Pedido recebido",
+  "Pedido pago",
   "Em preparo",
   "Pronto para entrega",
   "Em rota",
@@ -91,6 +92,9 @@ export function image(v) {
 }
 
 export function imgProduct(i, p) {
+  const arr = i?.imagem_produto || p?.imagem_produto;
+  if (Array.isArray(arr) && arr.length > 0) return arr[0];
+  if (typeof arr === "string") return arr;
   return first(
     image(i?.midia?.imagens?.[0]),
     image(i?.imagem),
@@ -104,12 +108,15 @@ export function imgProduct(i, p) {
 
 export function imgStore(s, i, p) {
   return first(
+    image(s?.foto_loja),
     image(s?.pfp),
     image(s?.fotoPerfil),
     image(s?.foto_perfil),
     image(s?.logo),
     image(s?.imagem),
+    image(i?.loja?.foto_loja),
     image(i?.loja?.pfp),
+    image(p?.loja?.foto_loja),
     image(p?.loja?.pfp)
   );
 }
@@ -140,6 +147,22 @@ export function storeId(raw, i, p) {
 }
 
 export function itemsOf(raw) {
+  if (Array.isArray(raw?.pedidos_loja) && raw.pedidos_loja.length > 0) {
+    const extracted = [];
+    raw.pedidos_loja.forEach((pl) => {
+      const storeInfo = pl.loja || {};
+      const subItens = pl.itens_pedido || pl.itens || [];
+      subItens.forEach((it) => {
+        extracted.push({
+          ...it,
+          loja: it.loja || storeInfo,
+          status_loja: pl.status,
+        });
+      });
+    });
+    if (extracted.length > 0) return extracted;
+  }
+
   const s = first(
     raw?.itens,
     raw?.items,
@@ -158,7 +181,13 @@ export function itemsOf(raw) {
 }
 
 export function statusOf(raw) {
+  const storeStatus = raw?.pedidos_loja?.[0]?.status;
+  const payStatus = raw?.pagamento?.status_pagamento;
+  const payLiberado = raw?.pagamento?.liberado;
+
   const s = first(
+    storeStatus,
+    payStatus,
     raw?.status,
     raw?.statusPedido,
     raw?.nomeStatus,
@@ -171,34 +200,74 @@ export function statusOf(raw) {
   );
 
   const n = norm(s);
-  let stage = Number(s) || 0;
+  const nStore = norm(storeStatus);
+  const nPay = norm(payStatus);
+
+  let stage = 0;
 
   if (
+    n.includes("delivered") ||
+    n.includes("finished") ||
+    n.includes("entregue") ||
+    n.includes("finaliz") ||
+    n.includes("concluid") ||
+    nStore.includes("delivered") ||
+    nStore.includes("finished")
+  ) {
+    stage = 5;
+  } else if (
+    n.includes("delivering") ||
     n.includes("rota") ||
     n.includes("transito") ||
-    n.includes("caminho")
+    n.includes("caminho") ||
+    nStore.includes("delivering")
+  ) {
+    stage = 4;
+  } else if (
+    n.includes("ready") ||
+    n.includes("pronto") ||
+    nStore.includes("ready")
   ) {
     stage = 3;
-  } else if (n.includes("entregue") || n.includes("finaliz")) {
-    stage = 4;
-  } else if (n.includes("pronto")) {
+  } else if (
+    n.includes("preparing") ||
+    n.includes("preparo") ||
+    n.includes("process") ||
+    nStore.includes("preparing")
+  ) {
     stage = 2;
-  } else if (n.includes("preparo") || n.includes("process")) {
+  } else if (
+    n.includes("payed") ||
+    n.includes("paid") ||
+    n.includes("pago") ||
+    n.includes("aprovad") ||
+    nStore.includes("payed") ||
+    nStore.includes("paid") ||
+    nPay.includes("aprovad") ||
+    nPay.includes("payed") ||
+    nPay.includes("paid") ||
+    payLiberado === true
+  ) {
     stage = 1;
+  } else if (n.includes("cancelled") || n.includes("cancelad")) {
+    stage = 5;
   }
 
   return {
-    stage: Math.min(4, Math.max(0, stage)),
-    label:
-      stage >= 4
-        ? "Entregue"
-        : stage === 3
-        ? "Em rota de entrega"
-        : stage === 2
-        ? "Pronto para entrega"
-        : stage === 1
-        ? "Em preparo"
-        : "Pedido recebido",
+    stage: Math.min(5, Math.max(0, stage)),
+    label: n.includes("cancelad")
+      ? "Cancelado"
+      : stage >= 5
+      ? "Entregue"
+      : stage === 4
+      ? "Em rota de entrega"
+      : stage === 3
+      ? "Pronto para entrega"
+      : stage === 2
+      ? "Em preparo"
+      : stage === 1
+      ? "Pedido pago"
+      : "Pedido recebido",
   };
 }
 
@@ -230,14 +299,14 @@ export function normalize(raw, products = [], stores = []) {
       {};
 
     const q = num(
-      first(i.qtd, i.quantidade, i.quantity, 1)
+      first(i.quantidade, i.qtd, i.quantity, 1)
     ) || 1;
 
     const unit = num(
       first(
-        i.valor_uni,
-        i.valorUnitario,
         i.valor_unitario,
+        i.valorUnitario,
+        i.valor_uni,
         i.preco,
         p.valor_uni,
         p.preco,
@@ -253,10 +322,10 @@ export function normalize(raw, products = [], stores = []) {
         `${pid || "item"}-${index}`
       ),
       name: first(
+        i.nome_produto,
+        i.nomeProduto,
         p.nome,
         p.name,
-        i.nomeProduto,
-        i.nome_produto,
         i.nome,
         "Produto"
       ),
@@ -270,6 +339,7 @@ export function normalize(raw, products = [], stores = []) {
       unit,
       total: num(
         first(
+          i.subtotal,
           i.valor_total,
           i.valorTotal,
           i.total,
@@ -278,9 +348,10 @@ export function normalize(raw, products = [], stores = []) {
       ),
       image: imgProduct(i, p),
       storeName: first(
-        s.nomeLoja,
         s.nome_loja,
+        s.nomeLoja,
         s.nome,
+        i.loja?.nome_loja,
         i.nomeLoja,
         raw.nomeLoja,
         "Loja Melfy"
@@ -361,9 +432,9 @@ export function normalize(raw, products = [], stores = []) {
 
   const total = num(
     first(
+      raw.valor_total,
       raw.total,
       raw.valorTotal,
-      raw.valor_total,
       raw.totalPedido,
       raw.total_pedido,
       raw.precoTotal,
@@ -373,7 +444,31 @@ export function normalize(raw, products = [], stores = []) {
     )
   );
 
-  const store = raw.loja || {};
+  const storeObj = raw.pedidos_loja?.[0]?.loja || raw.loja || {};
+
+  const endObj = raw.endereco_entrega || raw.enderecoEntrega || raw.endereco;
+  let formattedAddress = "—";
+  if (endObj && typeof endObj === "object") {
+    const r = endObj.rua || endObj.logradouro || "";
+    const n = endObj.numero ? `, ${endObj.numero}` : "";
+    const c = endObj.complemento ? ` (${endObj.complemento})` : "";
+    const b = endObj.bairro ? ` — ${endObj.bairro}` : "";
+    const cid = endObj.cidade ? `, ${endObj.cidade}` : "";
+    const uf = endObj.estado || endObj.uf ? `/${endObj.estado || endObj.uf}` : "";
+    formattedAddress = `${r}${n}${c}${b}${cid}${uf}`;
+  } else if (typeof endObj === "string") {
+    formattedAddress = endObj;
+  }
+
+  const pag = raw.pagamento || {};
+  const paymentStr = first(
+    pag.tipo_pagamento,
+    pag.nome,
+    pag.descricao,
+    raw.formaPagamento,
+    raw.forma_pagamento,
+    "PIX"
+  );
 
   return {
     raw,
@@ -396,15 +491,15 @@ export function normalize(raw, products = [], stores = []) {
     ),
     items,
     storeName: first(
-      store.nomeLoja,
-      store.nome_loja,
-      store.nome,
+      storeObj.nome_loja,
+      storeObj.nomeLoja,
+      storeObj.nome,
       raw.nomeLoja,
       items[0]?.storeName,
       "Loja Melfy"
     ),
     storeImage: first(
-      imgStore(store, items[0], {}),
+      imgStore(storeObj, items[0], {}),
       items[0]?.storeImage
     ),
     created,
@@ -412,22 +507,10 @@ export function normalize(raw, products = [], stores = []) {
     delivered,
     status: st,
     total,
-    address: first(
-      raw.enderecoEntrega,
-      raw.endereco_entrega,
-      raw.endereco?.enderecoCompleto,
-      raw.endereco?.logradouro,
-      raw.endereco,
-      "—"
-    ),
-    payment: first(
-      raw.pagamento?.nome,
-      raw.pagamento?.descricao,
-      raw.formaPagamento,
-      raw.forma_pagamento,
-      raw.pagamento,
-      "Pagamento"
-    ),
+    address: formattedAddress,
+    payment: paymentStr,
+    paymentLink: pag.link_pagamento || null,
+    paymentStatus: pag.status_pagamento || null,
     fee: num(
       first(
         raw.taxaEntrega,
@@ -457,7 +540,7 @@ export function normalize(raw, products = [], stores = []) {
 
 export function finished(o) {
   return (
-    o.status.stage >= 4 ||
+    o.status.stage >= 5 ||
     TERMINAL.some((x) => norm(o.status.label).includes(x))
   );
 }

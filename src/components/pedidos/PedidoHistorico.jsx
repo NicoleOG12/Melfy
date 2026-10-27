@@ -2,7 +2,12 @@ import { dateTime, money } from "../../utils/orderUtils";
 import PedidoImagem from "./PedidoImagem";
 import PedidoDetalhes from "./PedidoDetalhes";
 
-export default function PedidoHistorico({ o, open, setOpen }) {
+export default function PedidoHistorico({
+  o,
+  open,
+  setOpen,
+  onAbrirPagamento,
+}) {
   return (
     <article
       id={`pedido-${o.id}`}
@@ -52,7 +57,13 @@ export default function PedidoHistorico({ o, open, setOpen }) {
         </span>
       </button>
 
-      {open && <PedidoDetalhes o={o} history />}
+      {open && (
+        <PedidoDetalhes
+          o={o}
+          history
+          onAbrirPagamento={onAbrirPagamento}
+        />
+      )}
     </article>
   );
 }

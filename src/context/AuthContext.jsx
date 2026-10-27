@@ -4,7 +4,7 @@ import { fetchCarrinho } from "../services/api";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [usuario,   setUsuario]   = useState(null);
+  const [usuario, setUsuario] = useState(null);
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -16,29 +16,60 @@ export function AuthProvider({ children }) {
     const token = localStorage.getItem("tokenCliente");
     if (!usuario || !token) return;
 
-    async function atualizar() {
-      try {
-        const items = await fetchCarrinho(token);
-        setCartCount(items.reduce((acc, i) => acc + (i.quantidade || 0), 0));
-      } catch {}
+    function atualizarCountLocal() {
+      const raw = localStorage.getItem("Sacola");
+      if (raw) {
+        try {
+          const items = JSON.parse(raw);
+          if (Array.isArray(items)) {
+            const count = items.reduce(
+              (acc, i) => acc + (Number(i.quantidade ?? i.qtd) || 0),
+              0
+            );
+            setCartCount(count);
+            return true;
+          }
+        } catch { }
+      }
+      return false;
     }
 
-    atualizar();
-    const id = setInterval(atualizar, 5000);
-    const onStorage = (e) => { if (e.key === "Sacola") atualizar(); };
-    const onCarrinhoAtualizado = () => { atualizar(); };
+    async function sincronizar() {
+      if (atualizarCountLocal()) return;
+      try {
+        const items = await fetchCarrinho(token);
+        if (Array.isArray(items)) {
+          setCartCount(
+            items.reduce(
+              (acc, i) => acc + (Number(i.quantidade ?? i.qtd) || 0),
+              0
+            )
+          );
+          localStorage.setItem("Sacola", JSON.stringify(items));
+        }
+      } catch { }
+    }
+
+    sincronizar();
+
+    const onStorage = (e) => {
+      if (e.key === "Sacola") atualizarCountLocal();
+    };
+    const onCarrinhoAtualizado = () => {
+      atualizarCountLocal();
+    };
     window.addEventListener("storage", onStorage);
     window.addEventListener("carrinhoAtualizado", onCarrinhoAtualizado);
     return () => {
-      clearInterval(id);
       window.removeEventListener("storage", onStorage);
       window.removeEventListener("carrinhoAtualizado", onCarrinhoAtualizado);
     };
   }, [usuario]);
 
   const login = useCallback((token, dados) => {
+    //console.log(dados)
     localStorage.setItem("tokenCliente", token);
-    localStorage.setItem("infoCliente",  JSON.stringify([dados]));
+    localStorage.setItem("infoCliente", JSON.stringify([dados]));
     setUsuario(dados);
   }, []);
 

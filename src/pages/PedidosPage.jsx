@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Pedido from "../components/pedidos/Pedido";
 import PedidoHistorico from "../components/pedidos/PedidoHistorico";
+import PagamentoPedidoModal from "../components/pedidos/PagamentoPedidoModal";
 import { SyncBar, ErrorBanner, LoadingSpinner, SectionHeading, EmptyState } from "../components/pedidos/PedidosUI";
 import { usePedidos } from "../hooks/usePedidos";
 import { PAGE_SIZE } from "../utils/orderUtils";
+import MelfySwal from "../services/melfySwal";
 import "../styles/cliente/pedidos.css";
+import "../styles/cliente/modal.css";
 
 export default function PedidosPage() {
   const {
@@ -20,10 +24,23 @@ export default function PedidosPage() {
     load,
   } = usePedidos();
 
+  const { status } = useParams();
+  const [searchParams] = useSearchParams();
+  const res = status ?? searchParams.get("status");
+
   const [activeOpen, setActiveOpen] = React.useState(null);
   const [historyOpen, setHistoryOpen] = React.useState(null);
   const [scrollParaId, setScrollParaId] = useState(null);
+  const [pedidoPagamento, setPedidoPagamento] = useState(null);
   const pedidoAbertoRef = useRef(false);
+
+  useEffect(() => {
+    if (res === "approved") {
+      MelfySwal("Pagamento Aprovado! 🎉", "Seu pagamento foi realizado com sucesso.", "success");
+    } else if (res === "pending") {
+      MelfySwal("Pagamento não Concluído ⚠️", "O pagamento não foi finalizado. Tente novamente.", "error");
+    }
+  }, [res]);
 
   useEffect(() => {
     if (loading || pedidoAbertoRef.current) return;
@@ -106,6 +123,7 @@ export default function PedidosPage() {
                       o={o}
                       open={activeOpen === o.id}
                       setOpen={setActiveOpen}
+                      onAbrirPagamento={setPedidoPagamento}
                     />
                   ))}
                 </div>
@@ -138,6 +156,7 @@ export default function PedidosPage() {
                         o={o}
                         open={historyOpen === o.id}
                         setOpen={setHistoryOpen}
+                        onAbrirPagamento={setPedidoPagamento}
                       />
                     ))}
                   </div>
@@ -174,6 +193,11 @@ export default function PedidosPage() {
           </>
         )}
       </main>
+
+      <PagamentoPedidoModal
+        pedido={pedidoPagamento}
+        onClose={() => setPedidoPagamento(null)}
+      />
 
       <Footer />
     </>

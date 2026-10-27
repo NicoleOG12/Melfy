@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lucide-react": "^1.52.0",
+    "@mercadopago/sdk-react": "^1.0.7",
+    "lucide-react": "^1.61.0",
+    "qrcode": "^1.5.4",
     "react": "^19.1.1",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4",
@@ -20,6 +22,6 @@
     "@vitejs/plugin-react": "^5.0.2",
     "oxlint": "^1.88.0",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.3.2"
+    "vite": "^8.3.5"
   }
 }

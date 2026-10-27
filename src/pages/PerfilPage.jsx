@@ -30,9 +30,18 @@ export default function PerfilPage() {
   const pagamentoHook = usePagamentos(showToast);
   const enderecoHook = useEnderecos(showToast);
 
-  function habilitarEdicao() {
-    const msg = perfil.toggleEdicao();
-    if (msg) showToast(msg);
+  async function habilitarEdicao() {
+    try {
+      const msg = await perfil.toggleEdicao();
+      if (msg) showToast(msg);
+    } catch (err) {
+      showToast(err?.message || "Erro ao salvar dados. Tente novamente.");
+    }
+  }
+
+  function cancelarEdicao() {
+    perfil.cancelarEdicao();
+    showToast("Edição cancelada.");
   }
 
   async function sairConta() {
@@ -72,6 +81,7 @@ export default function PerfilPage() {
           {secaoAtiva === "dados" && (
             <DadosTab
               isEditing={perfil.isEditing}
+              isSaving={perfil.isSaving}
               nome={perfil.nome}
               setNome={perfil.setNome}
               sobrenome={perfil.sobrenome}
@@ -86,7 +96,9 @@ export default function PerfilPage() {
               setCelular={perfil.setCelular}
               foto={perfil.foto}
               setFoto={perfil.setFoto}
+              setFotoArquivo={perfil.setFotoArquivo}
               onToggleEdicao={habilitarEdicao}
+              onCancelarEdicao={cancelarEdicao}
             />
           )}
 
