@@ -1,0 +1,102 @@
+name: CD – Melfy Frontend
+
+# ---------------------------------------------------------------------------
+# Entrega Contínua: só executa depois que o workflow de CI
+# ("CI – Melfy Frontend") terminar com SUCESSO.
+# Se o CI falhar, nada daqui roda e nenhuma imagem é publicada.
+# Obs.: o GitHub só dispara `workflow_run` com este arquivo na branch main.
+# ---------------------------------------------------------------------------
+on:
+  workflow_run:
+    workflows: ["CI – Melfy Frontend"]
+    types: [completed]
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Segurança — vulnerabilidades conhecidas nas dependências de produção
+  # -------------------------------------------------------------------------
+  audit:
+    name: Segurança – npm audit
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      # --omit=dev ignora ferramentas de desenvolvimento (vite, vitest),
+      # que não entram na imagem final.
+      - name: Verificar vulnerabilidades (altas ou críticas)
+        run: npm audit --omit=dev --audit-level=high
+
+  # -------------------------------------------------------------------------
+  # Docker — constrói a imagem e testa se o container sobe e responde
+  # -------------------------------------------------------------------------
+  docker:
+    name: Docker – build e teste do container
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Construir imagem
+        run: docker build -t melfy:teste .
+
+      - name: Subir o container
+        run: docker run -d --name melfy -p 8080:8080 melfy:teste
+
+      - name: Testar se a aplicação responde
+        run: |
+          for i in $(seq 1 15); do
+            if curl -fsS http://localhost:8080/ > /dev/null; then
+              echo "Aplicação respondeu com sucesso"
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs melfy
+          exit 1
+
+  # -------------------------------------------------------------------------
+  # Entrega — publica a imagem no Docker Hub (somente na main)
+  # -------------------------------------------------------------------------
+  publish:
+    name: Publicar imagem no Docker Hub
+    needs: [audit, docker]
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Login no Docker Hub
+        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
+      - name: Construir imagem
+        run: docker build -t ${{ secrets.DOCKER_USER }}/melfy:latest .
+
+      - name: Criar tag com o commit
+        run: docker tag ${{ secrets.DOCKER_USER }}/melfy:latest ${{ secrets.DOCKER_USER }}/melfy:${{ github.event.workflow_run.head_sha }}
+
+      - name: Enviar imagens (push)
+        run: |
+          docker push ${{ secrets.DOCKER_USER }}/melfy:latest
+          docker push ${{ secrets.DOCKER_USER }}/melfy:${{ github.event.workflow_run.head_sha }}
