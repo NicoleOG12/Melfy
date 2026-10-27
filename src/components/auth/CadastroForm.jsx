@@ -1,5 +1,5 @@
 import React, { useState, useId } from "react";
-import { Mail, User,ArrowRight, Loader2, Rocket } from "lucide-react";
+import { Mail, User, ArrowRight, Loader2, Rocket } from "lucide-react";
 import { API_URL } from "../../constants/api";
 import MelfySwal from "../../services/melfySwal";
 import Field from "./Field";
@@ -35,41 +35,13 @@ export default function CadastroForm({ onSwitchToLogin }) {
 
   function validateStep1() {
     const e = {};
-
-    // Nome: obrigatório, mínimo 2 palavras, sem números
-    const nomeTrim = form.nome.trim();
-    if (!nomeTrim) {
-      e.nome = "Informe seu nome completo";
-    } else if (/\d/.test(nomeTrim)) {
-      e.nome = "O nome não pode conter números";
-    } else if (nomeTrim.split(/\s+/).length < 2) {
-      e.nome = "Informe nome e sobrenome";
-    }
-
-    // E-mail: obrigatório, formato válido (sem espaços, com @ e domínio)
-    const emailTrim = form.email.trim();
-    if (!emailTrim) {
-      e.email = "Informe seu e-mail";
-    } else if (/\s/.test(form.email)) {
-      e.email = "E-mail inválido";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
-      e.email = "E-mail deve possuir formato válido";
-    }
-
-    // Senha: obrigatória, mínimo 6 caracteres
-    if (!form.senha) {
-      e.senha = "Crie uma senha";
-    } else if (form.senha.length < 6) {
-      e.senha = "Mínimo 6 caracteres";
-    }
-
-    // Confirmar senha: obrigatória, deve ser igual à senha
-    if (!form.confirmarSenha) {
-      e.confirmarSenha = "Confirme sua senha";
-    } else if (form.senha !== form.confirmarSenha) {
-      e.confirmarSenha = "As senhas não coincidem";
-    }
-
+    if (!form.nome.trim()) e.nome = "Informe seu nome completo";
+    if (!form.email.trim()) e.email = "Informe seu e-mail";
+    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "E-mail inválido";
+    if (!form.senha) e.senha = "Crie uma senha";
+    else if (form.senha.length < 6) e.senha = "Mínimo 8 caracteres";
+    if (form.senha !== form.confirmarSenha)
+      e.confirmarSenha = "Senhas não coincidem";
     setErrors(e);
     return !Object.keys(e).length;
   }
@@ -81,6 +53,7 @@ export default function CadastroForm({ onSwitchToLogin }) {
 
     try {
       const payload = {
+        tipo: "cliente",
         nome: form.nome.trim(),
         email: form.email.trim(),
         telefone: "11999999999",
@@ -89,12 +62,13 @@ export default function CadastroForm({ onSwitchToLogin }) {
         senha: form.senha,
       };
 
-      const res = await fetch(`${API_URL}/clientes`, {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       const data = await res.json();
+      //console.log(data)
 
       if (data.error === false) {
         await MelfySwal({
@@ -170,7 +144,7 @@ export default function CadastroForm({ onSwitchToLogin }) {
             onChange={(e) => { upd("senha")(e); clrErr("senha")(); }}
             autoComplete="new-password"
             error={errors.senha}
-            hint="Mínimo 6 caracteres"
+            hint="Mínimo 8 caracteres"
           />
           <PasswordField
             id={`${uid}-conf`}

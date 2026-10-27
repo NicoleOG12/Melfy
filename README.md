@@ -46,6 +46,15 @@
 
 <hr>
 
+<h2>💳 Checkout Mercado Pago</h2>
+<p>O checkout envia os pedidos para <code>POST /orders/checkout-api</code>. Para habilitar pagamento com cartão, configure a chave pública do Mercado Pago no ambiente do Vite:</p>
+
+<pre><code>VITE_MERCADOPAGO_PUBLIC_KEY=sua_chave_publica</code></pre>
+
+<p>Em desenvolvimento, essa variável pode ficar em <code>.env.local</code> na raiz do projeto. O cartão é tokenizado pelos Secure Fields oficiais do SDK React; número e CVV não são enviados ao backend nem armazenados pelo frontend. A chave privada (Access Token) deve permanecer somente no backend. Para Pix, o checkout exibe o QR Code e o código de pagamento retornados pela API.</p>
+
+<hr>
+
 <h2>🍯 Time Melfy</h2>
 <p>Feito com carinho por um time de abelhinhas dedicadas:<br></p>
 <ul>

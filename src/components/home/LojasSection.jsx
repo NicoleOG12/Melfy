@@ -12,7 +12,7 @@ export default function LojasSection({ lojas }) {
       <div className="lojas-scroll" ref={sliderRef}>
         {[...lojas].reverse().map((loja) => {
           const id   = loja.idLoja || loja.id_loja;
-          const nome = loja.nomeLoja || loja.loja_nome || loja.nome;
+          const nome = loja.nome_loja;
 
           return (
             <div
@@ -22,7 +22,7 @@ export default function LojasSection({ lojas }) {
               style={{ cursor: "pointer" }}
             >
               <img
-                src={loja.pfp || loja.fotoPerfil}
+                src={loja.pfp || loja.foto_loja}
                 alt={nome}
                 className="logo-loja"
               />
