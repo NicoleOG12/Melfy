@@ -101,7 +101,6 @@ async function getCepCoords(cep) {
       return coords;
     }
   } catch {
-    // ignora falha individual
   }
   return null;
 }
