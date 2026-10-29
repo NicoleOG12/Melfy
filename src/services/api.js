@@ -27,7 +27,18 @@ async function fetchComRetry(url, options = {}, tentativas = 3) {
   return fetch(url, options);
 }
 
+function dispararTokenExpirado() {
+  const token = localStorage.getItem("tokenCliente");
+  if (token) {
+    localStorage.removeItem("tokenCliente");
+    window.dispatchEvent(new Event("tokenExpirado"));
+  }
+}
+
 async function parseResponse(res) {
+  if (res.status === 401) {
+    dispararTokenExpirado();
+  }
   const text = await res.text();
   let data = {};
   try {
@@ -320,6 +331,9 @@ export async function fetchCarrinho(token) {
       "Content-Type": "application/json",
     },
   });
+  if (res.status === 401) {
+    dispararTokenExpirado();
+  }
   if (!res.ok) return [];
   const data = await parseResponse(res);
   return Array.isArray(data.data) ? data.data : [];
@@ -432,6 +446,9 @@ export async function fetchEnderecosAPI() {
         "Content-Type": "application/json",
       },
     });
+    if (res.status === 401) {
+      dispararTokenExpirado();
+    }
     if (!res.ok) return [];
     const data = await parseResponse(res);
     const list =

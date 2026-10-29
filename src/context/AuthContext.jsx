@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { fetchCarrinho } from "../services/api";
+import MelfySwal from "../services/melfySwal";
 
 const AuthContext = createContext(null);
 
@@ -76,9 +77,30 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     localStorage.removeItem("tokenCliente");
     localStorage.removeItem("infoCliente");
+    localStorage.removeItem("usuarioLogado");
+    localStorage.removeItem("confeiteiraLogada");
     setUsuario(null);
     setCartCount(0);
   }, []);
+
+  useEffect(() => {
+    const handleTokenExpirado = () => {
+      logout();
+      MelfySwal({
+        icon: "warning",
+        title: "Sessão expirada",
+        text: "Sua sessão expirou por inatividade. Por favor, faça login novamente para continuar.",
+        confirmButtonText: "Ir para a Página Inicial",
+      }).then(() => {
+        window.location.href = "/";
+      });
+    };
+
+    window.addEventListener("tokenExpirado", handleTokenExpirado);
+    return () => {
+      window.removeEventListener("tokenExpirado", handleTokenExpirado);
+    };
+  }, [logout]);
 
   return (
     <AuthContext.Provider value={{ usuario, cartCount, login, logout }}>
