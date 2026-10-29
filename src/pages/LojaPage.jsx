@@ -216,6 +216,7 @@ export default function LojaPage() {
               horarios={horarios}
               aberto={aberto}
               formaEntrega={formaEntrega}
+              loja={loja}
             />
           )}
 

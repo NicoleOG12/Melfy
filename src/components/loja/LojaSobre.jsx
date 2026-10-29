@@ -1,7 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-export default function LojaSobre({ descricao, endereco, telefone, email, horarios, aberto, formaEntrega = [] }) {
+export default function LojaSobre({ descricao, endereco, telefone, email, horarios, aberto, formaEntrega = [], loja }) {
   const diaAtual = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][new Date().getDay()];
+
+  const [coords, setCoords] = useState(null);
+  const [loadingMap, setLoadingMap] = useState(false);
+
+  useEffect(() => {
+    const enderecoObj = Array.isArray(loja?.enderecos) ? loja.enderecos[0] : null;
+
+    if (enderecoObj?.latitude && enderecoObj?.longitude) {
+      setCoords({
+        lat: parseFloat(enderecoObj.latitude),
+        lng: parseFloat(enderecoObj.longitude)
+      });
+      return;
+    }
+
+    const cep = enderecoObj?.cep || loja?.cep;
+    if (cep) {
+      const cleanCep = String(cep).replace(/\D/g, "");
+      if (cleanCep) {
+        setLoadingMap(true);
+        fetch(`https://nominatim.openstreetmap.org/search?postalcode=${cleanCep}&country=BR&format=json&limit=1`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (Array.isArray(data) && data.length > 0) {
+              setCoords({
+                lat: parseFloat(data[0].lat),
+                lng: parseFloat(data[0].lon)
+              });
+            } else {
+              const query = encodeURIComponent(`${enderecoObj?.rua || ""}, ${enderecoObj?.numero || ""}, ${enderecoObj?.cidade || ""}, BR`);
+              return fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`)
+                .then((res) => res.json())
+                .then((fallbackData) => {
+                  if (Array.isArray(fallbackData) && fallbackData.length > 0) {
+                    setCoords({
+                      lat: parseFloat(fallbackData[0].lat),
+                      lng: parseFloat(fallbackData[0].lon)
+                    });
+                  }
+                });
+            }
+          })
+          .catch((err) => console.warn("Erro ao geocodificar localização da loja:", err))
+          .finally(() => setLoadingMap(false));
+      }
+    }
+  }, [loja]);
 
   return (
     <div className="loja-sobre">
@@ -23,10 +70,24 @@ export default function LojaSobre({ descricao, endereco, telefone, email, horari
           <i className="fas fa-location-dot" />
           {endereco}
         </p>
-        <div className="loja-mapa-placeholder">
-          <i className="fas fa-map" />
-          <span>Mapa disponível em breve</span>
-        </div>
+        {loadingMap ? (
+          <div className="loja-mapa-placeholder">
+            <i className="fas fa-circle-notch fa-spin" />
+            <span>Carregando mapa...</span>
+          </div>
+        ) : coords ? (
+          <div className="loja-mapa-container">
+            <iframe
+              title={`Mapa de ${loja?.nome_loja || loja?.nome || "Loja"}`}
+              src={`https://www.openstreetmap.org/export/embed.html?bbox=${coords.lng - 0.003},${coords.lat - 0.003},${coords.lng + 0.003},${coords.lat + 0.003}&layer=mapnik&marker=${coords.lat},${coords.lng}`}
+            />
+          </div>
+        ) : (
+          <div className="loja-mapa-placeholder">
+            <i className="fas fa-map" />
+            <span>Mapa não disponível para esta localização</span>
+          </div>
+        )}
       </div>
 
       {(telefone || email) && (
