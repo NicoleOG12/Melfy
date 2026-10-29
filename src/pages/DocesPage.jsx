@@ -95,28 +95,14 @@ export default function DocesPage() {
   const cardsRef = useRef(null);
 
   useEffect(() => {
-    let ativo = true;
-
-    function carregar() {
-      fetchProdutos()
-        .then((ps) => {
-          if (!ativo) return;
-          const ordenados = ordenarProdutos(ps);
-          setProdutosOrdenados(ordenados);
-        })
-        .catch(console.error)
-        .finally(() => {
-          if (ativo) setLoading(false);
-        });
-    }
-
-    carregar();
-    const interval = setInterval(carregar, 12000); // Polling a cada 12 segundos
-
-    return () => {
-      ativo = false;
-      clearInterval(interval);
-    };
+    fetchProdutos()
+      .then((ps) => {
+        const ordenados = ordenarProdutos(ps);
+        setProdutosOrdenados(ordenados);
+        setProdutosFiltrados(ordenados);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   function filtrar(termo) {
@@ -130,10 +116,6 @@ export default function DocesPage() {
     return rearranjarSemLojasConsecutivas(filtrados);
   }
 
-  useEffect(() => {
-    setProdutosFiltrados(filtrar(busca));
-  }, [produtosOrdenados, busca]);
-
   function scrollSuave() {
     const el = cardsRef.current;
     if (!el) return;
@@ -142,7 +124,7 @@ export default function DocesPage() {
   }
 
   function executarBusca(termo = busca) {
-    setBusca(termo);
+    setProdutosFiltrados(filtrar(termo));
     scrollSuave();
   }
 
