@@ -81,8 +81,33 @@ function ordenarProdutos(lista) {
   );
   const novos = sorted.slice(0, 10);
   const restantes = embaralhar(sorted.slice(10));
-  const tudo = [...novos, ...restantes];
-  return rearranjarSemLojasConsecutivas(tudo);
+
+  const novosRearranjados = rearranjarSemLojasConsecutivas(novos);
+  const restantesRearranjados = rearranjarSemLojasConsecutivas(restantes);
+
+  const resultado = [...novosRearranjados, ...restantesRearranjados];
+
+  // Trata a colisão de borda entre o último doce do grupo "novos" e o primeiro do grupo "restantes"
+  const getStoreId = (p) => p.id_loja || p.idLoja || p.loja?.id_loja || p.loja?.id || "unknown";
+
+  if (novosRearranjados.length > 0 && restantesRearranjados.length > 0) {
+    const idxBordaNovos = novosRearranjados.length - 1;
+    const idxBordaRestantes = novosRearranjados.length;
+
+    if (getStoreId(resultado[idxBordaNovos]) === getStoreId(resultado[idxBordaRestantes])) {
+      // Procura o próximo doce subsequente de outra loja para permutar com o elemento colidido na borda
+      for (let i = idxBordaRestantes + 1; i < resultado.length; i++) {
+        if (getStoreId(resultado[i]) !== getStoreId(resultado[idxBordaNovos])) {
+          const temp = resultado[idxBordaRestantes];
+          resultado[idxBordaRestantes] = resultado[i];
+          resultado[i] = temp;
+          break;
+        }
+      }
+    }
+  }
+
+  return resultado;
 }
 
 export default function DocesPage() {
