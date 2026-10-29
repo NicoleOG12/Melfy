@@ -19,13 +19,70 @@ function embaralhar(lista) {
     .map((o) => o.x);
 }
 
+function rearranjarSemLojasConsecutivas(produtos) {
+  if (produtos.length <= 1) return produtos;
+
+  const getStoreId = (p) => p.id_loja || p.idLoja || p.loja?.id_loja || p.loja?.id || "unknown";
+
+  // Agrupa produtos por ID de loja
+  const grupos = {};
+  for (const p of produtos) {
+    const sId = getStoreId(p);
+    if (!grupos[sId]) {
+      grupos[sId] = [];
+    }
+    grupos[sId].push(p);
+  }
+
+  // Lista de lojas com seus produtos
+  const lojasList = Object.keys(grupos).map((sId) => ({
+    id: sId,
+    items: grupos[sId],
+  }));
+
+  const resultado = [];
+  let ultimoLojaId = null;
+
+  while (true) {
+    // Ordena as lojas pela quantidade de produtos restantes (decrescente)
+    lojasList.sort((a, b) => b.items.length - a.items.length);
+
+    // Encontra a primeira loja com produtos que não seja a última utilizada
+    let indexEscolhido = -1;
+    for (let i = 0; i < lojasList.length; i++) {
+      if (lojasList[i].items.length > 0 && lojasList[i].id !== ultimoLojaId) {
+        indexEscolhido = i;
+        break;
+      }
+    }
+
+    // Se nenhuma loja for elegível (só restaram produtos da última loja utilizada)
+    if (indexEscolhido === -1) {
+      const restante = lojasList.find((l) => l.items.length > 0);
+      if (restante) {
+        resultado.push(...restante.items);
+        restante.items = [];
+      }
+      break;
+    }
+
+    const lojaEscolhida = lojasList[indexEscolhido];
+    const produto = lojaEscolhida.items.shift();
+    resultado.push(produto);
+    ultimoLojaId = lojaEscolhida.id;
+  }
+
+  return resultado;
+}
+
 function ordenarProdutos(lista) {
   const sorted = [...lista].sort(
     (a, b) => new Date(b.datahora) - new Date(a.datahora)
   );
   const novos = sorted.slice(0, 10);
   const restantes = embaralhar(sorted.slice(10));
-  return [...novos, ...restantes];
+  const tudo = [...novos, ...restantes];
+  return rearranjarSemLojasConsecutivas(tudo);
 }
 
 export default function DocesPage() {
@@ -38,25 +95,44 @@ export default function DocesPage() {
   const cardsRef = useRef(null);
 
   useEffect(() => {
-    fetchProdutos()
-      .then((ps) => {
-        const ordenados = ordenarProdutos(ps);
-        setProdutosOrdenados(ordenados);
-        setProdutosFiltrados(ordenados);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    let ativo = true;
+
+    function carregar() {
+      fetchProdutos()
+        .then((ps) => {
+          if (!ativo) return;
+          const ordenados = ordenarProdutos(ps);
+          setProdutosOrdenados(ordenados);
+        })
+        .catch(console.error)
+        .finally(() => {
+          if (ativo) setLoading(false);
+        });
+    }
+
+    carregar();
+    const interval = setInterval(carregar, 12000); // Polling a cada 12 segundos
+
+    return () => {
+      ativo = false;
+      clearInterval(interval);
+    };
   }, []);
 
   function filtrar(termo) {
     const t = normalizar(termo).trim();
     if (!t) return produtosOrdenados;
     const palavras = t.split(" ");
-    return produtosOrdenados.filter((p) => {
+    const filtrados = produtosOrdenados.filter((p) => {
       const txt = normalizar((p.nome || "") + " " + (p.descricao || ""));
       return palavras.every((w) => txt.includes(w));
     });
+    return rearranjarSemLojasConsecutivas(filtrados);
   }
+
+  useEffect(() => {
+    setProdutosFiltrados(filtrar(busca));
+  }, [produtosOrdenados, busca]);
 
   function scrollSuave() {
     const el = cardsRef.current;
@@ -66,7 +142,7 @@ export default function DocesPage() {
   }
 
   function executarBusca(termo = busca) {
-    setProdutosFiltrados(filtrar(termo));
+    setBusca(termo);
     scrollSuave();
   }
 
