@@ -1,15 +1,20 @@
 name: CD – Melfy Frontend
 
 # ---------------------------------------------------------------------------
-# Entrega Contínua: só executa depois que o workflow de CI
+# Só executa depois que o workflow de CI
 # ("CI – Melfy Frontend") terminar com SUCESSO.
 # Se o CI falhar, nada daqui roda e nenhuma imagem é publicada.
 # Obs.: o GitHub só dispara `workflow_run` com este arquivo na branch main.
+# Por isso, `push` na branch pipeline e `workflow_dispatch` (manual) permitem
+# testar audit e docker fora da main. O publish continua restrito à main.
 # ---------------------------------------------------------------------------
 on:
   workflow_run:
     workflows: ["CI – Melfy Frontend"]
     types: [completed]
+  push:
+    branches: [pipeline]
+  workflow_dispatch:
 
 jobs:
   # -------------------------------------------------------------------------
@@ -17,13 +22,13 @@ jobs:
   # -------------------------------------------------------------------------
   audit:
     name: Segurança – npm audit
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
@@ -44,13 +49,13 @@ jobs:
   # -------------------------------------------------------------------------
   docker:
     name: Docker – build e teste do container
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Construir imagem
         run: docker build -t melfy:teste .
