@@ -9,6 +9,8 @@ import PerfilPage from "./pages/PerfilPage";
 import CarrinhoPage from "./pages/CarrinhoPage";
 import AuthPage from "./pages/AuthPage";
 import LojaPage from "./pages/LojaPage";
+import FloatingChat from "./components/FloatingChat";
+import { API_URL } from "./constants/api";
 
 export default function App() {
   return (
@@ -25,6 +27,7 @@ export default function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/loja/:id" element={<LojaPage />} />
         </Routes>
+        <FloatingChat apiEndpoint={`${API_URL}/ai/assistant`} />
       </BrowserRouter>
     </AuthProvider>
   );

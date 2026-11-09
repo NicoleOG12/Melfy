@@ -6,8 +6,6 @@ import ProductsSection from "../components/home/ProductsSection";
 import HowItWorks from "../components/home/HowItWorks";
 import BakersSection from "../components/home/BakersSection";
 import CtaSection from "../components/home/CtaSection";
-import FloatingChat from "../components/FloatingChat";
-import { API_URL } from "../constants/api";
 import "../styles/home.css";
 
 export default function HomePage() {
@@ -21,7 +19,6 @@ export default function HomePage() {
         <BakersSection />
         <CtaSection />
       </div>
-      <FloatingChat apiEndpoint={`${API_URL}/ai/assistant`} />
       <Footer />
     </>
   );

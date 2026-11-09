@@ -57,7 +57,7 @@ export default function FloatingChat({ apiEndpoint }) {
             {/* Janela do Chat */}
             {isOpen && (
                 <div
-                    className="mb-4 w-80 sm:w-96 h-[500px] flex flex-col overflow-hidden transition-all animate-in fade-in slide-in-from-bottom-5"
+                    className="w-80 sm:w-96 h-[500px] flex flex-col overflow-hidden transition-all animate-in fade-in slide-in-from-bottom-5"
                     style={{
                         background: 'var(--surface-1)',
                         borderRadius: '20px',
@@ -74,10 +74,23 @@ export default function FloatingChat({ apiEndpoint }) {
                         }}
                     >
                         <div className="flex items-center gap-2">
-                            <span
-                                className="w-2.5 h-2.5 rounded-full animate-pulse"
-                                style={{ background: 'var(--green-light)' }}
-                            ></span>
+                            <div className="relative w-9 h-9 shrink-0">
+                                <div
+                                    className="w-9 h-9 rounded-full overflow-hidden"
+                                    style={{ background: 'var(--yellow)', border: '2px solid var(--yellow)' }}
+                                >
+                                    <img
+                                        src="/assents/img/Geral/Abelha Cliente.png"
+                                        alt="Mel, assistente da Melfy"
+                                        className="w-full h-full object-cover"
+                                        style={{ transform: 'scale(2.4)', transformOrigin: '50% 38%' }}
+                                    />
+                                </div>
+                                <span
+                                    className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full animate-pulse"
+                                    style={{ background: 'var(--green-light)', border: '1.5px solid var(--brown)' }}
+                                ></span>
+                            </div>
                             <span className="text-sm font-bold" style={{ color: 'var(--header-text)', fontFamily: 'var(--font-principal)' }}>
                                 Mel - Assistente Melfy
                             </span>
@@ -201,31 +214,24 @@ export default function FloatingChat({ apiEndpoint }) {
                 </div>
             )}
 
-            {/* Botão Flutuante (Launcher) */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
-                aria-label="Abrir Chat"
-                style={{
-                    background: isOpen
-                        ? 'linear-gradient(135deg, var(--brown), var(--brown-light))'
-                        : 'linear-gradient(180deg, var(--yellow), var(--yellow-mid))',
-                    color: isOpen ? 'var(--yellow-mid)' : 'var(--brown-light)',
-                    boxShadow: isOpen
-                        ? '0 4px 0 var(--brown-dark), 0 6px 16px rgba(74, 32, 20, 0.35)'
-                        : '0 4px 0 var(--yellow-dark), 0 6px 16px rgba(74, 32, 20, 0.25)',
-                    border: '2px solid',
-                    borderColor: isOpen ? 'var(--yellow)' : 'var(--yellow-dark)',
-                }}
-            >
-                {isOpen ? (
-                    <span className="text-xl font-bold">✕</span>
-                ) : (
+            {/* Botão Flutuante (Launcher) - escondido com o chat aberto; o fechamento é pelo X do cabeçalho */}
+            {!isOpen && (
+                <button
+                    onClick={() => setIsOpen(true)}
+                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none"
+                    aria-label="Abrir Chat"
+                    style={{
+                        background: 'linear-gradient(180deg, var(--yellow), var(--yellow-mid))',
+                        color: 'var(--brown-light)',
+                        boxShadow: '0 4px 0 var(--yellow-dark), 0 6px 16px rgba(74, 32, 20, 0.25)',
+                        border: '2px solid var(--yellow-dark)',
+                    }}
+                >
                     <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                     </svg>
-                )}
-            </button>
+                </button>
+            )}
         </div>
     );
 }
