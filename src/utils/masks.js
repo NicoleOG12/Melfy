@@ -19,6 +19,36 @@ export function formatarCPF(v) {
   return v.substring(0, 14);
 }
 
+/**
+ * Apenas para exibição (também enquanto digita): oculta os 6 dígitos do meio.
+ * 12345678909 -> 123.***.***-09
+ */
+export function ocultarCPF(v) {
+  const digitos = String(v || "").replace(/\D/g, "").slice(0, 11);
+  if (!digitos) return "";
+  return digitos
+    .replace(/\d/g, (c, i) => (i >= 3 && i <= 8 ? "*" : c))
+    .replace(/([\d*]{3})([\d*])/, "$1.$2")
+    .replace(/([\d*]{3})([\d*])/, "$1.$2")
+    .replace(/([\d*]{3})([\d*]{1,2})$/, "$1-$2");
+}
+
+/**
+ * Converte o que foi digitado no campo oculto de volta para o CPF real formatado.
+ * - digitar no fim: acrescenta ao CPF real;
+ * - apagar no fim: remove do CPF real;
+ * - qualquer outra edição (meio, colar): usa só os dígitos digitados, sem os "*".
+ */
+export function lerCPFOculto(cpfAtual, digitado) {
+  const atual = String(cpfAtual || "").replace(/\D/g, "");
+  const exibido = ocultarCPF(atual).replace(/[^\d*]/g, "");
+  const bruto = String(digitado || "").replace(/[^\d*]/g, "");
+
+  if (bruto.startsWith(exibido)) return formatarCPF((atual + bruto.slice(exibido.length)).slice(0, 11));
+  if (exibido.startsWith(bruto)) return formatarCPF(atual.slice(0, bruto.length));
+  return formatarCPF(bruto.replace(/\*/g, ""));
+}
+
 export function formatarCEP(v) {
   if (!v) return "";
   v = String(v).replace(/\D/g, "");

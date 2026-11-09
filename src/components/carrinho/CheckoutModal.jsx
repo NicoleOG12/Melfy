@@ -8,7 +8,7 @@ import {
   initMercadoPago,
 } from "@mercadopago/sdk-react";
 import { formatarPreco } from "../../utils/cartUtils";
-import { formatarCPF } from "../../utils/masks";
+import { formatarCPF, ocultarCPF, lerCPFOculto } from "../../utils/masks";
 import MelfySwal from "../../services/melfySwal";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -884,8 +884,8 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
                   inputMode="numeric"
                   autoComplete="off"
                   maxLength={14}
-                  value={cpfPagador}
-                  onChange={(event) => setCpfPagador(formatarCPF(event.target.value))}
+                  value={ocultarCPF(cpfPagador)}
+                  onChange={(event) => setCpfPagador((atual) => lerCPFOculto(atual, event.target.value))}
                   required
                 />
               </label>
