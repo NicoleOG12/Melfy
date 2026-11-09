@@ -29,22 +29,88 @@ const MOCK_AVALIACOES = [
 
 const MAPA_DIAS = {
   SEGUNDA: "Segunda",
+  "SEGUNDA-FEIRA": "Segunda",
+  SEG: "Segunda",
+  MONDAY: "Segunda",
+
   TERCA: "Terça",
+  TERÇA: "Terça",
+  "TERCA-FEIRA": "Terça",
+  "TERÇA-FEIRA": "Terça",
+  TER: "Terça",
+  TUESDAY: "Terça",
+
   QUARTA: "Quarta",
+  "QUARTA-FEIRA": "Quarta",
+  QUA: "Quarta",
+  WEDNESDAY: "Quarta",
+
   QUINTA: "Quinta",
+  "QUINTA-FEIRA": "Quinta",
+  QUI: "Quinta",
+  THURSDAY: "Quinta",
+
   SEXTA: "Sexta",
+  "SEXTA-FEIRA": "Sexta",
+  SEX: "Sexta",
+  FRIDAY: "Sexta",
+
   SABADO: "Sábado",
+  SÁBADO: "Sábado",
+  SAB: "Sábado",
+  SATURDAY: "Sábado",
+
   DOMINGO: "Domingo",
+  DOM: "Domingo",
+  SUNDAY: "Domingo",
 };
+
+const ORDEM_DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+
+function formatarHora(horaStr) {
+  if (!horaStr || typeof horaStr !== "string") return null;
+  const trimmed = horaStr.trim();
+  if (!trimmed) return null;
+  const match = trimmed.match(/^(\d{1,2}):(\d{2})/);
+  if (match) {
+    const h = match[1].padStart(2, "0");
+    const m = match[2];
+    return `${h}:${m}`;
+  }
+  return trimmed;
+}
+
+function normalizarNomeDia(diaStr) {
+  if (!diaStr) return "";
+  const limpo = String(diaStr).trim().toUpperCase();
+  return MAPA_DIAS[limpo] || diaStr;
+}
 
 function formatarHorarios(horariosAPI) {
   if (!Array.isArray(horariosAPI) || horariosAPI.length === 0) return MOCK_HORARIOS;
-  return horariosAPI.map((h) => ({
-    dia: MAPA_DIAS[h.dia_semana?.toUpperCase()] || h.dia || h.dia_semana || "",
-    abre: h.abre || null,
-    fecha: h.fecha || null,
-    aberto: !h.fechado && Boolean(h.abre),
-  }));
+
+  const lista = horariosAPI.map((h) => {
+    const rawDia = h.dia_semana || h.dia || h.diaSemana || h.dia_da_semana || "";
+    const dia = normalizarNomeDia(rawDia);
+    const rawAbre = h.abre || h.hora_abertura || h.abertura || h.hora_inicio || h.inicio || h.open;
+    const rawFecha = h.fecha || h.hora_fechamento || h.fechamento || h.hora_fim || h.fim || h.close;
+    const abre = formatarHora(rawAbre);
+    const fecha = formatarHora(rawFecha);
+    const estaFechado = h.fechado === true || h.aberto === false || !abre || !fecha;
+
+    return {
+      dia,
+      abre: estaFechado ? null : abre,
+      fecha: estaFechado ? null : fecha,
+      aberto: !estaFechado,
+    };
+  });
+
+  return lista.sort((a, b) => {
+    const idxA = ORDEM_DIAS.indexOf(a.dia);
+    const idxB = ORDEM_DIAS.indexOf(b.dia);
+    return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+  });
 }
 
 function humanizarChave(chave) {
@@ -142,11 +208,37 @@ function formatarEndereco(enderecosAPI, fallback) {
 
 function lojaAbertoAgora(horarios) {
   if (!Array.isArray(horarios) || horarios.length === 0) return true;
+
   const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-  const diaHoje = dias[new Date().getDay()];
+  const agora = new Date();
+  const diaHoje = dias[agora.getDay()];
   const hHoje = horarios.find((h) => h.dia === diaHoje);
-  if (!hHoje) return true;
-  return hHoje.aberto ?? false;
+
+  if (!hHoje || !hHoje.aberto || !hHoje.abre || !hHoje.fecha) {
+    return false;
+  }
+
+  const parseMinutos = (horaStr) => {
+    if (!horaStr) return null;
+    const partes = horaStr.split(":");
+    if (partes.length < 2) return null;
+    return parseInt(partes[0], 10) * 60 + parseInt(partes[1], 10);
+  };
+
+  const minAtual = agora.getHours() * 60 + agora.getMinutes();
+  const minAbre = parseMinutos(hHoje.abre);
+  const minFecha = parseMinutos(hHoje.fecha);
+
+  if (minAbre === null || minFecha === null) {
+    return false;
+  }
+
+  if (minAbre <= minFecha) {
+    return minAtual >= minAbre && minAtual < minFecha;
+  }
+
+  // Turno noturno que passa da meia-noite
+  return minAtual >= minAbre || minAtual < minFecha;
 }
 
 export default function LojaPage() {
@@ -160,7 +252,7 @@ export default function LojaPage() {
   const telefone       = loja?.telefone   ?? loja?.whatsapp   ?? "";
   const email          = loja?.email      ?? "";
   const endereco       = formatarEndereco(loja?.enderecos, loja?.endereco);
-  const horarios       = formatarHorarios(loja?.horarios);
+  const horarios       = formatarHorarios(loja?.horarios || loja?.store?.horarios || loja?.schedules);
   const formaEntrega   = "";
   const avaliacoes     = loja?.avaliacoes ?? MOCK_AVALIACOES;
 

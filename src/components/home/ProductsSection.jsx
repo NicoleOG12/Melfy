@@ -65,13 +65,13 @@ export default function ProductsSection() {
 
   return (
     <>
-      <section className="min-h-screen py-16 bg-cosy-brown-200 relative" id="products">
+      <section className="min-h-screen pb-16 bg-cosy-brown-200 relative" id="products">
         <img
           src="/assents/img/Home/chocolate-wave-2.svg"
           alt="chocolate wave"
-          className="absolute top-0 w-full"
+          className="absolute top-0 w-full pointer-events-none"
         />
-        <div className="container mx-auto mt-12 px-4">
+        <div className="container mx-auto relative z-10 pt-28 sm:pt-36 md:pt-48 lg:pt-38 px-4">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-cosy-brown-700">
               <span className="font-nunito text-5xl md:text-6xl">Nossos doces</span>{" "}

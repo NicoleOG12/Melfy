@@ -19,13 +19,23 @@ export function useLojaPage() {
       .then(async (data) => {
         if (!data) throw new Error("Loja não encontrada");
 
-        const storeObj = data.store ?? data;
+        const storeObj = {
+          ...(data.store ?? data),
+          horarios:
+            data.store?.horarios ??
+            data.horarios ??
+            data.store?.store_horarios ??
+            data.store_horarios ??
+            data.store?.schedules ??
+            data.schedules ??
+            (data.store ?? data)?.horarios ??
+            [],
+        };
+
         let prods =
           Array.isArray(data.produtos) && data.produtos.length > 0
             ? data.produtos
             : await fetchProdutosPorLoja(id);
-
-        console.log(prods);
 
         setLoja(storeObj);
         setProdutos(prods || []);

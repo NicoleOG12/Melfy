@@ -162,15 +162,21 @@ export default function LojaSobre({ descricao, endereco, telefone, email, horari
           </span>
         </div>
         <div className="loja-horarios-lista">
-          {horarios.map((h) => (
-            <div key={h.dia} className={`loja-horario-row${h.dia === diaAtual ? " hoje" : ""}`}>
-              <span className="loja-horario-dia">{h.dia}</span>
-              {h.aberto
-                ? <span className="loja-horario-hrs">{h.abre} – {h.fecha}</span>
-                : <span className="loja-horario-fechado">Fechado</span>
-              }
+          {Array.isArray(horarios) && horarios.length > 0 ? (
+            horarios.map((h) => (
+              <div key={h.dia} className={`loja-horario-row${h.dia === diaAtual ? " hoje" : ""}`}>
+                <span className="loja-horario-dia">{h.dia}</span>
+                {h.aberto && h.abre && h.fecha
+                  ? <span className="loja-horario-hrs">{h.abre} – {h.fecha}</span>
+                  : <span className="loja-horario-fechado">Fechado</span>
+                }
+              </div>
+            ))
+          ) : (
+            <div className="loja-horario-row">
+              <span className="loja-horario-fechado">Horários não informados</span>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
