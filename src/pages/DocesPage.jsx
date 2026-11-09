@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import SearchBar from "../components/home/SearchBar";
@@ -118,6 +119,7 @@ export default function DocesPage() {
   const [modalProd, setModalProd] = useState(null);
   const [busca, setBusca] = useState("");
   const cardsRef = useRef(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     fetchProdutos()
@@ -129,6 +131,40 @@ export default function DocesPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const produtoId = searchParams.get("produto");
+    if (!produtoId || produtosOrdenados.length === 0) {
+      if (!produtoId) setModalProd(null);
+      return;
+    }
+
+    const produto = produtosOrdenados.find((item) =>
+      String(item.id_produto ?? item.idProduto ?? item.id) === produtoId
+    );
+    setModalProd(produto ?? null);
+  }, [searchParams, produtosOrdenados]);
+
+  function obterProdutoId(produto) {
+    return produto?.id_produto ?? produto?.idProduto ?? produto?.id;
+  }
+
+  function abrirProduto(produto) {
+    const produtoId = obterProdutoId(produto);
+    if (produtoId == null) return;
+
+    const params = new URLSearchParams(searchParams);
+    params.set("produto", String(produtoId));
+    setModalProd(produto);
+    setSearchParams(params);
+  }
+
+  function fecharProduto() {
+    const params = new URLSearchParams(searchParams);
+    params.delete("produto");
+    setModalProd(null);
+    setSearchParams(params);
+  }
 
   function filtrar(termo) {
     const t = normalizar(termo).trim();
@@ -210,7 +246,7 @@ export default function DocesPage() {
               <CardProduto
                 key={p.id_produto}
                 produto={p}
-                onCardClick={setModalProd}
+                onCardClick={abrirProduto}
               />
             ))}
         </section>
@@ -218,7 +254,8 @@ export default function DocesPage() {
 
       <ProductModal
         produto={modalProd}
-        onClose={() => setModalProd(null)}
+        lojas={lojas}
+        onClose={fecharProduto}
       />
 
       <Footer />
