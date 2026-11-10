@@ -111,7 +111,7 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     (endereco?.cep && endereco.cep.replace(/\D/g, "").length === 8) ||
     (cep && cep.replace(/\D/g, "").length === 8)
   );
-  const frete = temCepValido ? 9 : 0;
+  const frete = temCepValido ? 0 : 0;
   const total = subtotal + frete;
 
   function selecionarEndereco(item) {
