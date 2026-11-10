@@ -41,7 +41,7 @@ export default function FloatingChat({ apiEndpoint }) {
             const data = await response.json();
 
             // Ajuste 'data.resposta' caso o seu backend retorne com outro nome (ex: data.message, data.text)
-            const botResponse = data.resposta || data.message || 'Desculpe, não consegui processar sua resposta.';
+            const botResponse = data.resposta || data.message || 'No momento estou atendendo outros clientes, tente novamente daqui a alguns minutinhos.';
 
             setMessages((prev) => [...prev, { role: 'assistant', text: botResponse }]);
         } catch (error) {
