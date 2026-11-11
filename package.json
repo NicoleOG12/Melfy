@@ -19,7 +19,7 @@
     "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.5",
     "@vitejs/plugin-react": "^5.0.2",
     "oxlint": "^1.88.0",
     "tailwindcss": "^4.3.3",
