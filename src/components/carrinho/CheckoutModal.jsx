@@ -354,7 +354,20 @@ export default function CheckoutModal({ open, onClose, subtotal, onFinish }) {
     if (!result.isConfirmed) return;
 
     try {
-      await removerEnderecoAPI(id);
+      try {
+        await removerEnderecoAPI(id);
+      } catch (apiErr) {
+        // Endereço que só existe localmente (não está na API): remove só do front.
+        if (!/not found|não encontrado|nao encontrado|does not belong/i.test(apiErr?.message || "")) {
+          throw apiErr;
+        }
+      }
+      const salvo = carregarEnderecoSalvo();
+      if (salvo && (salvo.id === id || enderecosLista.length <= 1)) {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch { }
+      }
       const filtrados = enderecosLista.filter(
         (item) => (item.id || item.id_endereco) !== id
       );
