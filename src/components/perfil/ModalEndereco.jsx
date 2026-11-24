@@ -122,10 +122,10 @@ export default function ModalEndereco({
         </div>
 
         <div className="modal-buttons">
-          <button id="fechar-modal" type="button" onClick={onClose}>
+          <button id="fechar-modal" type="button" className="perfil-btn-ghost" onClick={onClose}>
             Cancelar
           </button>
-          <button id="salvar-endereco" type="button" onClick={onSave}>
+          <button id="salvar-endereco" type="button" className="perfil-btn-primary" onClick={onSave}>
             Salvar
           </button>
         </div>
