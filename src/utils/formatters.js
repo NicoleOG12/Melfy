@@ -47,9 +47,15 @@ export function getPrecoProduto(produto) {
   const temOferta =
     !!oferta && precoOferta > 0 && (!precoBase || precoOferta < precoBase);
 
+  const percentualDesconto =
+    temOferta && precoBase > 0
+      ? Math.round((1 - precoOferta / precoBase) * 100)
+      : 0;
+
   return {
     oferta,
     temOferta,
+    percentualDesconto,
     precoBase,
     precoOferta: temOferta ? precoOferta : precoBase,
   };

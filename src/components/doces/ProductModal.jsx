@@ -24,7 +24,7 @@ export default function ProductModal({ produto, onClose }) {
 
   if (!produto) return null;
 
-  const { temOferta, precoBase, precoOferta } = getPrecoProduto(produto);
+  const { temOferta, percentualDesconto, precoBase, precoOferta } = getPrecoProduto(produto);
   const preco = precoOferta;
 
   const handleLojaClick = (e) => {
@@ -109,7 +109,12 @@ export default function ProductModal({ produto, onClose }) {
             <p className="modal-subtitulo">{produto.subtitulo || ""}</p>
             <p className="modal-description">{produto.descricao || ""}</p>
             {produto.peso && <p className="modal-peso">{produto.peso}</p>}
-            {temOferta && <span className="modal-badge-oferta">Oferta</span>}
+            {temOferta && (
+              <span className="modal-badge-oferta">
+                <i className="fas fa-tag"></i>
+                {percentualDesconto > 0 ? `${percentualDesconto}% OFF` : "Oferta"}
+              </span>
+            )}
             <p className={`modal-price ${temOferta ? "modal-price--promo" : ""}`}>
               R$ {formatarPreco(preco)}
             </p>

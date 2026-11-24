@@ -12,7 +12,7 @@ export default function CardProduto({ produto, onCardClick, variant = "doces", h
 
   const imgSrc = produto.imagem || produto.midia?.imagens?.[0]?.path || produto.foto || "";
   const loja   =  produto.loja;
-  const { temOferta, precoBase, precoOferta } = getPrecoProduto(produto);
+  const { temOferta, percentualDesconto, precoBase, precoOferta } = getPrecoProduto(produto);
 
   function irParaLoja(e) {
     e.stopPropagation();
@@ -33,7 +33,12 @@ export default function CardProduto({ produto, onCardClick, variant = "doces", h
       </div>
       <div className={isHome ? "border-card-home" : "border-card"}>
         <div className="imagem-produto-wrap">
-          {temOferta && <span className="oferta-badge">Oferta</span>}
+          {temOferta && (
+            <span className="oferta-badge">
+              <i className="fas fa-tag"></i>
+              {percentualDesconto > 0 ? `${percentualDesconto}% OFF` : "Oferta"}
+            </span>
+          )}
           <img src={imgSrc} alt={produto.nome} className="imagem-produto" />
         </div>
         <div className={isHome ? "descricao-home" : "descricao"}>
@@ -49,7 +54,7 @@ export default function CardProduto({ produto, onCardClick, variant = "doces", h
                 </span>
               )}
               <span className="icone-preco">R$</span>
-              <span className="valor">
+              <span className={`valor ${temOferta ? "valor--promo" : ""}`}>
                 {formatarPreco(precoOferta)}
               </span>
             </div>
