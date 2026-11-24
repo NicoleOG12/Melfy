@@ -1,5 +1,5 @@
 import React from "react";
-import { formatarCPF, formatarCelular } from "../../utils/masks";
+import { formatarCelular, ocultarCPF, lerCPFOculto } from "../../utils/masks";
 
 /* ── ícones inline ── */
 const IcoUser = () => (
@@ -176,7 +176,7 @@ export default function DadosTab({
         <div className="dados-grid-2">
           <Field id="nome-input"      label="Nome"      icon={<IcoUser />} value={nome}      onChange={e => setNome(e.target.value)}      disabled={!isEditing} />
           <Field id="sobrenome-input" label="Sobrenome" icon={<IcoUser />} value={sobrenome} onChange={e => setSobrenome(e.target.value)} disabled={!isEditing} />
-          <Field id="cpf-input"       label="CPF"       icon={<IcoCard />} value={cpf}       onChange={e => setCpf(formatarCPF(e.target.value))}    disabled={!isEditing} hint="Somente números" />
+          <Field id="cpf-input"       label="CPF"       icon={<IcoCard />} value={ocultarCPF(cpf)} onChange={e => setCpf(atual => lerCPFOculto(atual, e.target.value))} disabled={!isEditing} hint="Somente números" />
           <Field id="data-input"      label="Data de Nascimento" icon={<IcoCal />} value={dataNascimento} onChange={e => setDataNascimento(e.target.value)} disabled={!isEditing} placeholder="DD/MM/AAAA" />
         </div>
       </div>
