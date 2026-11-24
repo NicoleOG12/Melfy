@@ -1,11 +1,18 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLojasMaisProximas } from "../../hooks/useLojasMaisProximas";
 
 export default function BakersSection() {
-  const { lojas } = useLojasMaisProximas();
-  const loading = lojas.length === 0;
+  const { lojas: todasLojas, loading } = useLojasMaisProximas();
   const navigate = useNavigate();
+
+  // Enquanto as distâncias não ficam prontas, mostra 3 lojas aleatórias do banco
+  const aleatorias = useMemo(
+    () => [...todasLojas].sort(() => Math.random() - 0.5).slice(0, 3),
+    [todasLojas]
+  );
+  const proximas = todasLojas.filter((l) => Number.isFinite(l.distKm)).slice(0, 3);
+  const lojas = proximas.length > 0 ? proximas : aleatorias;
 
   const avaliacoes = useRef([]);
 
@@ -32,13 +39,13 @@ export default function BakersSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading && (
+          {loading && lojas.length === 0 && (
             <p className="text-center col-span-full py-8">Carregando confeitarias…</p>
           )}
           {!loading && lojas.length === 0 && (
             <p className="text-center col-span-full py-8">Nenhuma confeitaria encontrada.</p>
           )}
-          {!loading && lojas.slice(0, 3).map((loja, i) => {
+          {lojas.map((loja, i) => {
             const id   = loja.id_loja || loja.id;
             const nome = loja.nome_loja || loja.nome;
             const foto = loja.foto_loja || loja.pfp;
